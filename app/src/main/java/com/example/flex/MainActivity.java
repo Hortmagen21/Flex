@@ -24,13 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void setActionListener(){
-        Button button=findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this,"it works",Toast.LENGTH_LONG).show();
-            }
-        });
         BottomNavigationView bnv=findViewById(R.id.bottom_bar);
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
