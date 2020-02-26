@@ -4,12 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.ClipData;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment=new AccountFragment();
                         break;
                     case R.id.action_camera:
-                        selectedFragment=new PhotoFragment();
+                        selectedFragment=new CameraFragment();
                         break;
                     case R.id.action_home:
                         selectedFragment=new HomeFragment();
