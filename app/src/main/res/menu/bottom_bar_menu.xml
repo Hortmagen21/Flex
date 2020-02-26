@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:title="Home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/action_map"
+        android:title="Map"
+        android:enabled="true"
+        android:icon="@drawable/ic_map"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/action_camera"
+        android:title="Camera"
+        android:enabled="true"
+        android:icon="@drawable/ic_camera"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/action_tv"
+        android:title="Live TV"
+        android:enabled="true"
+        android:icon="@drawable/ic_live_tv"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/action_account"
+        android:title="Account"
+        android:enabled="true"
+        android:icon="@drawable/ic_perm_identity"
+        app:showAsAction="ifRoom"
+        />
+</menu>
