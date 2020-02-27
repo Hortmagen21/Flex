@@ -6,4 +6,8 @@
     <color name="colorMain">#FBFBFF</color>
     <color name="colorSecondary">#FDEDEC</color>
     <color name="colorTretiary">#E9F9F8</color>
+    <color name="colorFieldEdges">#cacfd9</color>
+    <color name="colorField">#ebeef2</color>
+    <color name="registration_button_pressed_edge">#b7bdc9</color>
+    <color name="registration_button_pressed">#dadfe6</color>
 </resources>

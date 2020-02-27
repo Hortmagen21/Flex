@@ -28,8 +28,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_tv -> selectedFragment = TvFragment()
                 else->selectedFragment=HomeFragment()
             }
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.frame_container, selectedFragment).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.frame_container, selectedFragment).commit()
             true
         }
     }

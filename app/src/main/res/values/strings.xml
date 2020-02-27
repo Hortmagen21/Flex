@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Flex</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="login">Login</string>
+    <string name="email">E-mail</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="login_or_email">Login/E-mail</string>
 </resources>
