@@ -27,26 +27,26 @@ class MainActivity : AppCompatActivity() {
             var selectedFragment: Fragment
             when (menuItem.itemId) {
                 R.id.action_account -> {
-                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!!.equals(account))
-                    account=AccountFragment()
-                selectedFragment=account }
+                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!! == account){
+                    account=AccountFragment()}
+                    selectedFragment=account }
                 R.id.action_camera -> {
-                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!!.equals(camera))
-                    camera=CameraFragment()
-                selectedFragment=camera }
+                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!! == camera){
+                    camera=CameraFragment()}
+                    selectedFragment=camera }
                 R.id.action_home -> {
-                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!!.equals(home))
-                    home=HomeFragment()
+                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!! == home){
+                    home=HomeFragment()}
                     selectedFragment=home }
                 R.id.action_map -> {
-                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!!.equals(map))
-                    map=MapFragment()
+                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!! == map){
+                    map=MapFragment()}
                     selectedFragment=map }
                 R.id.action_tv -> {
-                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!!.equals(tv))
-                    tv=TvFragment()
+                    if(supportFragmentManager.findFragmentByTag("fragment_tag")!! == tv){
+                    tv=TvFragment()}
                     selectedFragment=tv }
-                else->selectedFragment= getSupportFragmentManager().findFragmentById(R.id.frame_container)!!
+                else->selectedFragment= supportFragmentManager.findFragmentById(R.id.frame_container)!!
             }
             supportFragmentManager.beginTransaction().replace(R.id.frame_container, selectedFragment,"fragment_tag").commit()
             true

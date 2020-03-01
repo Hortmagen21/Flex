@@ -8,4 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MemberIcon">
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    <style name="MiniMemberIcon">
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    <style name="Text">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/text_black</item>
+    </style>
+    <style name="TextIconSolid">
+        <item name="android:textColor">@color/text_black</item>
+        <item name="fontFamily">@font/font_awesome_solid</item>
+    </style>
+    <style name="TextIcon">
+        <item name="fontFamily">@font/font_awesome</item>
+    </style>
 </resources>

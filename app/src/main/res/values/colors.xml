@@ -10,4 +10,5 @@
     <color name="colorField">#ebeef2</color>
     <color name="registration_button_pressed_edge">#b7bdc9</color>
     <color name="registration_button_pressed">#dadfe6</color>
+    <color name="text_black">#171717</color>
 </resources>
