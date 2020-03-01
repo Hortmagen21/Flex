@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accAplication.apps.AccConfig',
+    'accBase.apps.AccConfig',
 
     #'mysite.polls.apps.PollsConfig',
     #'mysite.polls',
@@ -135,9 +135,14 @@ django.setup()
 
 from polls.models import AccBase
 
-from accAplication.models import Accsign
-p=Accsign(121,'Maxer','email@ukr',21)
-p.save()
+from accBase.models import Users
+from accBase.models import Usersauth
+
+
+
+
+
+
 
 
 

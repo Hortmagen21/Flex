@@ -8,14 +8,15 @@
 from django.db import models
 
 
-class Accsign(models.Model):
-    id = models.IntegerField()
-    name = models.CharField(primary_key=True, max_length=20)
-    email = models.CharField(max_length=30)
-    password = models.IntegerField()
+class Usersauth(models.Model):
+    id = models.ForeignKey('Users', models.DO_NOTHING, db_column='id', blank=True, null=True)
+    token = models.CharField(primary_key=True, max_length=200)
 
     class Meta:
-        managed = False
-        db_table = 'AccSign'
+        managed = True
+        db_table = 'UsersAuth'
 
-
+class Users(models.Model):
+    name=models.CharField(max_length=20,unique=True)
+    email=models.EmailField()
+    password=models.IntegerField()
