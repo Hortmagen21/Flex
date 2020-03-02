@@ -6,32 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.flex.Adapter.PostAdapter
+import com.example.flex.POJO.Post
+import com.example.flex.POJO.User
+import java.util.*
 
 class HomeFragment : Fragment() {
     lateinit var button:Button
     lateinit var button2:Button
     lateinit var v:View
     lateinit var recycler:RecyclerView
+    lateinit var postAdapter: PostAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v=inflater.inflate(R.layout.fragment_home,container,false)
-        var fragment1=PublishedPhotoFragment("https://photos8.com/wp-content/uploads/2019/11/Love-Hands-Heart-Copyright-by-Sam-Mugraby.jpg",
-            "https://s23527.pcdn.co/wp-content/uploads/2019/02/moon-1-745x517.jpg.optimal.jpg",
-            "https://images.pexels.com/photos/1820567/pexels-photo-1820567.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
-        fragmentManager!!.beginTransaction().replace(R.id.fragment1,fragment1,"fragment1 tag").commit()
-        var fragment2=PublishedPhotoFragment("https://s23527.pcdn.co/wp-content/uploads/2019/12/Downside-Up-745x449.jpg.optimal.jpg",
-            "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
-            "https://images.pexels.com/photos/2873992/pexels-photo-2873992.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
-        fragmentManager!!.beginTransaction().replace(R.id.fragment2,fragment2,"fragment2 tag").commit()
-        var fragment3=PublishedPhotoFragment("https://www.designer.io/wp-content/uploads/2019/10/1-1024x698.png",
-            "https://media.istockphoto.com/photos/heart-shape-paper-book-on-the-beach-picture-id817147678?k=6&m=817147678&s=612x612&w=0&h=vNJJJoRPaieom61bMwQxaGtOImMhJsoxz1OIgLZNOEw=",
-            "https://www.androidpolice.com/wp-content/uploads/2019/10/Google-Photos-Colorize-Beta.png")
-        fragmentManager!!.beginTransaction().replace(R.id.fragment3,fragment3,"fragment3 tag").commit()
-        var fragment4=PublishedPhotoFragment("https://www.slrlounge.com/wp-content/uploads/2020/01/Dirk-Dallas-Drone-Photo-splash-image-wppi-expo.jpg",
-            "https://dynaimage.cdn.cnn.com/cnn/q_auto,h_600/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F200109201648-28-week-in-photos-0110.jpg",
-            "https://shotkit.com/wp-content/uploads/2019/10/tips-for-unique-travel-photos.jpg")
-        fragmentManager!!.beginTransaction().replace(R.id.fragment4,fragment4,"fragment4 tag").commit()
+
         /*recycler=v.findViewById<RecyclerView>(R.id.recycler).apply {
             layoutManager=LinearLayoutManager(this.context)
         }*/
@@ -43,6 +34,34 @@ class HomeFragment : Fragment() {
         button2.setOnClickListener {
             startActivity(Intent(v.context,SignIn::class.java))
         }*/
+        loadRecyclerView()
+        loadPosts()
         return v
+    }
+    fun getPosts():Collection<Post>{
+        return Arrays.asList(
+            Post(1,5,654,95, User(1,"Vlad","https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
+                "https://static.toiimg.com/photo/72975551.cms",
+                User(2,"DeLitX","https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500"),
+                "top content,ya perviy"),
+            Post(2,651,64,5, User(3,"Vilard","https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819__340.jpg"),
+                "https://www.freedigitalphotos.net/images/img/homepage/394230.jpg",
+                User(4,"Hortmagen","https://media.gettyimages.com/photos/beautiful-book-picture-id865109088?s=612x612"),
+                "Проверка кириллицы"),
+            Post(3,65,6984,25, User(5,"Max","https://media3.s-nbcnews.com/j/newscms/2019_41/3047866/191010-japan-stalker-mc-1121_06b4c20bbf96a51dc8663f334404a899.fit-760w.JPG"),
+                "https://images.unsplash.com/photo-1503803548695-c2a7b4a5b875?ixlib=rb-1.2.1&w=1000&q=80",
+                User(6,"Dima","https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"),
+                "fu,skatilsya")
+        )
+    }
+    fun loadPosts(){
+        postAdapter.addItems(getPosts())
+    }
+    fun loadRecyclerView(){
+        recycler=v.findViewById(R.id.main_recycler_view)
+        recycler.layoutManager=LinearLayoutManager(v.context)
+
+        postAdapter=PostAdapter()
+        recycler.adapter=postAdapter
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -149,34 +149,38 @@
             android:src="@drawable/ic_launcher_background"
             android:layout_marginTop="10dp"/>
 
-        <TextView
-            style="@style/Text"
-            android:id="@+id/user_comment_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/user_comment_icon"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_toEndOf="@id/user_comment_icon"
             android:layout_toRightOf="@id/user_comment_icon"
-            android:gravity="center_vertical"
-            android:text="Name:"
-            android:textSize="20sp" />
-        <TextView
-            style="@style/Text"
-            android:id="@+id/comment_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="300dp"
-            android:layout_below="@id/user_comment_name"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_toEndOf="@id/user_comment_icon"
-            android:layout_toRightOf="@id/user_comment_icon"
-            android:gravity="center_vertical"
-            android:text="Usual comment to test ellipsize sfsdf"
-            android:singleLine="true"
-            android:textSize="18sp" />
+            android:orientation="vertical">
+            <TextView
+                style="@style/Text"
+                android:id="@+id/user_comment_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:text="Name:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/comment_text"
+                style="@style/Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Usual comment to test ellipsize sfsdfsdfgfgsdfgdfgsdfgsdfgsdfgsdfgsdfgsdfg"
+                android:textSize="18sp" />
+        </LinearLayout>
+
     </RelativeLayout>
 
 </LinearLayout>

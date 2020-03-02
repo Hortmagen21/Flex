@@ -5,42 +5,10 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTretiary">
+    android:background="@color/colorWhite">
 
-    <ScrollView
-        android:id="@+id/scroll"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <FrameLayout
-                android:id="@+id/fragment1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/fragment2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:id="@+id/fragment3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:id="@+id/fragment4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </ScrollView>
-
-
+        android:layout_height="match_parent" />
 </RelativeLayout>
