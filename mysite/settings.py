@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
 import django
+import django_heroku
 
 
 
@@ -138,7 +139,7 @@ from polls.models import AccBase
 from accBase.models import Users
 from accBase.models import Usersauth
 
-
+django_heroku.settings(locals())
 
 
 
