@@ -13,8 +13,10 @@ def registration(request):
     username = request.POST.get(['username',False])
     password = request.POST.get(['password',False])
     email = request.POST.get(['email',False])
-    if username==False or password==False or email==False:
+
+    if username == False or password == False or email == False:
         return HttpResponse("NOT VALID DATA")
+
     user = User.objects.create_user(username=username,password=password,email=email)
     user.save()
     setSessionHash(request.session)
@@ -39,3 +41,9 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return HttpResponse('acclogout')
+
+def getCookie(request):
+    client=request.session()
+    csrftoken=client.cookies['csrftoken']
+    up=str(csrftoken)
+    return HttpResponse(csrftoken)
