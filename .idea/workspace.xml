@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/accBase/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/accBase/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accBase/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

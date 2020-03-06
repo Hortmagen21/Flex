@@ -4,16 +4,16 @@ from django.contrib.sessions.models import Session
 from rest_framework import authtoken
 from .models import Users
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie
 
 
-@csrf_exempt
+@ensure_csrf_cookie
 def setSessionHash(session):
     session_hash = session.session_key
     HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
 
-@csrf_exempt
+@ensure_csrf_cookie
 def registration(request):
     username = request.POST.get(['username',False])
     password = request.POST.get(['password',False])
