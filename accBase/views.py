@@ -43,7 +43,9 @@ def logout(request):
     return HttpResponse('acclogout')
 
 def getCookie(request):
+    URL='https://sleepy-ocean-25130.herokuapp.com/'
     client=request.session()
+    client.get(URL)
     csrftoken=client.cookies['csrftoken']
     up=str(csrftoken)
     return HttpResponse(csrftoken)
