@@ -4,11 +4,16 @@ from django.contrib.sessions.models import Session
 from rest_framework import authtoken
 from .models import Users
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 
+
+@csrf_exempt
 def setSessionHash(session):
     session_hash = session.session_key
     HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
+
+@csrf_exempt
 def registration(request):
     username = request.POST.get(['username',False])
     password = request.POST.get(['password',False])
@@ -25,6 +30,7 @@ def registration(request):
     return HttpResponse("CREATED")
 
 
+@csrf_exempt
 def login(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -38,14 +44,9 @@ def login(request):
     return HttpResponse("Unsuccessful login",status=404)
 
 
+@csrf_exempt
 def logout(request):
     auth.logout(request)
     return HttpResponse('acclogout')
 
-def getCookie(request):
-    URL='https://sleepy-ocean-25130.herokuapp.com/'
-    client=request.session()
-    client.get(URL)
-    csrftoken=client.cookies['csrftoken']
-    up=str(csrftoken)
-    return HttpResponse(csrftoken)
+
