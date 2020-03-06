@@ -7,13 +7,12 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie
 
 
-@ensure_csrf_cookie
-def setSessionHash(session):
-    session_hash = session.session_key
-    HttpResponse.__setitem__(header='Authorization', value=session_hash)
+#def setSessionHash(session):
+    #session_hash = session.session_key
+    #HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
 
-@ensure_csrf_cookie
+@csrf_exempt
 def registration(request):
     username = request.POST.get(['username',False])
     password = request.POST.get(['password',False])
@@ -24,7 +23,9 @@ def registration(request):
 
     user = User.objects.create_user(username=username,password=password,email=email)
     user.save()
-    setSessionHash(request.session)
+    #setSessionHash(request.session)
+    session_hash = request.session.session_key
+    HttpResponse.__setitem__(header='Authorization', value=session_hash)
     print('I created user!!!!!!!')
     #serialized=UserSerializer(data=request.DATA)
     return HttpResponse("CREATED")
@@ -38,7 +39,9 @@ def login(request):
 
     if user is not None and user.is_active:
         auth.login(request, user)
-        setSessionHash(request.session)
+        #setSessionHash(request.session)
+        session_hash = request.session.session_key
+        HttpResponse.__setitem__(header='Authorization', value=session_hash)
         print('I log in !!!!!!!')
         return HttpResponse('Successful login'+user.id)
     return HttpResponse("Unsuccessful login",status=404)
