@@ -10,9 +10,11 @@ def setSessionHash(session):
     HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
 def registration(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    email = request.POST['email']
+    username = request.POST.get(['username',False])
+    password = request.POST.get(['password',False])
+    email = request.POST.get(['email',False])
+    if username==False or password==False or email==False:
+        return HttpResponse("NOT VALID DATA")
     user = User.objects.create_user(username=username,password=password,email=email)
     user.save()
     setSessionHash(request.session)
