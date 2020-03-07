@@ -1,13 +1,11 @@
-package com.example.flex
+package com.example.flex.Fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.example.flex.R
 
 class MapFragment : Fragment() {
     lateinit var v:View

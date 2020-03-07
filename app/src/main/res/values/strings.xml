@@ -11,4 +11,6 @@
     <string name="comment_icon">\uf27a</string>
     <string name="fire_icon">\uf06d</string>
     <string name="share_icon">\uf1e0</string>
+    <string name="followers_text">Followers</string>
+    <string name="followed_text">Followed</string>
 </resources>
