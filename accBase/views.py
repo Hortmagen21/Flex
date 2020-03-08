@@ -7,11 +7,13 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie
 import django
 from django.contrib.auth.decorators import login_required
+from password_generator import PasswordGenerator
+from django.core.mail import send_mail
 
 
-#def setSessionHash(session):
-    #session_hash = session.session_key
-    #HttpResponse.__setitem__(header='Authorization', value=session_hash)
+# def setSessionHash(session):
+# session_hash = session.session_key
+# HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
 
 @csrf_exempt
@@ -27,16 +29,16 @@ def registration(request):
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
 
-    #setSessionHash(request.session)
-    #session_hash = request.session.session_key
-    #HttpResponse.__setitem__(header='Authorization', value=session_hash)
+    # setSessionHash(request.session)
+    # session_hash = request.session.session_key
+    # HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
         csrf_token = django.middleware.csrf.get_token(request)
         http_resp=HttpResponse()
         http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
         print('I created user!!!!!!!')
 
-    #serialized=UserSerializer(data=request.DATA)
+    # serialized=UserSerializer(data=request.DATA)
 
         return HttpResponse(http_resp)
     else:
@@ -57,10 +59,11 @@ def login(request):
 
         if user is not None and user.is_active:
             auth.login(request, user)
-            #setSessionHash(request.session)
-            #session_hash = request.session.session_key
+            # setSessionHash(request.session)
+            # session_hash = request.session.session_key
             csrf_token = django.middleware.csrf.get_token(request)
             http_resp = HttpResponse()
+            # must be rechanged on cookies
             http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
             print('I log in !!!!!!!')
             return HttpResponse('Successful login')
@@ -76,6 +79,27 @@ def logout(request):
         return HttpResponse('acclogout')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+def forgot_pass(request):
+    token = PasswordGenerator(minlen=8, maxlen=8)
+    user_email = ''
+    if request.method == 'GET':
+        email = request.GET.get(['email'][0], False)
+        user_email=email
+        if email:
+            send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com',
+                      email, fail_silently=False)
+            HttpResponse('Message is sent')
+        else:
+            HttpResponse('Bad email', status=404)
+    if request.method == 'POST':
+        user_token = request.POST.get(['user_token'][0], False)
+        new_password=request.POST.get(['new_password'][0], False)
+        if user_token and user_token == token:
+            user = User.objects.get(email=user_email)
+            user.set_password(new_password)
+            user.save()
 
 
 
