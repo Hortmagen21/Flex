@@ -33,7 +33,7 @@ def registration(request):
 
         url_confirm=core_url+'registration/ended?email={}'.format(user.email)
         send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm),
-                  'hortmagennn@gmail.com', email, fail_silently=False)
+                  'hortmagennn@gmail.com', [email], fail_silently=False, )
 
     # setSessionHash(request.session)
     # session_hash = request.session.session_key
@@ -110,7 +110,7 @@ def verifying(request):
         # user_email = email
         # if email:
             # send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com',
-                      # email, fail_silently=False)
+                      # [email], fail_silently=False)
             # HttpResponse('Message is sent')
         # else:
             # HttpResponse('Bad email', status=404)

@@ -141,7 +141,12 @@ from accBase.models import Usersauth
 
 django_heroku.settings(locals())
 
-
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'hortmagennn@gmail.com'
+EMAIL_HOST_PASSWORD = 'rexwex21'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 
 
 
