@@ -11,9 +11,7 @@ from password_generator import PasswordGenerator
 from django.core.mail import send_mail
 
 
-# def setSessionHash(session):
-# session_hash = session.session_key
-# HttpResponse.__setitem__(header='Authorization', value=session_hash)
+
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
 
@@ -97,31 +95,32 @@ def verifying(request):
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
-# user_created_token = -1
-# user_email = ''
+
+def forgot_pass(request):
+
+    if request.method == 'GET':
+        token = PasswordGenerator(minlen=8, maxlen=8)
+        email = request.GET.get(['email'][0], False)
+        if email:
+            send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com'
+                      , [email], fail_silently=False)
+            HttpResponse('Message is sent')
+        else:
+            HttpResponse('Bad email', status=404)
 
 
-# def forgot_pass(request): || reset_pass
-
-    # if request.method == 'GET':
-        # token = PasswordGenerator(minlen=8, maxlen=8)
-        # user_created_token = token
-        # email = request.GET.get(['email'][0], False)
-        # user_email = email
-        # if email:
-            # send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com',
-                      # [email], fail_silently=False)
-            # HttpResponse('Message is sent')
-        # else:
-            # HttpResponse('Bad email', status=404)
-    # if request.method == 'POST':
-        # user_token = request.POST.get(['user_token'][0], False)
-        # new_password=request.POST.get(['new_password'][0], False)
-        # if user_token and user_token == user_created_token:
-            # user = User.objects.get(email=user_email)
-            # user.set_password(new_password)
-            # user.save()
-
+def reset_pass(request):
+    if request.method == 'POST':
+        user_email = request.POST.get(['email'], False)
+        new_password = request.POST.get(['new_password'], False)
+        user_token = request.POST.get(['user_token'][0], False)
+        token = 0
+        # must be taken from table
+        if user_email and token == user_token:
+            user = User.objects.get(email=user_email)
+            user.set_password(new_password)
+            user.save()
+            return HttpResponseRedirect('flex://login.com')
 
 
 
