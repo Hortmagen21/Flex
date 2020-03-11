@@ -93,7 +93,7 @@ def verifying(request):
         user = User.objects.get(email=user_email)
         user.is_active = True
         user.save()
-        return HttpResponseRedirect('flex://www.main.com/end_registration')
+        return HttpResponseRedirect('flex://main.com')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
