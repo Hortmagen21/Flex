@@ -11,6 +11,8 @@ from password_generator import PasswordGenerator
 from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
+from django.template import loader
+from django.shortcuts import render
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
@@ -100,7 +102,9 @@ def verifying(request):
         else:
             user.is_active = True
             user.save()
-            return HttpResponseRedirect('flex://main.com')
+            #template = loader.get_template('registration.html')
+            return render(request, 'registration.html')
+            #return HttpResponseRedirect('flex://main.com')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
