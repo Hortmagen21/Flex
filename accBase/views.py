@@ -11,8 +11,6 @@ from password_generator import PasswordGenerator
 from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
 
-
-
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
 
@@ -93,11 +91,15 @@ def logout(request):
 
 def verifying(request):
     if request.method == 'GET':
-        user_email=request.GET.get('email', '')
-        user = User.objects.get(email=user_email)
-        user.is_active = True
-        user.save()
-        return HttpResponseRedirect('flex://main.com')
+        user_email = request.GET.get('email', '')
+        try:
+            user = User.objects.get(email=user_email)
+        except ObjectDoesNotExist:
+            return HttpResponse('Something go wrong with registration your acc,pls try again')
+        else:
+            user.is_active = True
+            user.save()
+            return HttpResponseRedirect('flex://main.com')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
