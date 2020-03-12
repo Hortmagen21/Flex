@@ -100,7 +100,7 @@ def verifying(request):
         else:
             user.is_active = True
             user.save()
-            return HttpResponseRedirect('flex://main')
+            return HttpResponseRedirect('flex://main.com')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
