@@ -9,6 +9,7 @@ import django
 from django.contrib.auth.decorators import login_required
 from password_generator import PasswordGenerator
 from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist
 
 
 
@@ -25,26 +26,31 @@ def registration(request):
         if username == False or password == False or email == False:
             return HttpResponse("NOT VALID DATA", status=415)
 
-        user = User.objects.create_user(username=username, password=password, email=email)
-        user.is_active = False
-        user.save()
+        try:
+            test_user = User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            user = User.objects.create_user(username=username, password=password, email=email)
+            user.is_active = False
+            user.save()
 
-        url_confirm=core_url+'registration/ended?email={}'.format(user.email)
-        send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm),
-                  'hortmagennn@gmail.com', [email], fail_silently=False, )
+            url_confirm=core_url+'registration/ended?email={}'.format(user.email)
+            send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
+                      , 'hortmagennn@gmail.com', [email], fail_silently=False, )
 
     # setSessionHash(request.session)
     # session_hash = request.session.session_key
     # HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
-        csrf_token = django.middleware.csrf.get_token(request)
-        http_resp=HttpResponse()
-        http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
-        print('I created user!!!!!!!')
+            csrf_token = django.middleware.csrf.get_token(request)
+            http_resp=HttpResponse()
+            http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
+            print('I created user!!!!!!!')
 
     # serialized=UserSerializer(data=request.DATA)
 
-        return HttpResponse(http_resp)
+            return HttpResponse(http_resp)
+
+        return HttpResponse("Such email is already exist", status=409)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
