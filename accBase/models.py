@@ -8,15 +8,10 @@
 from django.db import models
 
 
-class Usersauth(models.Model):
-    id = models.ForeignKey('Users', models.DO_NOTHING, db_column='id', blank=True, null=True)
-    token = models.CharField(primary_key=True, max_length=200)
+class TokenConfirm(models.Model):
+    id = models.ForeignKey('AuthUser', models.DO_NOTHING, db_column='id', blank=True, null=True)
+    token = models.CharField(max_length=-1, blank=True, null=True)
 
     class Meta:
-        managed = True
-        db_table = 'UsersAuth'
 
-class Users(models.Model):
-    name=models.CharField(max_length=20,unique=True)
-    email=models.EmailField()
-    password=models.IntegerField()
+        db_table = 'token_confirm'

@@ -2,7 +2,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.sessions.models import Session
 from rest_framework import authtoken
-from .models import Users
+from .models import TokenConfirm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie
 import django
@@ -117,22 +117,49 @@ def forgot_pass(request):
         if email:
             send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com'
                       , [email], fail_silently=False)
-            HttpResponse('Message is sent')
+            try:
+                user = User.objects.get(email=email)
+            except ObjectDoesNotExist:
+                HttpResponse('User with such email is not exist', status=404)
+            else:
+                try:
+                    duplicate_token = TokenConfirm.objects.get(id=user.id)
+                except ObjectDoesNotExist:
+                    user_token = TokenConfirm(id=user.id, token=token)
+                    user_token.save()
+                    HttpResponse('Message is sent')
+                else:
+                    duplicate_token.token = token
+                    duplicate_token.save()
+                    HttpResponse('Message is sent')
         else:
             HttpResponse('Bad email', status=404)
 
 
 def reset_pass(request):
+    
     if request.method == 'POST':
         user_email = request.POST.get(['email'], False)
         new_password = request.POST.get(['new_password'], False)
         user_token = request.POST.get(['user_token'][0], False)
-        token = 0
-        # must be taken from table
-        if user_email and token == user_token:
-            user = User.objects.get(email=user_email)
-            user.set_password(new_password)
-            user.save()
+
+        if user_email :
+            try:
+                user = User.objects.get(email=user_email)
+            except ObjectDoesNotExist:
+                HttpResponse('User with such email is not exist', status=404)
+            else:
+                try:
+                    token = TokenConfirm.objects.get(id=user.id)
+                except ObjectDoesNotExist:
+                    HttpResponse('User with such id is not exist', status=404)
+                else:
+                    if user_token == token:
+                        user.set_password(new_password)
+                        user.save()
+                        token.delete()
+                    else:
+                        HttpResponse('It is incorrect token', status=400)
             return HttpResponseRedirect('flex://login.com')
 
 
