@@ -4,7 +4,7 @@ from django.contrib.sessions.models import Session
 from rest_framework import authtoken
 from .models import TokenConfirm
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
 import django
 from django.contrib.auth.decorators import login_required
 from password_generator import PasswordGenerator
@@ -71,6 +71,7 @@ def login(request):
 
         if user is not None and user.is_active:
             auth.login(request, user)
+            user.save()
             # setSessionHash(request.session)
             # session_hash = request.session.session_key
             csrf_token = django.middleware.csrf.get_token(request)
@@ -84,7 +85,7 @@ def login(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-@ensure_csrf_cookie
+@csrf_protect
 def logout(request):
     if request.method == 'GET':
         auth.logout(request)
@@ -93,11 +94,12 @@ def logout(request):
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
-
-@login_required(redirect_field_name='flex://login.com')
+@csrf_protect
 def checklog(request):
     if request.method == 'GET':
-        if request.user.is_authenticated():
+        print(request.user.is_authenticated)
+
+        if request.user.is_authenticated:
             return HttpResponse('good')
         else:
             return HttpResponse('bad', status=400)
