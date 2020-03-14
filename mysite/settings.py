@@ -139,7 +139,6 @@ from polls.models import AccBase
 
 
 django_heroku.settings(locals())
-LOGIN_URL = 'flex://login.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'hortmagennn@gmail.com'
