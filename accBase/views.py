@@ -71,7 +71,9 @@ def login(request):
 
         if user is not None and user.is_active:
             auth.login(request, user)
+
             user.save()
+            print(request.user.is_authenticated)
             # setSessionHash(request.session)
             # session_hash = request.session.session_key
             csrf_token = django.middleware.csrf.get_token(request)
@@ -98,7 +100,6 @@ def logout(request):
 def checklog(request):
     if request.method == 'GET':
         print(request.user.is_authenticated)
-
         if request.user.is_authenticated:
             return HttpResponse('good')
         else:
