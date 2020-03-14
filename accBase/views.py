@@ -92,6 +92,7 @@ def logout(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+@csrf_exempt
 def verifying(request):
     if request.method == 'GET':
         user_email = request.GET.get('email', '')
@@ -109,6 +110,7 @@ def verifying(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+@csrf_exempt
 def forgot_pass(request):
 
     if request.method == 'GET':
@@ -136,6 +138,7 @@ def forgot_pass(request):
             HttpResponse('Bad email', status=404)
 
 
+@csrf_exempt
 def reset_pass(request):
 
     if request.method == 'POST':

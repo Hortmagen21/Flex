@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/accBase/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accBase/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,8 +15,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mysite/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="143" selection-start-line="143" selection-end-line="143" />
+            <state relative-caret-position="79">
+              <caret line="138" selection-start-line="138" selection-end-line="138" />
               <folding>
                 <element signature="e#306#315#0" expanded="true" />
               </folding>
@@ -42,8 +41,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/accBase/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
+            <state relative-caret-position="810">
+              <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
               <folding>
                 <element signature="e#0#57#0" expanded="true" />
               </folding>
@@ -143,12 +142,12 @@
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/mysite/urls.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/mysite/settings.py" />
         <option value="$PROJECT_DIR$/accBase/urls.py" />
         <option value="$PROJECT_DIR$/accBase/templates.py" />
         <option value="$PROJECT_DIR$/accBase/templates/registration.html" />
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/accBase/models.py" />
+        <option value="$PROJECT_DIR$/mysite/settings.py" />
         <option value="$PROJECT_DIR$/accBase/views.py" />
       </list>
     </option>
@@ -270,6 +269,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20536913" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -423,13 +423,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/accBase/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="6" column="48" selection-start-line="6" selection-start-column="48" selection-end-line="6" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -457,16 +450,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mysite/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="143" selection-start-line="143" selection-end-line="143" />
-          <folding>
-            <element signature="e#306#315#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/django/contrib/auth/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="143">
@@ -481,10 +464,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="79">
+          <caret line="138" selection-start-line="138" selection-end-line="138" />
+          <folding>
+            <element signature="e#306#315#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/accBase/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="6" column="48" selection-start-line="6" selection-start-column="48" selection-end-line="6" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/accBase/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
+        <state relative-caret-position="810">
+          <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
           <folding>
             <element signature="e#0#57#0" expanded="true" />
           </folding>
