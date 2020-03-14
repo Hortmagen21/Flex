@@ -96,7 +96,7 @@ def logout(request):
 @csrf_exempt
 def checklog(request):
     if request.method == 'GET':
-        if request.user.is_authenticated:
+        if request.user.is_authenticated():
             return HttpResponse('good')
         else:
             return HttpResponse('bad', status=400)
