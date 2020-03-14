@@ -82,7 +82,7 @@ def login(request):
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
-
+@ensure_csrf_cookie
 def logout(request):
     if request.method == 'GET':
         auth.logout(request)
