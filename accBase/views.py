@@ -59,8 +59,8 @@ def registration(request):
 @csrf_exempt
 def login(request):
     if request.method == 'GET':
-        username = request.GET.get(['username'][0], False)
-        password = request.GET.get(['password'][0], False)
+        username = request.GET.get('username', '')
+        password = request.GET.get('password', '')
         print(username, type(username))
         print(password, type(password))
         user = auth.authenticate(username=username, password=password)
@@ -137,7 +137,7 @@ def forgot_pass(request):
 
 
 def reset_pass(request):
-    
+
     if request.method == 'POST':
         user_email = request.POST.get(['email'], False)
         new_password = request.POST.get(['new_password'], False)
