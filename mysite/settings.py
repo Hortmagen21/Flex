@@ -136,8 +136,7 @@ django.setup()
 
 from polls.models import AccBase
 
-from accBase.models import Users
-from accBase.models import Usersauth
+
 
 django_heroku.settings(locals())
 
