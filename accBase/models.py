@@ -9,9 +9,8 @@ from django.db import models
 
 
 class TokenConfirm(models.Model):
-    id = models.ForeignKey('AuthUser', models.DO_NOTHING, db_column='id', blank=True, null=True)
-    token = models.CharField(max_length=-1, blank=True, null=True)
+    id = models.IntegerField(primary_key=True)
+    token = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-
         db_table = 'token_confirm'
