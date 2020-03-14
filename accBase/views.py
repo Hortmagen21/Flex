@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.template import loader
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
@@ -93,7 +94,7 @@ def logout(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-@csrf_exempt
+@login_required
 def checklog(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
