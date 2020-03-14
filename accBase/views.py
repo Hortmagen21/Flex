@@ -94,7 +94,7 @@ def logout(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-@login_required(redirect_field_name='flex://login.com')
+@login_required
 def checklog(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
