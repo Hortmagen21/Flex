@@ -96,6 +96,7 @@ def logout(request):
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
+
 @csrf_protect
 def checklog(request):
     if request.method == 'GET':
@@ -162,7 +163,7 @@ def reset_pass(request):
         new_password = request.POST.get(['new_password'], False)
         user_token = request.POST.get(['user_token'][0], False)
 
-        if user_email :
+        if user_email:
             try:
                 user = User.objects.get(email=user_email)
             except ObjectDoesNotExist:
