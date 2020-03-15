@@ -64,7 +64,7 @@ def login(request):
         password = request.GET.get('password', '')
         print(username, type(username))
         print(password, type(password))
-        user = auth.authenticate(username=username, password=password)
+        user = auth.authenticate(request, username=username, password=password)
 
         if username == False or password == False:
             return HttpResponse("NOT VALID DATA", status=415)
@@ -76,10 +76,10 @@ def login(request):
             print(request.user.is_authenticated)
             # setSessionHash(request.session)
             # session_hash = request.session.session_key
-            csrf_token = django.middleware.csrf.get_token(request)
-            http_resp = HttpResponse()
+            # csrf_token = django.middleware.csrf.get_token(request)
+            # http_resp = HttpResponse()
             # must be rechanged on cookies
-            http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
+            # http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
             print('I log in !!!!!!!')
             return HttpResponse('Successful login')
         return HttpResponse("Unsuccessful login", status=404)
