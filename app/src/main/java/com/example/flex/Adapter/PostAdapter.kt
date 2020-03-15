@@ -3,68 +3,80 @@ package com.example.flex.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.flex.Fragments.CommentFragment
 import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
+import com.example.flex.PostView
 import com.example.flex.R
 import com.squareup.picasso.Picasso
 
 class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder> {
-    private var onUserClickListener:PostViewHolder.OnUserClickListener
+    private var onUserClickListener: OnUserClickListener
     private var postList = mutableListOf<Post>()
-    constructor(onUserClickListener: PostViewHolder.OnUserClickListener){
-        this.onUserClickListener=onUserClickListener
+
+    constructor(onUserClickListener: OnUserClickListener) {
+        this.onUserClickListener = onUserClickListener
     }
 
-    class PostViewHolder : RecyclerView.ViewHolder {
-        private var onUserClickListener:OnUserClickListener
-        private var mainUserAvatar: ImageView
-        private var mainUserName: TextView
-        private var postImage: ImageView
-        private var commentatorAvatar: ImageView
-        private var commentatorName: TextView
-        private var commentText: TextView
-        private var firesCount: TextView
-        private var commentsCount: TextView
-        private var shareCount: TextView
-        private lateinit var post:Post
+    class PostViewHolder(
+        private val v: View,
+        private var onUserClickListener: OnUserClickListener
+    ) :
+        RecyclerView.ViewHolder(v), CommentFragment.onCommentClickListener {
+        private val mainUserAvatar: ImageView = v.findViewById(R.id.user_icon)
+        private val mainUserName: TextView = v.findViewById(R.id.user_name)
+        private val postImage: ImageView = v.findViewById(R.id.main_image)
+        private val firesCount: TextView = v.findViewById(R.id.fire_count)
+        private val commentsCount: TextView = v.findViewById(R.id.comments_count)
+        private val shareCount: TextView = v.findViewById(R.id.share_count)
+        private val postText: TextView = v.findViewById(R.id.post_text)
+        private val fragmentContainer = v.findViewById<FrameLayout>(R.id.comment_frame)
+        private lateinit var comment: CommentFragment
+        private lateinit var post: Post
 
-        constructor(v: View,onUserClickListener: OnUserClickListener) : super(v) {
-            this.onUserClickListener=onUserClickListener
-            mainUserAvatar = v.findViewById(R.id.user_icon)
-            mainUserName = v.findViewById(R.id.user_name)
-            postImage = v.findViewById(R.id.main_image)
-            commentatorAvatar = v.findViewById(R.id.user_comment_icon)
-            commentatorName = v.findViewById(R.id.user_comment_name)
-            commentText = v.findViewById(R.id.comment_text)
-            firesCount = v.findViewById(R.id.fire_count)
-            commentsCount = v.findViewById(R.id.comments_count)
-            shareCount = v.findViewById(R.id.share_count)
+        init {
             mainUserAvatar.setOnClickListener {
                 onUserClickListener.onUserClick(post.mainUser)
-            }
-            commentatorAvatar.setOnClickListener {
-                onUserClickListener.onUserClick(post.commentUser)
             }
         }
 
         fun bind(post: Post) {
-            this.post=post
+            this.post = post
+
             mainUserName.text = post.mainUser.name
-            Picasso.get().load(post.mainUser.imageUrl).into(mainUserAvatar)
-            Picasso.get().load(post.imageUrl).into(postImage)
-            Picasso.get().load(post.commentUser.imageUrl).into(commentatorAvatar)
-            commentatorName.text = post.commentUser.name
-            commentText.text = post.commentText
+            if (post.mainUser.imageUrl != "") Picasso.get().load(post.mainUser.imageUrl)
+                .into(mainUserAvatar)
+            if (post.imageUrl != "") Picasso.get().load(post.imageUrl).into(postImage)
+            if (post.postText != "") {
+                postText.text = post.postText
+                postText.layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            } else postText.height = 0
             firesCount.text = post.countOfFires.toString()
             commentsCount.text = post.countOfComments.toString()
             shareCount.text = post.countOfShares.toString()
+
+            if (post.comment.text != "" && post.mainUser.name != "" && post.mainUser.imageUrl != "") {
+                comment = CommentFragment(post.comment, this)
+                val activity: AppCompatActivity = v.context as AppCompatActivity
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.comment_frame, comment).commit()
+            }
         }
-        interface OnUserClickListener {
-            fun onUserClick(user: User)
+
+        override fun onCommentClick() {
+            onUserClickListener.onUserClick(post.comment.user)
         }
+
+    }
+
+    interface OnUserClickListener {
+        fun onUserClick(user: User)
     }
 
     fun addItems(posts: Collection<Post>) {
@@ -78,14 +90,14 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        var view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.published_photo_layout, parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+        val view:View=inflater.inflate(R.layout.published_photo_layout, parent, false)
 
-        return PostViewHolder(view,onUserClickListener)
+        return PostViewHolder(view, onUserClickListener)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(postList.get(position))
+        holder.bind(postList[position])
     }
 
     override fun getItemCount(): Int {

@@ -51,4 +51,10 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/registration_fields"
         android:text="@string/sign_in" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 </LinearLayout>

@@ -6,4 +6,6 @@ class MainData() {
     val URL_REGISTRATION = "/registration"
     val URL_LOGIN = "/login"
     val URL_LOGOUT = "/logout"
+    val CRSFTOKEN="crsftoken"
+    val SESION_ID="session id"
 }

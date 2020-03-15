@@ -1,0 +1,43 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        style="@style/Icon.Mini"
+        android:id="@+id/user_comment_icon"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_launcher_background" />
+
+    <LinearLayout
+        android:layout_alignTop="@id/user_comment_icon"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/user_comment_icon"
+        android:layout_toRightOf="@id/user_comment_icon"
+        android:layout_width="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Text"
+            android:gravity="center_vertical"
+            android:id="@+id/user_comment_name"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:text="Name:"
+            android:textSize="20sp" />
+
+        <TextView
+            style="@style/Text"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:id="@+id/comment_text"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            android:text="Usual comment to test ellipsize sfsdfsdfgfgsdfgdfgsdfgsdfgsdfgsdfgsdfgsdfg"
+            android:textSize="18sp" />
+    </LinearLayout>
+</RelativeLayout>

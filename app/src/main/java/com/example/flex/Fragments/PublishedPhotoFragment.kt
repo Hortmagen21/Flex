@@ -14,9 +14,9 @@ class PublishedPhotoFragment:Fragment {
     lateinit var photo:ImageView
     lateinit var avatar:ImageView
     lateinit var commentatorAvatar:ImageView
-    lateinit var photoPath: String
-    lateinit var iconPath: String
-    lateinit var commentIconPath: String
+    var photoPath: String
+    var iconPath: String
+    var commentIconPath: String
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         v=inflater.inflate(R.layout.published_photo_layout,container,false)

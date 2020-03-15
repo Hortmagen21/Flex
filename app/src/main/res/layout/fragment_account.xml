@@ -75,4 +75,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign In" />
+
+    <Button
+        android:id="@+id/button_logout"
+        android:layout_below="@id/button_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout" />
+    <Button
+        android:id="@+id/button_checkLog"
+        android:layout_below="@id/button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckLog" />
 </RelativeLayout>

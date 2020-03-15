@@ -9,17 +9,17 @@
         app:showAsAction="ifRoom"
         />
     <item
-        android:id="@+id/action_map"
-        android:title="Map"
-        android:enabled="true"
-        android:icon="@drawable/ic_map"
-        app:showAsAction="ifRoom"
-        />
-    <item
         android:id="@+id/action_camera"
         android:title="Camera"
         android:enabled="true"
         android:icon="@drawable/ic_camera"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/action_map"
+        android:title="Map"
+        android:enabled="true"
+        android:icon="@drawable/ic_map"
         app:showAsAction="ifRoom"
         />
     <item

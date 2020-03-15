@@ -4,18 +4,18 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class User(
-    val id: Long,
-    val name: String,
-    val imageUrl: String,
-    val followersCount: Long,
-    val followingCount: Long
+        val id: Long,
+        val name: String,
+        val imageUrl: String,
+        val followersCount: Long,
+        val followingCount: Long
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readLong(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readLong(),
-        parcel.readLong()
+            parcel.readLong(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readLong(),
+            parcel.readLong()
     ) {
     }
 
