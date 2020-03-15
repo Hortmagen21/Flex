@@ -101,7 +101,7 @@ def logout(request):
 def checklog(request):
     if request.method == 'GET':
         print(request.user.is_authenticated)
-        if request.user.is_authenticated:
+        if request.user.is_authenticated():
             return HttpResponse('good')
         else:
             return HttpResponse('bad', status=400)
