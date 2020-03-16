@@ -36,7 +36,7 @@ def registration(request):
             user.is_active = False
             user.save()
 
-            url_confirm=core_url+'registration/ended?email={}'.format(user.email)
+            url_confirm=core_url+'accbase/registration/ended?email={}'.format(user.email)
             send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
                       , 'hortmagennn@gmail.com', [email], fail_silently=False, )
 
@@ -128,7 +128,7 @@ def verifying(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 @csrf_exempt
-def forgot_pass(request):
+def forgot_pass(request):#is_active_check
     if request.method == 'POST':
         token = secrets.randbelow(8)
         email = request.POST.get(['email'][0], False)
