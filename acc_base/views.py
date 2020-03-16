@@ -153,6 +153,8 @@ def forgot_pass(request):
                     HttpResponse('Message is sent')
         else:
             HttpResponse('Bad email', status=404)
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
 @csrf_exempt
