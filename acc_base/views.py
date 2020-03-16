@@ -169,19 +169,19 @@ def reset_pass(request):
             try:
                 user = User.objects.get(email=user_email)
             except ObjectDoesNotExist:
-                HttpResponse('User with such email is not exist', status=404)
+                return HttpResponse('User with such email is not exist', status=404)
             else:
                 try:
                     token = TokenConfirm.objects.get(id=user.id)
                 except ObjectDoesNotExist:
-                    HttpResponse('User with such token is not exist', status=404)
+                    return HttpResponse('User with such token is not exist', status=404)
                 else:
                     if user_token == token:
                         user.set_password(new_password)
                         user.save()
                         token.delete()
                     else:
-                        HttpResponse('It is incorrect token', status=400)
+                        return HttpResponse('It is incorrect token', status=400)
             return HttpResponse('There is not such user ', status=404)
 
 
