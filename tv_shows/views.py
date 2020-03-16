@@ -2,7 +2,6 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.sessions.models import Session
 from rest_framework import authtoken
-from .models import TokenConfirm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
 import django
