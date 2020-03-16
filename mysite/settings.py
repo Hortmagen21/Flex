@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accBase.apps.AccConfig',
+    'acc_base.apps.AccConfig',
 
     #'mysite.polls.apps.PollsConfig',
     #'mysite.polls',
@@ -134,7 +134,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 django.setup()
 
-from polls.models import AccBase
+
 
 
 

@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
-    url(r'^', include('accBase.urls')),
+    url(r'accbase/', include('acc_base.urls')),
+    url(r'userprofile/', include('user_profile.urls')),
+    url(r'tvshows/', include('tv_shows.urls')),
 
     url(r'^admin/', admin.site.urls),
 ]

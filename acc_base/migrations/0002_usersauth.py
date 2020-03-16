@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accBase', '0001_initial'),
+        ('acc_base', '0001_initial'),
     ]
 
     operations = [
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='Usersauth',
             fields=[
                 ('token', models.CharField(max_length=200, primary_key=True, serialize=False)),
-                ('id', models.ForeignKey(blank=True, db_column='id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='accBase.Users')),
+                ('id', models.ForeignKey(blank=True, db_column='id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='acc_base.Users')),
             ],
             options={
                 'db_table': 'UsersAuth',
