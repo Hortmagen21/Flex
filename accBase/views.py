@@ -130,9 +130,9 @@ def verifying(request):
 @csrf_exempt
 def forgot_pass(request):
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         token = PasswordGenerator(minlen=8, maxlen=8)
-        email = request.GET.get(['email'][0], False)
+        email = request.POST.get(['email'][0], False)
         if email:
             send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com'
                       , [email], fail_silently=False)
