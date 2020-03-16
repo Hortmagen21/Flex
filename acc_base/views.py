@@ -180,7 +180,7 @@ def reset_pass(request):
                         token.delete()
                     else:
                         HttpResponse('It is incorrect token', status=400)
-            return HttpResponseRedirect('flex://login.com')
+            return HttpResponse('There is not such user ', status=404)
 
 
 

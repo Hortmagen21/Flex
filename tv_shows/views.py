@@ -13,7 +13,13 @@ from django.urls import reverse
 from django.template import loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
-
+def search_people(request):
+    if request.method == 'GET':
+        name = request.GET.get('name', '')
+        user_dict = User.objects.filter(name__contains=name)
+        print(user_dict, type(user_dict))
+        JsonResponse(user_dict)
 
