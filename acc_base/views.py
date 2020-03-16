@@ -127,8 +127,9 @@ def verifying(request):
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
+
 @csrf_exempt
-def forgot_pass(request):#is_active_check
+def forgot_pass(request):#is_active_check !!!!
     if request.method == 'POST':
         token = secrets.randbelow(8)
         email = request.POST.get(['email'][0], False)
@@ -176,6 +177,8 @@ def reset_pass(request):
                 except ObjectDoesNotExist:
                     return HttpResponse('User with such token is not exist', status=404)
                 else:
+                    print(token, type(token))
+                    print(user_token, type(user_token))
                     if user_token == token:
                         user.set_password(new_password)
                         user.save()
