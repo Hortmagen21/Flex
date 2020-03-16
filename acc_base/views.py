@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
 import django
 from django.contrib.auth.decorators import login_required
-from password_generator import PasswordGenerator
+import secrets
 from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
@@ -131,7 +131,7 @@ def verifying(request):
 def forgot_pass(request):
 
     if request.method == 'POST':
-        token = PasswordGenerator(minlen=8, maxlen=8)
+        token = secrets.randbelow(8)
         email = request.POST.get(['email'][0], False)
         if email:
             send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com'

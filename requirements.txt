@@ -1,6 +1,5 @@
 django
 django-heroku
 djangorestframework
-random-password-generator
 gunicorn
 psycopg2
