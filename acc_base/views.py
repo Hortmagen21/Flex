@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.template import loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django import forms
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
@@ -126,10 +127,8 @@ def verifying(request):
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
-
 @csrf_exempt
 def forgot_pass(request):
-
     if request.method == 'POST':
         token = secrets.randbelow(8)
         email = request.POST.get(['email'][0], False)
@@ -139,22 +138,23 @@ def forgot_pass(request):
             try:
                 user = User.objects.get(email=email)
             except ObjectDoesNotExist:
-                HttpResponse('User with such email is not exist', status=404)
+                return HttpResponse('User with such email is not exist', status=404)
             else:
                 try:
                     duplicate_token = TokenConfirm.objects.get(id=user.id)
                 except ObjectDoesNotExist:
                     user_token = TokenConfirm(id=user.id, token=token)
                     user_token.save()
-                    HttpResponse('Message is sent')
+                    return HttpResponse('Message is sent')
                 else:
                     duplicate_token.token = token
                     duplicate_token.save()
-                    HttpResponse('Message is sent')
+                    return HttpResponse('Message is sent')
         else:
-            HttpResponse('Bad email', status=404)
+            return HttpResponse('Bad email', status=404)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
+    return HttpResponse("Not valid date", status=400)
 
 
 @csrf_exempt
@@ -174,7 +174,7 @@ def reset_pass(request):
                 try:
                     token = TokenConfirm.objects.get(id=user.id)
                 except ObjectDoesNotExist:
-                    HttpResponse('User with such id is not exist', status=404)
+                    HttpResponse('User with such token is not exist', status=404)
                 else:
                     if user_token == token:
                         user.set_password(new_password)
