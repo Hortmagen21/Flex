@@ -131,7 +131,7 @@ def verifying(request):
 @csrf_exempt
 def forgot_pass(request):#is_active_check !!!!
     if request.method == 'POST':
-        token = secrets.randbelow(8)
+        token = secrets.randbelow(10000)
         email = request.POST.get(['email'][0], False)
         if email:
             send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com'
@@ -179,10 +179,12 @@ def reset_pass(request):
                 else:
                     print(token.token, type(token))
                     print(user_token, type(user_token))
+                    print(token.token==token)
                     if user_token == token.token:
                         user.set_password(new_password)
                         user.save()
                         token.delete()
+                        return HttpResponse('Everything is ok')
                     else:
                         return HttpResponse('It is incorrect token', status=400)
             return HttpResponse('There is not such user ', status=404)
