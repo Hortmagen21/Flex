@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tv_shows/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/migrations/0002_usersauth.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/migrations/0002_usersauth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/migrations/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/templates/registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/templates/registration.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accBase/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/acc_base/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysite/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysite/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tv_shows/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/tv_shows/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tv_shows/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tv_shows/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_profile/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,18 +26,49 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/acc_base/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="11" column="36" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
+            <state relative-caret-position="135">
+              <caret line="5" column="45" lean-forward="true" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#40#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tv_shows/urls.py">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="5" column="45" selection-start-line="5" selection-start-column="45" selection-end-line="5" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#40#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/acc_base/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="353">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+              <folding>
+                <element signature="e#0#57#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -59,16 +81,6 @@
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/user_profile/admin.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/user_profile/apps.py">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -88,7 +100,14 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/user_profile/urls.py">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
+              <folding>
+                <element signature="e#0#40#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -147,10 +166,11 @@
         <option value="$PROJECT_DIR$/accBase/urls.py" />
         <option value="$PROJECT_DIR$/accBase/templates/registration.html" />
         <option value="$PROJECT_DIR$/accBase/views.py" />
-        <option value="$PROJECT_DIR$/user_profile/urls.py" />
         <option value="$PROJECT_DIR$/mysite/settings.py" />
-        <option value="$PROJECT_DIR$/tv_shows/urls.py" />
         <option value="$PROJECT_DIR$/mysite/urls.py" />
+        <option value="$PROJECT_DIR$/user_profile/urls.py" />
+        <option value="$PROJECT_DIR$/tv_shows/urls.py" />
+        <option value="$PROJECT_DIR$/tv_shows/views.py" />
       </list>
     </option>
   </component>
@@ -189,11 +209,6 @@
               <item name="Flex" type="b2602c69:ProjectViewProjectNode" />
               <item name="Flex" type="462c0819:PsiDirectoryNode" />
               <item name="mysite" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Flex" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Flex" type="462c0819:PsiDirectoryNode" />
-              <item name="polls" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Flex" type="b2602c69:ProjectViewProjectNode" />
@@ -305,13 +320,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/django/conf/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="160" column="23" lean-forward="true" selection-start-line="160" selection-start-column="23" selection-end-line="160" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/accAplication/views.py" />
     <entry file="file://$PROJECT_DIR$/accAplication/__init__.py" />
     <entry file="file://$PROJECT_DIR$/polls/models.py">
@@ -451,32 +459,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/acc_base/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1173">
-          <caret line="134" column="42" selection-start-line="134" selection-start-column="42" selection-end-line="134" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/user_profile/admin.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/user_profile/apps.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/user_profile/models.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/user_profile/tests.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/user_profile/views.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/user_profile/urls.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/mysite/settings.py">
@@ -489,9 +481,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tv_shows/urls.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/mysite/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
@@ -502,10 +491,53 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/user_profile/models.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/user_profile/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/acc_base/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="11" column="36" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
+        <state relative-caret-position="135">
+          <caret line="5" column="45" lean-forward="true" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tv_shows/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="5" column="45" selection-start-line="5" selection-start-column="45" selection-end-line="5" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/acc_base/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
