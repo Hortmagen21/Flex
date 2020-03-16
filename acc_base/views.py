@@ -177,9 +177,9 @@ def reset_pass(request):
                 except ObjectDoesNotExist:
                     return HttpResponse('User with such token is not exist', status=404)
                 else:
-                    print(token, type(token))
+                    print(token.token, type(token))
                     print(user_token, type(user_token))
-                    if user_token == token:
+                    if user_token == token.token:
                         user.set_password(new_password)
                         user.save()
                         token.delete()
