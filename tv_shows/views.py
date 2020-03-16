@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
 import django
 from django.contrib.auth.decorators import login_required
-from password_generator import PasswordGenerator
 from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
