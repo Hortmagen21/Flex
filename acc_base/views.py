@@ -161,8 +161,8 @@ def forgot_pass(request):#is_active_check
 def reset_pass(request):
 
     if request.method == 'POST':
-        user_email = request.POST.get(['email'], False)
-        new_password = request.POST.get(['new_password'], False)
+        user_email = request.POST.get(['email'][0], False)
+        new_password = request.POST.get(['new_password'][0], False)
         user_token = request.POST.get(['user_token'][0], False)
 
         if user_email:
