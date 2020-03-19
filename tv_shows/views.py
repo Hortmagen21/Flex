@@ -11,14 +11,27 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.template import loader
 from django.shortcuts import render
+from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+import json
+from django.contrib.auth.decorators import login_required
+core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 
 
+def login_redirection(request):
+    if request.method == 'GET':
+        return render(request, 'login_redirect.html')
+
+
+@login_required(redirect_field_name=core_url+'tv_shows/login_redirection')
 def search_people(request):
     if request.method == 'GET':
         name = request.GET.get('name', '')
-        user_dict = User.objects.filter(name__contains=name)
-        print(user_dict, type(user_dict))
-        JsonResponse(user_dict)
+        user_row = list(User.objects.filter(username__contains=name))
+        user_list = {}
+        for user in user_row:
+            user_list.update({user.username: user.id})
+        return JsonResponse({"user_list": user_list}, content_type='application/json')
+
 

@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.template import loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django import forms
+
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
@@ -35,8 +35,10 @@ def registration(request):
             user = User.objects.create_user(username=username, password=password, email=email)
             user.is_active = False
             user.save()
-
-            url_confirm=core_url+'accbase/registration/ended?email={}'.format(user.email)
+            token = secrets.token_hex(nbytes=10)
+            token_confirm = TokenConfirm(id=user.id, token=token)
+            token_confirm.save()
+            url_confirm = core_url+'acc_base/registration/ended?token={}'.format(token)
             send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
                       , 'hortmagennn@gmail.com', [email], fail_silently=False, )
 
@@ -44,14 +46,14 @@ def registration(request):
     # session_hash = request.session.session_key
     # HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
-            csrf_token = django.middleware.csrf.get_token(request)
-            http_resp=HttpResponse()
-            http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
+            # csrf_token = django.middleware.csrf.get_token(request)
+            # http_resp=HttpResponse()
+            # http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
             print('I created user!!!!!!!')
 
     # serialized=UserSerializer(data=request.DATA)
 
-            return HttpResponse(http_resp)
+            return HttpResponse('I created user!!!!!!!')
 
         return HttpResponse("Such email is already exist", status=409)
     else:
@@ -59,10 +61,10 @@ def registration(request):
 
 
 @csrf_exempt
-def login(request):
-    if request.method == 'GET':
-        username = request.GET.get('username', '')
-        password = request.GET.get('password', '')
+def login(request):#POST
+    if request.method == 'POSR':
+        username = request.POST.get(['username'][0], False)
+        password = request.POST.get(['password'][0], False)
         print(username, type(username))
         print(password, type(password))
         user = auth.authenticate(request, username=username, password=password)
@@ -85,7 +87,7 @@ def login(request):
             return HttpResponse('Successful login')
         return HttpResponse("Unsuccessful login", status=404)
     else:
-        return HttpResponse("Pls ensure that you use GET method", status=405)
+        return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
 @csrf_protect
@@ -93,7 +95,7 @@ def logout(request):
     if request.method == 'GET':
         auth.logout(request)
         print('I logged out!!!')
-        return HttpResponse('acclogout')
+        return HttpResponse('acc is logout')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
@@ -113,17 +115,22 @@ def checklog(request):
 @csrf_exempt
 def verifying(request):
     if request.method == 'GET':
-        user_email = request.GET.get('email', '')
+        token = request.GET.get('token', '')
         try:
-            user = User.objects.get(email=user_email)
+            user_id = TokenConfirm.objects.get(token=token)
         except ObjectDoesNotExist:
-            return HttpResponse('Something go wrong with registration your acc,pls try again')
+            return HttpResponse('Such token verification does not exist', status=404)
         else:
-            user.is_active = True
-            user.save()
-            #template = loader.get_template('registration.html')
-            return render(request, 'registration.html')
-            #return HttpResponseRedirect('flex://main.com')
+
+            try:
+                user = User.objects.get(id=user_id.id)
+            except ObjectDoesNotExist:
+                return HttpResponse('Something go wrong with registration your acc,pls try again', status=404)
+            else:
+                user.is_active = True
+                user_id.delete()
+                user.save()
+                return render(request, 'registration.html')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
@@ -131,7 +138,7 @@ def verifying(request):
 @csrf_exempt
 def forgot_pass(request):#is_active_check !!!!
     if request.method == 'POST':
-        token = secrets.randbelow(10000)
+        token = secrets.token_hex(4)
         email = request.POST.get(['email'][0], False)
         if email:
             send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com'
@@ -177,9 +184,6 @@ def reset_pass(request):
                 except ObjectDoesNotExist:
                     return HttpResponse('User with such token is not exist', status=404)
                 else:
-                    print(token.token, type(token))
-                    print(user_token, type(user_token))
-                    print(token.token==token)
                     if user_token == token.token:
                         user.set_password(new_password)
                         user.save()
