@@ -46,14 +46,14 @@ def registration(request):
     # session_hash = request.session.session_key
     # HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
-            # csrf_token = django.middleware.csrf.get_token(request)
-            # http_resp=HttpResponse()
-            # http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
+            csrf_token = django.middleware.csrf.get_token(request)
+            http_resp=HttpResponse()
+            http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
             print('I created user!!!!!!!')
 
     # serialized=UserSerializer(data=request.DATA)
 
-            return HttpResponse('I created user!!!!!!!')
+            return HttpResponse(http_resp)
 
         return HttpResponse("Such email is already exist", status=409)
     else:
@@ -127,6 +127,7 @@ def verifying(request):
             else:
                 user.is_active = True
                 user_id.delete()
+                auth.login(request, user)
                 user.save()
                 return render(request, 'registration.html')
     else:
