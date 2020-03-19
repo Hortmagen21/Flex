@@ -47,7 +47,7 @@ def registration(request):
     # HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
             csrf_token = django.middleware.csrf.get_token(request)
-            http_resp=HttpResponse()
+            http_resp = HttpResponse()
             http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
             print('I created user!!!!!!!')
 
@@ -127,7 +127,8 @@ def verifying(request):
             else:
                 user.is_active = True
                 user_id.delete()
-                auth.login(request, user)
+                user = auth.authenticate(request, username=user.username, password=user.password)
+                auth.login(request,user)
                 user.save()
                 return render(request, 'registration.html')
     else:
