@@ -34,6 +34,8 @@ def registration(request):
         except ObjectDoesNotExist:
             user = User.objects.create_user(username=username, password=password, email=email)
             user.is_active = False
+            user = auth.authenticate(request, username=user.username, password=user.password)
+            auth.login(request, user)
             user.save()
             token = secrets.token_hex(nbytes=10)
             token_confirm = TokenConfirm(id=user.id, token=token)
@@ -127,8 +129,6 @@ def verifying(request):
             else:
                 user.is_active = True
                 user_id.delete()
-                user = auth.authenticate(request, username=user.username, password=user.password)
-                auth.login(request,user)
                 user.save()
                 return render(request, 'registration.html')
     else:
