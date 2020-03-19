@@ -8,13 +8,9 @@ import django
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
-from django.urls import reverse
 from django.template import loader
 from django.shortcuts import render
-from django.core import serializers
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-import json
 from django.contrib.auth.decorators import login_required
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 

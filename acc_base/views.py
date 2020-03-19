@@ -61,8 +61,8 @@ def registration(request):
 
 
 @csrf_exempt
-def login(request):#POST
-    if request.method == 'POSR':
+def login(request):
+    if request.method == 'POST':
         username = request.POST.get(['username'][0], False)
         password = request.POST.get(['password'][0], False)
         print(username, type(username))
@@ -74,9 +74,7 @@ def login(request):#POST
 
         if user is not None and user.is_active:
             auth.login(request, user)
-
             user.save()
-            print(request.user.is_authenticated)
             # setSessionHash(request.session)
             # session_hash = request.session.session_key
             # csrf_token = django.middleware.csrf.get_token(request)
