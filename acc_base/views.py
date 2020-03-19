@@ -34,9 +34,7 @@ def registration(request):
         except ObjectDoesNotExist:
             user = User.objects.create_user(username=username, password=password, email=email)
             user.is_active = False
-            user = auth.authenticate(request, username=user.username, password=user.password)
-            auth.login(request, user)
-            user.save()
+
             token = secrets.token_hex(nbytes=10)
             token_confirm = TokenConfirm(id=user.id, token=token)
             token_confirm.save()
@@ -52,9 +50,7 @@ def registration(request):
             http_resp = HttpResponse()
             http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
             print('I created user!!!!!!!')
-
-    # serialized=UserSerializer(data=request.DATA)
-
+            user.save()
             return HttpResponse(http_resp)
 
         return HttpResponse("Such email is already exist", status=409)
