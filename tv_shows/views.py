@@ -13,14 +13,17 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
+test_url = 'http://127.0.0.1:8000/'
+
 
 
 def login_redirection(request):
     if request.method == 'GET':
-        return render(request, 'login_redirect.html')
+        next = request.GET.get('next', '')
+        return render(request, 'tv_shows/templates/login_redirect.html')
 
 
-@login_required(redirect_field_name=core_url+'tv_shows/login_redirection')
+@login_required(login_url=test_url+'tv_shows/login_redirection')
 def search_people(request):
     if request.method == 'GET':
         name = request.GET.get('name', '')
