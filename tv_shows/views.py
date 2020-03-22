@@ -19,7 +19,8 @@ test_url = 'http://127.0.0.1:8000/'
 def login_redirection(request):
     if request.method == 'GET':
         next = request.GET.get('next', '')
-        return render(request, 'login_redirect.html')
+        return HttpResponse('fine')
+
 
 
 @login_required(login_url=core_url+'tv_shows/login_redirection')
