@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'acc_base.apps.AccConfig',
+    'tv_shows.apps.TvShowsConfig',
+    'user_profile.apps.UserProfileConfig',
 
     #'mysite.polls.apps.PollsConfig',
     #'mysite.polls',
