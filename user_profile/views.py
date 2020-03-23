@@ -21,8 +21,13 @@ def follow(request):
             user.save()
             return HttpResponse('i follow new user')
         else:
-            duplicate_user.followers.append(user_id)
-            duplicate_user.save()
-            return HttpResponse('i follow')
+            # print(duplicate_user.followers.count, type(duplicate_user.followers.count))
+            if duplicate_user.followers.count(user_id) < 1:
+                duplicate_user.followers.append(user_id)
+                duplicate_user.save()
+                return HttpResponse('i follow')
+            else:
+                return HttpResponse('You already followed him', status=409)
+
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
