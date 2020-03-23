@@ -8,6 +8,14 @@ core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
 
+def login_redirection(request):
+    if request.method == 'GET':
+        # next = request.GET.get('next', '')
+        http_resp = HttpResponse()
+        http_resp.__setitem__(header='isLogin', value=False)
+        return HttpResponse(http_resp)
+
+
 @login_required(login_url=core_url+'user_profile/login_redirection')
 def follow(request):
     if request.method == 'GET':
@@ -21,7 +29,6 @@ def follow(request):
             user.save()
             return HttpResponse('i follow new user')
         else:
-            # print(duplicate_user.followers.count, type(duplicate_user.followers.count))
             if duplicate_user.followers.count(user_id) < 1:
                 duplicate_user.followers.append(user_id)
                 duplicate_user.save()
