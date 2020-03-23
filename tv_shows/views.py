@@ -20,7 +20,6 @@ def login_redirection(request):
     if request.method == 'GET':
         next = request.GET.get('next', '')
         return render(request, 'login_redirect.html')
-        return HttpResponse('fine')
 
 
 @login_required(login_url=core_url+'tv_shows/login_redirection')
@@ -32,5 +31,6 @@ def search_people(request):
         for user in user_row:
             user_list.update({user.username: user.id})
         return JsonResponse({"user_list": user_list}, content_type='application/json')
-
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
 
