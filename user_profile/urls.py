@@ -5,6 +5,7 @@ from tv_shows.views import login_redirection
 from . import views
 urlpatterns = [
     path('follow', views.follow),
+    path('login_redirection', login_redirection),
 
 
 ]
