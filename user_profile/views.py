@@ -31,8 +31,8 @@ def follow(request):
 @login_required(login_url=test_url+'acc_base/login_redirection')
 def check_i_follow(request):
     if request.method == 'GET':
-        user_id = int(request.session['_auth_user_id'])
-        user_row = list(UserFollower.objects.filter(follower=user_id))
+        user_id = request.GET.get('id', int(request.session['_auth_user_id']))
+        user_row = list(UserFollower.objects.filter(follower=int(user_id)))
         return HttpResponse(len(user_row))
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
@@ -41,8 +41,8 @@ def check_i_follow(request):
 @login_required(login_url=test_url + 'acc_base/login_redirection')
 def followers(request):
     if request.method == 'GET':
-        user_id = int(request.session['_auth_user_id'])
-        user_row = list(UserFollower.objects.filter(id=user_id))
+        user_id = request.GET.get('id', int(request.session['_auth_user_id']))
+        user_row = list(UserFollower.objects.filter(id=int(user_id)))
         return HttpResponse(len(user_row))
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
