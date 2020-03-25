@@ -46,3 +46,19 @@ def followers(request):
         return HttpResponse(len(user_row))
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def view_acc(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('id', int(request.session['_auth_user_id']))
+        if user_id == int(request.session['_auth_user_id']):
+            http_resp = HttpResponse()
+            http_resp.__setitem__(header='isI', value=True)
+            return http_resp
+        else:
+            http_resp = HttpResponse()
+            http_resp.__setitem__(header='isI', value=False)
+            return http_resp
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)

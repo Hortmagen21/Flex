@@ -5,5 +5,6 @@ urlpatterns = [
     path('follow', views.follow),
     path('check_i_follow', views.check_i_follow),
     path('followers', views.followers),
+    path('view_acc', views.view_acc),
 
 ]
