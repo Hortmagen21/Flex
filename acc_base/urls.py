@@ -10,6 +10,7 @@ urlpatterns = [
     path('forgot_pass', views.forgot_pass),
     path('reset_pass', views.reset_pass),
     path('checklog', views.checklog),
+    path('login_redirection', views.login_redirection),
 
 ]
 

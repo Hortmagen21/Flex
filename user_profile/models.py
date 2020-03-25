@@ -6,12 +6,12 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 
 
-class UserFollowers(models.Model):
+class UserFollower(models.Model):
     id = models.IntegerField(primary_key=True)
-    followers = ArrayField(base_field=models.IntegerField(null=True, blank=True), blank=True)  # This field type is a guess.
+    follower = models.IntegerField()
 
     class Meta:
-        db_table = 'user_followers'
+        db_table = 'user_follower'
+        unique_together = (('id', 'follower'),)

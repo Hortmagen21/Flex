@@ -16,15 +16,7 @@ core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
 
-def login_redirection(request):
-    if request.method == 'GET':
-        # next = request.GET.get('next', '')
-        http_resp = HttpResponse()
-        http_resp.__setitem__(header='isLogin', value=False)
-        return HttpResponse(http_resp)
-
-
-@login_required(login_url=core_url+'tv_shows/login_redirection')
+@login_required(login_url=core_url+'acc_base/login_redirection')
 def search_people(request):
     if request.method == 'GET':
         name = request.GET.get('name', '')

@@ -4,5 +4,4 @@ from django.urls import path
 from . import views
 urlpatterns = [
     path('search_people', views.search_people),
-    path('login_redirection', views.login_redirection),
 ]

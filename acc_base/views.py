@@ -190,6 +190,14 @@ def reset_pass(request):
             return HttpResponse('There is not such user ', status=404)
 
 
+def login_redirection(request):
+    if request.method == 'GET':
+        # next = request.GET.get('next', '')
+        http_resp = HttpResponse()
+        http_resp.__setitem__(header='isLogin', value=False)
+        http_resp.status_code = 302
+        return http_resp
+
 
 
 
