@@ -9,7 +9,7 @@ core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
 
-@login_required(login_url=test_url+'acc_base/login_redirection')
+@login_required(login_url=core_url+'acc_base/login_redirection')
 def follow(request):
     if request.method == 'GET':
         user_follow = request.GET.get('id', ' ')
@@ -28,7 +28,7 @@ def follow(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-@login_required(login_url=test_url+'acc_base/login_redirection')
+@login_required(login_url=core_url+'acc_base/login_redirection')
 def check_i_follow(request):
     if request.method == 'GET':
         user_id = request.GET.get('id', int(request.session['_auth_user_id']))
@@ -38,7 +38,7 @@ def check_i_follow(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-@login_required(login_url=test_url + 'acc_base/login_redirection')
+@login_required(login_url=core_url + 'acc_base/login_redirection')
 def followers(request):
     if request.method == 'GET':
         user_id = request.GET.get('id', int(request.session['_auth_user_id']))
