@@ -6,6 +6,7 @@ from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
+import django
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -49,13 +50,14 @@ def followers(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def view_acc(request):
     if request.method == 'POST':
         user_id = request.POST.get('id', int(request.session['_auth_user_id']))
         if user_id == int(request.session['_auth_user_id']):
             http_resp = HttpResponse()
+            csrf_token = django.middleware.csrf.get_token(request)
+            http_resp.__setitem__(header='X-CSRF-TOKEN', value=str(csrf_token))
             http_resp.__setitem__(header='isI', value=True)
             return http_resp
         else:
