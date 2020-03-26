@@ -47,11 +47,13 @@
             android:text="@string/more_menu_icon"
             android:textSize="30sp" />
     </RelativeLayout>
+
     <TextView
         android:id="@+id/post_text"
         style="@style/Text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
+
     <ImageView
         android:id="@+id/main_image"
         android:layout_width="match_parent"
@@ -59,7 +61,7 @@
         android:adjustViewBounds="true"
         android:layout_marginHorizontal="15dp"
         android:scaleType="centerCrop"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <RelativeLayout
         android:id="@+id/below_layout"
@@ -146,11 +148,12 @@
             android:layout_toRightOf="@id/share_icon"
             android:text="1234"
             android:textSize="20sp" />
+
         <FrameLayout
             android:id="@+id/comment_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/fire_icon"/>
+            android:layout_below="@id/fire_icon" />
 
     </RelativeLayout>
 

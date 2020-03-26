@@ -13,4 +13,6 @@
     <string name="share_icon">\uf1e0</string>
     <string name="followers_text">Followers</string>
     <string name="followed_text">Followed</string>
+    <string name="already_account">Already have an account?</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
 </resources>

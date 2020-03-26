@@ -10,8 +10,7 @@
         android:id="@+id/frame_container"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_above="@id/bottom_bar"
-        />
+        android:layout_above="@id/bottom_bar" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_bar"
@@ -23,8 +22,7 @@
         style="@style/Widget.Design.BottomNavigationView"
         app:itemIconTint="@drawable/item_state"
         app:itemTextColor="@drawable/item_state"
-        android:background="@color/colorGrayishWhite"
-        />
+        android:background="@color/colorGrayishWhite" />
 
 
 </RelativeLayout>

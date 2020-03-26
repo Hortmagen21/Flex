@@ -11,33 +11,44 @@ import com.example.flex.POJO.Comment
 import com.example.flex.R
 import com.squareup.picasso.Picasso
 
-class CommentFragment(private val comment: Comment,private val OnCommentClick:onCommentClickListener):Fragment() {
+class CommentFragment(
+    private val comment: Comment,
+    private val OnCommentClick: onCommentClickListener
+) : Fragment() {
     lateinit var v: View
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        v=inflater.inflate(R.layout.comment_fragment,container,false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        v = inflater.inflate(R.layout.comment_fragment, container, false)
         setComment()
         addActionListener()
         return v
     }
-    private fun setComment(){
-        val photo=v.findViewById<ImageView>(R.id.user_comment_icon)
-        val name=v.findViewById<TextView>(R.id.user_comment_name)
-        val text =v.findViewById<TextView>(R.id.comment_text)
+
+    private fun setComment() {
+        val photo = v.findViewById<ImageView>(R.id.user_comment_icon)
+        val name = v.findViewById<TextView>(R.id.user_comment_name)
+        val text = v.findViewById<TextView>(R.id.comment_text)
         Picasso.get().load(comment.user.imageUrl).into(photo)
-        name.text=comment.user.name
-        text.text=comment.text
+        name.text = comment.user.name
+        text.text = comment.text
     }
-    private fun addActionListener(){
-        val photo=v.findViewById<ImageView>(R.id.user_comment_icon)
+
+    private fun addActionListener() {
+        val photo = v.findViewById<ImageView>(R.id.user_comment_icon)
         photo.setOnClickListener {
             OnCommentClick.onCommentClick()
         }
     }
-    interface onCommentClickListener{
+
+    interface onCommentClickListener {
         fun onCommentClick()
     }
-    fun addThisComment(id:Int){
-        fragmentManager!!.beginTransaction().replace(id,this).commit()
+
+    fun addThisComment(id: Int) {
+        fragmentManager!!.beginTransaction().replace(id, this).commit()
     }
 }

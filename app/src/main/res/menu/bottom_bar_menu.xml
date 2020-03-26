@@ -6,34 +6,29 @@
         android:title="Home"
         android:enabled="true"
         android:icon="@drawable/ic_home"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_tv"
+        android:enabled="true"
+        android:icon="@drawable/ic_live_tv"
+        android:title="Live TV"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_map"
+        android:enabled="true"
+        android:icon="@drawable/ic_map"
+        android:title="Map"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_camera"
         android:title="Camera"
         android:enabled="true"
         android:icon="@drawable/ic_camera"
-        app:showAsAction="ifRoom"
-        />
-    <item
-        android:id="@+id/action_map"
-        android:title="Map"
-        android:enabled="true"
-        android:icon="@drawable/ic_map"
-        app:showAsAction="ifRoom"
-        />
-    <item
-        android:id="@+id/action_tv"
-        android:title="Live TV"
-        android:enabled="true"
-        android:icon="@drawable/ic_live_tv"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_account"
         android:title="Account"
         android:enabled="true"
         android:icon="@drawable/ic_perm_identity"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 </menu>

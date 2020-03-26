@@ -9,17 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.flex.Fragments.CommentFragment
 import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
-import com.example.flex.PostView
 import com.example.flex.R
 import com.squareup.picasso.Picasso
 
-class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder> {
-    private var onUserClickListener: OnUserClickListener
+class PostAdapter(private var onUserClickListener: OnUserClickListener) :
+    RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
     private var postList = mutableListOf<Post>()
-
-    constructor(onUserClickListener: OnUserClickListener) {
-        this.onUserClickListener = onUserClickListener
-    }
 
     class PostViewHolder(
         private val v: View,
@@ -91,8 +86,7 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view:View=inflater.inflate(R.layout.published_photo_layout, parent, false)
-
+        val view: View = inflater.inflate(R.layout.published_photo_layout, parent, false)
         return PostViewHolder(view, onUserClickListener)
     }
 

@@ -8,14 +8,19 @@ import androidx.fragment.app.Fragment
 import com.example.flex.R
 
 class MapFragment : Fragment() {
-    lateinit var v:View
+    lateinit var v: View
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        v=inflater.inflate(R.layout.fragment_photo,container,false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        v = inflater.inflate(R.layout.fragment_photo, container, false)
         addActionListener()
         return v
     }
-    fun addActionListener(){
+
+    fun addActionListener() {
 
     }
 }

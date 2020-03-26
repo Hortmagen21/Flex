@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,21 +9,21 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_icon_main"
         style="@style/Icon.Main"
-        android:src="@drawable/ic_launcher_background"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background" />
 
     <LinearLayout
         android:id="@+id/followers_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignTop="@id/user_icon_main"
+        android:layout_alignBottom="@id/user_icon_main"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_toEndOf="@id/user_icon_main"
         android:layout_toRightOf="@id/user_icon_main"
         android:gravity="center"
-        android:layout_alignBottom="@id/user_icon_main"
-        android:layout_alignTop="@id/user_icon_main"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/followers_count"
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="15651" />
+
         <TextView
             android:id="@+id/followers_text"
             style="@style/Text"
@@ -37,17 +39,18 @@
             android:layout_height="wrap_content"
             android:text="@string/followers_text" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignTop="@id/user_icon_main"
+        android:layout_alignBottom="@id/user_icon_main"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_toEndOf="@+id/followers_layout"
         android:layout_toRightOf="@+id/followers_layout"
         android:gravity="center"
-        android:layout_alignBottom="@id/user_icon_main"
-        android:layout_alignTop="@id/user_icon_main"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/followed_count"
@@ -55,6 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="15651" />
+
         <TextView
             android:id="@+id/followed_text"
             style="@style/Text"
@@ -63,29 +67,17 @@
             android:text="@string/followed_text" />
     </LinearLayout>
 
-    <Button
-        android:layout_below="@id/user_icon_main"
-        android:id="@+id/button_registration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registration"/>
-    <Button
-        android:layout_below="@id/button_registration"
-        android:id="@+id/button_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign In" />
 
     <Button
-        android:id="@+id/button_logout"
-        android:layout_below="@id/button_login"
+        android:id="@+id/button_follow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Logout" />
-    <Button
-        android:id="@+id/button_checkLog"
-        android:layout_below="@id/button_logout"
+        android:layout_below="@id/user_icon_main"
+        android:text="Follow" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_photos_account"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CheckLog" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/button_follow"/>
 </RelativeLayout>

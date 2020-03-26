@@ -19,13 +19,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val action = intent?.action
+        val data = intent?.data
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, home, "fragment_tag")
             .commit()
-        val mActionBar = supportActionBar
-        mActionBar?.setDisplayShowHomeEnabled(true);
-        mActionBar?.setLogo(R.drawable.ic_camera);
-        mActionBar?.setDisplayUseLogoEnabled(true);
         setActionListener()
     }
 
@@ -60,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                             account = AccountFragment()
                             isAddToBackStack = false
                         }
+                        account.activity = this
                         account
                     }
                     R.id.action_camera -> {

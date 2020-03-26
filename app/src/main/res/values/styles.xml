@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorGrayish</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -13,23 +13,33 @@
         <item name="android:layout_width">@dimen/icon_size</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
+
     <style name="Icon.Mini">
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_width">60dp</item>
     </style>
+
     <style name="Icon.Main">
         <item name="android:layout_height">130dp</item>
         <item name="android:layout_width">130dp</item>
     </style>
+
     <style name="Text">
         <item name="android:textSize">25sp</item>
         <item name="android:textColor">@color/text_black</item>
     </style>
+
     <style name="TextIconSolid">
         <item name="android:textColor">@color/text_black</item>
         <item name="fontFamily">@font/font_awesome_solid</item>
     </style>
+
     <style name="TextIcon">
         <item name="fontFamily">@font/font_awesome</item>
+    </style>
+
+    <style name="TextHint">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorDarkerGray</item>
     </style>
 </resources>

@@ -4,4 +4,37 @@
     android:layout_height="match_parent"
     android:background="@android:color/holo_purple">
 
+    <Button
+        android:id="@+id/button_registration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registration" />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_registration"
+        android:text="Sign In" />
+
+    <Button
+        android:id="@+id/button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_login"
+        android:text="Logout" />
+
+    <Button
+        android:id="@+id/button_checkLog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_logout"
+        android:text="CheckLog" />
+
+    <Button
+        android:id="@+id/button_change_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_checkLog"
+        android:text="Change pass" />
 </RelativeLayout>

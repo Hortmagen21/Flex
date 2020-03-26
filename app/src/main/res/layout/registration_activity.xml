@@ -29,7 +29,7 @@
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:padding="5dp"
-        android:background="@drawable/registration_fields"/>
+        android:background="@drawable/registration_fields" />
 
     <EditText
         android:id="@+id/login"
@@ -43,7 +43,7 @@
         android:hint="@string/login"
         android:inputType="textPersonName"
         android:padding="5dp"
-        android:background="@drawable/registration_fields"/>
+        android:background="@drawable/registration_fields" />
 
     <EditText
         android:id="@+id/password"
@@ -57,7 +57,7 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:padding="5dp"
-        android:background="@drawable/registration_fields"/>
+        android:background="@drawable/registration_fields" />
 
     <EditText
         android:id="@+id/repeat_password"
@@ -71,7 +71,15 @@
         android:hint="@string/repeat_password"
         android:inputType="textPassword"
         android:padding="5dp"
-        android:background="@drawable/registration_fields"/>
+        android:background="@drawable/registration_fields" />
+
+    <TextView
+        android:id="@+id/have_acc"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/already_account" />
 
     <Button
         android:id="@+id/sign_up_button"
@@ -82,16 +90,4 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/registration_fields"
         android:text="@string/sign_up" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 </LinearLayout>
