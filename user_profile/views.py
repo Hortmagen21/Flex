@@ -49,7 +49,7 @@ def followers(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-@csrf_exempt
+
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def view_acc(request):
     if request.method == 'POST':
