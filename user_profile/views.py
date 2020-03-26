@@ -50,8 +50,8 @@ def followers(request):
 
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def view_acc(request):
-    if request.method == 'POST':
-        user_id = request.POST.get('id', int(request.session['_auth_user_id']))
+    if request.method == 'GET':
+        user_id = request.GET.get('id', int(request.session['_auth_user_id']))
         if user_id == int(request.session['_auth_user_id']):
             http_resp = HttpResponse()
             http_resp.__setitem__(header='isI', value=True)
