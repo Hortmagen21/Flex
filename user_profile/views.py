@@ -50,14 +50,13 @@ def followers(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+@csrf_exempt
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def view_acc(request):
     if request.method == 'POST':
-        user_id = request.POST.get('id', int(request.session['_auth_user_id']))
+        user_id = request.POST.get(['id'][0], int(request.session['_auth_user_id']))
         if user_id == int(request.session['_auth_user_id']):
             http_resp = HttpResponse()
-            csrf_token = django.middleware.csrf.get_token(request)
-            http_resp.__setitem__(header='X-CSRF-TOKEN', value=str(csrf_token))
             http_resp.__setitem__(header='isI', value=True)
             return http_resp
         else:
