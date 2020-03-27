@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
 import django
+import urllib
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -48,6 +49,20 @@ def followers(request):
         return HttpResponse(len(user_row))
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_exempt
+# test
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def add_photo(request):
+    if request.method == "POST":
+        img = request.GET.get('img', '')
+        resource = urllib.urlopen(img)
+        out = open("Photos/test.jpg", "wb")
+        out.write(resource.read())
+        return HttpResponse("ok")
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
 @csrf_exempt
