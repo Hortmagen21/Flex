@@ -56,7 +56,7 @@ def followers(request):
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def add_photo(request):
     if request.method == "POST":
-        img = request.GET.get('img', '')
+        img = request.POST.get('img', '')
         resource = urllib.urlopen(img)
         out = open("Photos/test.jpg", "wb")
         out.write(resource.read())
