@@ -13,5 +13,17 @@ class UserFollower(models.Model):
     follower = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'user_follower'
         unique_together = (('id', 'follower'),)
+
+
+class PhotoBase(models.Model):
+    id = models.IntegerField(primary_key=True)
+    username = models.CharField(max_length=100, blank=True, null=True)
+    day = models.DateTimeField()
+    img = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = 'photo_base'
+        unique_together = (('id', 'img'),)

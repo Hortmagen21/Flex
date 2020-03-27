@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from user_profile.models import UserFollower
+from user_profile.models import UserFollower,PhotoBase
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
@@ -7,7 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
 import django
-import urllib
+
+import datetime
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -56,10 +57,16 @@ def followers(request):
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def add_photo(request):
     if request.method == "POST":
-        img = request.POST.get('img', '')
-        resource = urllib.urlopen(img)
-        out = open("Photos/test.jpg", "wb")
-        out.write(resource.read())
+        img = request.FILES['img']
+        username = str(request.session['username'])
+        time = datetime.datetime
+        photo = PhotoBase(username=username, time=time, img=" ")
+        url = "photos/{username}{id}.jpg".format(username=username, id=photo.id)
+        with open(url, 'wb+') as destination:
+            for chunk in img.chunks():
+                destination.write(chunk)
+        photo.img = core_url+"user_profile/"+url
+        photo.save()
         return HttpResponse("ok")
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)

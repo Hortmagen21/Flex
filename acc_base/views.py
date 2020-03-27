@@ -63,8 +63,6 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get(['username'][0], False)
         password = request.POST.get(['password'][0], False)
-        print(username, type(username))
-        print(password, type(password))
         user = auth.authenticate(request, username=username, password=password)
 
         if username == False or password == False:
@@ -72,6 +70,7 @@ def login(request):
 
         if user is not None and user.is_active:
             auth.login(request, user)
+            request.session['username'] = username
             user.save()
             # setSessionHash(request.session)
             # session_hash = request.session.session_key
