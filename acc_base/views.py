@@ -72,6 +72,9 @@ def login(request):
             auth.login(request, user)
             request.session['username'] = username
             user.save()
+            http_resp = HttpResponse()
+            # csrf_token = django.middleware.csrf.get_token(request)
+            # http_resp.__setitem__(header='X-CSRF-TOKEN', value=csrf_token)
             # setSessionHash(request.session)
             # session_hash = request.session.session_key
             # csrf_token = django.middleware.csrf.get_token(request)
@@ -79,7 +82,7 @@ def login(request):
             # must be rechanged on cookies
             # http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
             print('I log in !!!!!!!')
-            return HttpResponse('Successful login')
+            return http_resp
         return HttpResponse("Unsuccessful login", status=404)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -96,7 +99,7 @@ def logout(request):
 
 
 @csrf_protect
-def checklog(request):
+def check_log(request):
     if request.method == 'GET':
         print(request.user.is_authenticated)
         if request.user.is_authenticated:
@@ -193,8 +196,7 @@ def login_redirection(request):
     if request.method == 'GET':
         # next = request.GET.get('next', '')
         http_resp = HttpResponse()
-        http_resp.__setitem__(header='isLogin', value=False)
-        http_resp.status_code = 302
+        http_resp.status_code = 401
         return http_resp
 
 

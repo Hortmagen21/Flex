@@ -9,7 +9,7 @@ urlpatterns = [
     path('logout', views.logout),
     path('forgot_pass', views.forgot_pass),
     path('reset_pass', views.reset_pass),
-    path('checklog', views.checklog),
+    path('check_log', views.check_log),
     path('login_redirection', views.login_redirection),
 
 ]

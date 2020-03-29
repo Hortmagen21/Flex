@@ -52,27 +52,29 @@ def followers(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
-@csrf_exempt
-# test
+@csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
-def add_photo(request):
+def add_post(request):
     if request.method == "POST":
         img = request.FILES['img']
+        description = request.POST.get(['description'][0], '')
         username = str(request.session['username'])
-        time = datetime.datetime
-        photo = PhotoBase(username=username, time=time, img=" ")
-        url = "photos/{username}{id}.jpg".format(username=username, id=photo.id)
+        time = datetime.datetime.today()
+        #without user-> id.user
+        photo = PhotoBase(username=username, day=time, img=" ", description=description)
+        photo.save()
+        url = "user_profile/photos/{username}_{id}.jpg".format(username=username, id=photo.id)
         with open(url, 'wb+') as destination:
             for chunk in img.chunks():
                 destination.write(chunk)
-        photo.img = core_url+"user_profile/"+url
+        photo.img = core_url+url
         photo.save()
-        return HttpResponse("ok")
+        return HttpResponse('ok')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
-@csrf_exempt
+@csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def view_acc(request):
     if request.method == 'POST':
