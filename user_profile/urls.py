@@ -7,5 +7,6 @@ urlpatterns = [
     path('followers', views.followers),
     path('view_acc', views.view_acc),
     path('add_post', views.add_post),
+    path('view_photo', views.view_photo),
 
 ]
