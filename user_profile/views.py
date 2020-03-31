@@ -94,10 +94,10 @@ def view_acc(request):
             isI = False
         print(isI)
         posts_row = list(PostBase.objects.filter(user_id=user_id))
-        posts_list = {}
+        posts = []
         for post in posts_row:
-            posts_list.update({post.img: {post.id: {post.milliseconds: post.description}}})
-        return JsonResponse({isI: posts_list}, content_type='application/json')
+            posts.append({'img_src': post.img, 'date': post.milliseconds, 'description': post.description, 'post_id': post.id})
+        return JsonResponse({'isMyUser': user_id, 'posts':posts}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
