@@ -17,13 +17,14 @@ class UserFollower(models.Model):
         unique_together = (('id', 'follower'),)
 
 
-class PhotoBase(models.Model):
+class PostBase(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=100, blank=True, null=True)
-    day = models.DateTimeField()
-    img = models.CharField(max_length=200)
-    description = models.CharField(max_length=150, blank=True, null=True)
+    user_id = models.IntegerField(blank=True, null=True)
+    milliseconds = models.BigIntegerField()
+    img = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-        db_table = 'photo_base'
+        ordering = ('milliseconds',)
+        db_table = 'post_base'
         unique_together = (('id', 'img'),)

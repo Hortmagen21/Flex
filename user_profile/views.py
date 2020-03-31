@@ -1,15 +1,16 @@
 from django.shortcuts import render
-from user_profile.models import UserFollower,PhotoBase
-from django.http import HttpResponse,HttpResponseRedirect,HttpResponseNotFound
+from user_profile.models import UserFollower, PostBase
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
-from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.http import JsonResponse
 import django
 from urllib.parse import urlparse
 import mimetypes
+from django.utils.datastructures import MultiValueDictKeyError
 
 import datetime
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
@@ -59,20 +60,24 @@ def followers(request):
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def add_post(request):
     if request.method == "POST":
-        img = request.FILES['img']
-        description = request.POST.get(['description'][0], '')
-        username = str(request.session['username'])
-        time = datetime.datetime.today()
-        #without user-> id.user
-        photo = PhotoBase(username=username, day=time, img=" ", description=description)
-        photo.save()
-        url = "user_profile/photos/{username}_{id}.jpg".format(username=username, id=photo.id)
-        with open(url, 'wb+') as destination:
-            for chunk in img.chunks():
-                destination.write(chunk)
-        photo.img = core_url+url
-        photo.save()
-        response = JsonResponse({'src': core_url+url})
+        try:
+            img = request.FILES['img']
+        except MultiValueDictKeyError:
+            response = HttpResponseNotFound()
+        else:
+            description = request.POST.get(['description'][0], '')
+            user_id = int(request.session['_auth_user_id'])
+            time = datetime.datetime.today()
+            milliseconds = time.timestamp()*1000
+            print(milliseconds, type(milliseconds))
+            url = "user_profile/photos/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
+            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=" ", description=description)
+            photo.img = core_url + url
+            photo.save()
+            with open(url, 'wb+') as destination:
+                for chunk in img.chunks():
+                    destination.write(chunk)
+            response = JsonResponse({'src': core_url+url})
         return response
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -83,14 +88,16 @@ def add_post(request):
 def view_acc(request):
     if request.method == 'POST':
         user_id = request.POST.get(['id'][0], int(request.session['_auth_user_id']))
-        if user_id == int(request.session['_auth_user_id']):
-            http_resp = HttpResponse()
-            http_resp.__setitem__(header='isI', value=True)
-            return http_resp
+        if int(user_id) == int(request.session['_auth_user_id']):
+            isI = True
         else:
-            http_resp = HttpResponse()
-            http_resp.__setitem__(header='isI', value=False)
-            return http_resp
+            isI = False
+        print(isI)
+        posts_row = list(PostBase.objects.filter(user_id=user_id))
+        posts_list = {}
+        for post in posts_row:
+            posts_list.update({post.img: {post.id: {post.milliseconds: post.description}}})
+        return JsonResponse({isI: posts_list}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
