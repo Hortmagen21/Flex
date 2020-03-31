@@ -97,7 +97,7 @@ def view_acc(request):
         posts = []
         for post in posts_row:
             posts.append({'img_src': post.img, 'date': post.milliseconds, 'description': post.description, 'post_id': post.id})
-        return JsonResponse({'isMyUser': user_id, 'posts':posts}, content_type='application/json')
+        return JsonResponse({'isMyUser': user_id, 'posts': posts}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 

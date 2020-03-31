@@ -72,7 +72,7 @@ def login(request):
             auth.login(request, user)
             request.session['username'] = username
             user.save()
-            http_resp = HttpResponse()
+            http_resp = HttpResponse(user.id)
             # csrf_token = django.middleware.csrf.get_token(request)
             # http_resp.__setitem__(header='X-CSRF-TOKEN', value=csrf_token)
             # setSessionHash(request.session)
