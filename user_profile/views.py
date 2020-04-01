@@ -74,13 +74,12 @@ def add_post(request):
             url = "user_profile/photos/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
             url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
             photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
-
             photo.save()
             with open(url, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
             im = Image.open(url)
-            out = im.resize((128, 128))
+            out = im.resize((384, 384))
             out.save(url_mini)
             response = JsonResponse({'src': core_url+url, 'src_mini': core_url+url_mini})
         return response
