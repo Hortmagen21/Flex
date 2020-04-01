@@ -71,7 +71,8 @@ def add_post(request):
             time = datetime.datetime.today()
             milliseconds = time.timestamp()*1000
             url = "user_profile/photos/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
-            url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
+            url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id,
+                                                                                      milliseconds=milliseconds)
             photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description,
                              img_mini=core_url + url_mini)
             photo.save()
@@ -95,7 +96,7 @@ def view_acc(request):
         posts_row = list(PostBase.objects.filter(user_id=user_id))
         posts = []
         for post in posts_row:
-            posts.append({'img_src': post.img_mini, 'date': post.milliseconds, 'description': post.description,
+            posts.append({'src_mini': post.img_mini, 'date': post.milliseconds, 'description': post.description,
                           'post_id': post.id})
         return JsonResponse({'isMyUser': user_id, 'posts': posts}, content_type='application/json')
     else:
