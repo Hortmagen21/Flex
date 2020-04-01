@@ -109,15 +109,15 @@ def view_photo(request):
     if request.method == 'GET':
         img = request.GET.get('img', '')
         src = urlparse(img)
-        try:
-            file = open(src[2][1:], 'rb+')
-            mime_type_guess = mimetypes.guess_type(src[2][1:])
-            print(mime_type_guess)
-            if mime_type_guess is not None:
-                response = HttpResponse(file, content_type=mime_type_guess[0])
-            response['Content-Disposition'] = 'attachment; filename="{}"'.format(img)
-        except IOError:
-            response = HttpResponseNotFound()
+        # try:
+        file = open(src[2][1:], 'rb+')
+        mime_type_guess = mimetypes.guess_type(src[2][1:])
+        print(mime_type_guess)
+        if mime_type_guess is not None:
+            response = HttpResponse(file, content_type=mime_type_guess[0])
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(img)
+        # except IOError:
+            # response = HttpResponseNotFound()
         return response
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
