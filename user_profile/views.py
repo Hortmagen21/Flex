@@ -13,6 +13,7 @@ import mimetypes
 from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
 
+
 import datetime
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
@@ -71,10 +72,9 @@ def add_post(request):
             time = datetime.datetime.today()
             milliseconds = time.timestamp()*1000
             url = "user_profile/photos/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
-            url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id,
-                                                                                      milliseconds=milliseconds)
-            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description,
-                             img_mini=core_url + url_mini)
+            url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
+            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
+
             photo.save()
             with open(url, 'wb+') as destination:
                 for chunk in img.chunks():
@@ -110,6 +110,7 @@ def view_photo(request):
         img = request.GET.get('img', '')
         src = urlparse(img)
         # try:
+        print(src[2][1:])
         file = open(src[2][1:], 'rb+')
         mime_type_guess = mimetypes.guess_type(src[2][1:])
         print(mime_type_guess)
