@@ -3,5 +3,4 @@ django-heroku
 djangorestframework
 gunicorn
 Pillow
-PIL
 psycopg2
