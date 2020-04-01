@@ -11,6 +11,7 @@ import django
 from urllib.parse import urlparse
 import mimetypes
 from django.utils.datastructures import MultiValueDictKeyError
+from PIL import Image
 
 import datetime
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
@@ -69,15 +70,18 @@ def add_post(request):
             user_id = int(request.session['_auth_user_id'])
             time = datetime.datetime.today()
             milliseconds = time.timestamp()*1000
-            print(milliseconds, type(milliseconds))
             url = "user_profile/photos/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
-            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=" ", description=description)
-            photo.img = core_url + url
+            url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
+            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description,
+                             img_mini=core_url + url_mini)
             photo.save()
             with open(url, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
-            response = JsonResponse({'src': core_url+url})
+            im = Image.open(url)
+            out = im.resize((128, 128))
+            out.save(url_mini)
+            response = JsonResponse({'src': core_url+url, 'src_mini': core_url+url_mini})
         return response
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -88,15 +92,11 @@ def add_post(request):
 def view_acc(request):
     if request.method == 'POST':
         user_id = request.POST.get(['id'][0], int(request.session['_auth_user_id']))
-        if int(user_id) == int(request.session['_auth_user_id']):
-            isI = True
-        else:
-            isI = False
-        print(isI)
         posts_row = list(PostBase.objects.filter(user_id=user_id))
         posts = []
         for post in posts_row:
-            posts.append({'img_src': post.img, 'date': post.milliseconds, 'description': post.description, 'post_id': post.id})
+            posts.append({'img_src': post.img_mini, 'date': post.milliseconds, 'description': post.description,
+                          'post_id': post.id})
         return JsonResponse({'isMyUser': user_id, 'posts': posts}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
