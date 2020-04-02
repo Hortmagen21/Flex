@@ -21,6 +21,6 @@ urlpatterns = [
     url(r'acc_base/', include('acc_base.urls')),
     url(r'user_profile/', include('user_profile.urls')),
     url(r'tv_shows/', include('tv_shows.urls')),
-
+    url(r'home/', include('home.urls')),
     url(r'^admin/', admin.site.urls),
 ]

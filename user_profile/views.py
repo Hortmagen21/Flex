@@ -1,17 +1,17 @@
 from django.shortcuts import render
-from user_profile.models import UserFollower, PostBase
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from user_profile.models import UserFollower, PostBase, Likes, Comments, UserAvatar
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.http import JsonResponse
-import django
 from urllib.parse import urlparse
 import mimetypes
 from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
+from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 
 
 import datetime
@@ -108,16 +108,71 @@ def view_photo(request):
     if request.method == 'GET':
         img = request.GET.get('img', '')
         src = urlparse(img)
-        # try:
-        print(src[2][1:])
-        file = open(src[2][1:], 'rb+')
-        mime_type_guess = mimetypes.guess_type(src[2][1:])
-        print(mime_type_guess)
-        if mime_type_guess is not None:
-            response = HttpResponse(file, content_type=mime_type_guess[0])
-        response['Content-Disposition'] = 'attachment; filename="{}"'.format(img)
-        # except IOError:
-            # response = HttpResponseNotFound()
+        try:
+            print(src[2][1:])
+            file = open(src[2][1:], 'rb+')
+            mime_type_guess = mimetypes.guess_type(src[2][1:])
+            print(mime_type_guess)
+            if mime_type_guess is not None:
+                response = HttpResponse(file, content_type=mime_type_guess[0])
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(img)
+        except IOError:
+            response = HttpResponseNotFound()
         return response
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def like(request):
+    if request.method == 'POST':
+        user_id = int(request.session['_auth_user_id'])
+        id_post = request.POST.get(['id'][0], False)
+        if type(id_post) == bool:
+            return HttpResponseBadRequest()
+        feedback = Likes(id_post=int(id_post), id_user=int(user_id))
+        feedback.save()
+        return HttpResponse('liked')
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def comment(request):
+    if request.method == 'POST':
+        user_id = int(request.session['_auth_user_id'])
+        id_post = request.POST.get(['id'][0], False)
+        if type(id_post) == bool:
+            return HttpResponseBadRequest()
+        description = request.POST.get(['comment'][0], False)
+        if type(description) == bool:
+            return HttpResponseBadRequest()
+        time = datetime.datetime.today()
+        milliseconds = time.timestamp() * 1000
+        feedback = Comments(id_post=int(id_post), id_user=int(user_id), comment=description, time=milliseconds)
+        feedback.save()
+        return HttpResponse('commented')
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def view_post(request):
+    if request.method == 'GET':
+        id_post = request.GET.get('id', '')
+        try:
+            post = PostBase.objects.get(id=int(id_post))
+        except ObjectDoesNotExist:
+            return HttpResponseNotFound()
+        except MultipleObjectsReturned:
+            return HttpResponseBadRequest()
+        else:
+            likes = list(Likes.objects.filter(id_post=int(id_post)))
+            comments = list(Comments.objects.filter(id_post=int(id_post)))
+            response = JsonResponse({'src': post.img, 'description': post.description, 'likes': len(likes), 'comments': len(comments)})
+            return response
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)

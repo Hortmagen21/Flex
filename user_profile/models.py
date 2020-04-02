@@ -29,3 +29,31 @@ class PostBase(models.Model):
         ordering = ('milliseconds',)
         db_table = 'post_base'
         unique_together = (('id', 'img'),)
+
+
+class Likes(models.Model):
+    id_post = models.IntegerField(primary_key=True)
+    id_user = models.IntegerField()
+
+    class Meta:
+        db_table = 'likes'
+        unique_together = (('id_post', 'id_user'),)
+
+
+class Comments(models.Model):
+    id_post = models.IntegerField()
+    id_user = models.IntegerField()
+    comment = models.CharField(max_length=100)
+    time = models.BigIntegerField(primary_key=True)
+
+    class Meta:
+        db_table = 'comments'
+        unique_together = (('time', 'id_user'),)
+
+
+class UserAvatar(models.Model):
+    id_post = models.IntegerField(blank=True, null=True)
+    id_user = models.IntegerField(primary_key=True)
+
+    class Meta:
+        db_table = 'user_avatar'
