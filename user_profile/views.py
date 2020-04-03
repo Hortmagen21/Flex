@@ -176,3 +176,40 @@ def view_post(request):
             return response
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def view_all_posts(request):
+    if request.method == 'POST':
+        user_id = request.POST.get(['id'][0], int(request.session['_auth_user_id']))
+        posts_row = list(PostBase.objects.filter(user_id=user_id))
+        posts = []
+        for post in posts_row:
+            posts.append({'src': post.img, 'date': post.milliseconds, 'description': post.description,
+                          'post_id': post.id, 'likes': len(list(Likes.objects.filter(id_post=int(post.id)))),
+                          'comments': len(list(Comments.objects.filter(id_post=int(post.id))))})
+        return JsonResponse({'isMyUser': user_id, 'posts': posts}, content_type='application/json')
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def unfollow(request):
+    if request.method == 'GET':
+        user_follow = request.GET.get('id', ' ')
+        user_id = int(request.session['_auth_user_id'])
+        try:
+            connection = UserFollower.objects.get(id=int(user_follow), follower=int(user_id))
+        except ObjectDoesNotExist:
+            return HttpResponseNotFound()
+        except MultipleObjectsReturned:
+            return HttpResponseBadRequest()
+        else:
+            connection.delete()
+            return HttpResponse('unfollowed')
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
