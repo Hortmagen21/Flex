@@ -19,7 +19,6 @@ def view_home(request):
         for user in followed:
             id_list.append(user['id'])
         posts = list(PostBase.objects.filter(user_id__in=id_list, id__gt=last_id).values('id')[:10])
-
         information = []
         for id_of_post in posts:
             id_post = id_of_post['id']
