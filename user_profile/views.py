@@ -243,3 +243,31 @@ def dislike(request):
         return HttpResponse('deleted')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def add_avatar(request):
+    if request.method == 'POST':
+        try:
+            img = request.FILES['img']
+        except MultiValueDictKeyError:
+            response = HttpResponseNotFound()
+        else:
+            user_id = int(request.session['_auth_user_id'])
+            time = datetime.datetime.today()
+            milliseconds = time.timestamp() * 1000
+            url = "user_profile/avatars/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
+            url_mini = "user_profile/avatars/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
+            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img_mini=core_url + url_mini)
+            photo.save()
+            with open(url, 'wb+') as destination:
+                for chunk in img.chunks():
+                    destination.write(chunk)
+            im = Image.open(url)
+            out = im.resize((384, 384))
+            out.save(url_mini)
+            response = HttpResponse('created')
+            return response
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)

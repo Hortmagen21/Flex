@@ -15,5 +15,5 @@ urlpatterns = [
     path('unsubscribe', views.unsubscribe),
     path('dislike', views.dislike),
     path('avatar', views.ava),
-
+    path('add_avatar',views.add_avatar),
 ]
