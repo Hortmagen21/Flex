@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.flex.Requests.PostRequests
+import com.example.flex.Requests.RegistRequests
 import java.net.HttpCookie
 
 class Registration : AppCompatActivity() {
@@ -48,8 +48,8 @@ class Registration : AppCompatActivity() {
                 login.text.toString() != "" && email.text.toString().contains("@gmail.com")
             ) {
 
-                val request = PostRequests(
-                    "https://" + MainData().BASE_URL + MainData().URL_REGISTRATION,
+                val request = RegistRequests(
+                    "https://${MainData.BASE_URL}/${MainData.URL_PREFIX_ACC_BASE}/${MainData.REGISTRATON}",
                     password.text.toString(),
                     login.text.toString(),
                     email.text.toString(),

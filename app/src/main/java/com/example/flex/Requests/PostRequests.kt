@@ -1,29 +1,30 @@
 package com.example.flex.Requests
 
-import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.example.flex.MainActivity
+import androidx.fragment.app.Fragment
+import com.example.flex.Fragments.AccountPostListRecyclerFragment
+import com.example.flex.Fragments.AccountPostTableRecyclerFragment
+import com.example.flex.Fragments.CameraFragment
+import com.example.flex.Fragments.HomeFragment
 import com.example.flex.MainData
-import com.example.flex.Registration
+import com.example.flex.POJO.Post
 import com.example.flex.SignIn
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 import java.net.CookieManager
 import java.net.CookiePolicy
-import java.net.HttpCookie
 
-class PostRequests(
-    private val url: String,
-    private val password: String,
-    private val login: String,
-    private val email: String,
-    private val context: AppCompatActivity?
+class PostRequests (
+    private val fragment: Fragment,
+    private val csrftoken: String,
+    private val sessionId: String
 ) {
-    val cookieManager = CookieManager()
+    private val cookieManager = CookieManager()
     private val client: OkHttpClient
-    var sessionId = ""
-    var csrftoken = ""
-
 
     init {
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
@@ -31,40 +32,51 @@ class PostRequests(
             .cookieJar(JavaNetCookieJar(cookieManager))
             .build()
     }
-
-    fun callLogin() {
-        login(url, password, login)
+    fun stopRequests(){
+        for(call in client.dispatcher.queuedCalls()){
+            if(call.request().tag()==MainData.TAG_VIEW_ALL_POSTS_HOME&&
+                call.request().tag()==MainData.TAG_VIEW_ALL_POSTS_ACCOUNT&&
+                call.request().tag()==MainData.TAG_COMMENT&&
+                call.request().tag()==MainData.TAG_LIKE){
+                call.cancel()
+            }
+        }
+        for(call in client.dispatcher.runningCalls()){
+            if(call.request().tag()==MainData.TAG_VIEW_ALL_POSTS_HOME&&
+                call.request().tag()==MainData.TAG_VIEW_ALL_POSTS_ACCOUNT&&
+                call.request().tag()==MainData.TAG_COMMENT&&
+                call.request().tag()==MainData.TAG_LIKE){
+                call.cancel()
+            }
+        }
     }
-
-    fun callRegister() {
-        register(url, password, login, email)
-    }
-
-    private fun login(url: String, password: String, login: String) {
-        var cookies: List<HttpCookie>
+    fun  likePost(postId:Long){
         val formBody = FormBody.Builder()
-            .add("password", password)
-            .add("username", login)
+            .add("id", postId.toString())
+            .add("csrfmiddlewaretoken", csrftoken)
             .build()
-        val request = Request.Builder().url(url)
+        val request = Request.Builder()
+            .tag(MainData.TAG_LIKE)
+            .url("https://${MainData.BASE_URL}/${MainData.URL_PREFIX_USER_PROFILE}/${MainData.LIKE}")
             .post(formBody)
-            .addHeader(MainData().HEADER_REFRER, "https://" + MainData().BASE_URL)
+            .addHeader(MainData.HEADER_REFRER, "https://" + MainData.BASE_URL)
+            .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId")
             .build()
-
         val call = client.newCall(request)
 
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                //cookies.add(HttpCookie("you failed","you failed"))
+
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    cookies = cookieManager.cookieStore.cookies
-                    if (context is SignIn) {
-                        context.runOnUiThread {
-                            context.setCookies(cookies)
-                        }
+
+                }else  if(response.code== MainData.ERR_403){
+                    (fragment.context as AppCompatActivity).runOnUiThread {
+                        val intent= Intent(fragment.context as AppCompatActivity, SignIn().javaClass)
+                        (fragment.context as AppCompatActivity).startActivity(intent)
+                        (fragment.context as AppCompatActivity).finish()
                     }
                 } else {
 
@@ -72,110 +84,34 @@ class PostRequests(
             }
         })
     }
-
-    fun logout() {
-        var cookies: List<HttpCookie>
-        val urlHttp = HttpUrl.Builder().scheme("https")
-            .host("sleepy-ocean-25130.herokuapp.com")
-            .addPathSegment(MainData().URL_PREFIX_ACC_BASE)
-            .addPathSegment("logout").build()
-        val request = Request.Builder().url(urlHttp)
-            .addHeader(MainData().HEADER_REFRER, "https://" + MainData().BASE_URL)
-            .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId")
-            .addHeader("Content-Type", "application/x-www-form-urlencoded")
-            .build()
-
-        val call = client.newCall(request)
-
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    cookies = cookieManager.cookieStore.cookies
-                    if (context is MainActivity) {
-                        context.runOnUiThread {
-                            val sharedPreferences =
-                                context.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-                            val editor = sharedPreferences.edit()
-                            editor.putString(MainData().CRSFTOKEN, "")
-                            editor.putString(MainData().SESION_ID, "")
-                            editor.apply()
-                        }
-                    }
-                } else {
-
-                }
-            }
-        })
-    }
-
-    fun callCheckLog() {
-        checkLog()
-    }
-
-    private fun checkLog() {
-        var cookies: List<HttpCookie>
-        val urlHttp = HttpUrl.Builder().scheme("https")
-            .host(MainData().BASE_URL)
-            .addPathSegment(MainData().URL_PREFIX_ACC_BASE)
-            .addPathSegment("checklog").build()
-        val request = Request.Builder().url(urlHttp)
-            .addHeader(MainData().HEADER_REFRER, "https://" + MainData().BASE_URL)
-            //.addHeader("Authorization",sessionId )
-            .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId")
-            .addHeader("Host", "sleepy-ocean-25130.herokuapp.com")
-            .addHeader("Content-Type", "application/x-www-form-urlencoded")
-            .build()
-
-        val call = client.newCall(request)
-
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                //cookies.add(HttpCookie("you failed","you failed"))
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    cookies = cookieManager.cookieStore.cookies
-
-                } else {
-
-                }
-            }
-        })
-    }
-
-    private fun register(url: String, password: String, login: String, email: String) {
-        var cookies = mutableListOf<HttpCookie>()
+    fun  commentPost(postId:Long){
         val formBody = FormBody.Builder()
-            .add("password", password)
-            .add("username", login)
-            .add("email", email)
+            .add("id", postId.toString())
+            .add("comment",".")
+            .add("csrfmiddlewaretoken", csrftoken)
             .build()
-        val request = Request.Builder().url(url)
+        val request = Request.Builder()
+            .tag(MainData.TAG_COMMENT)
+            .url("https://${MainData.BASE_URL}/${MainData.URL_PREFIX_USER_PROFILE}/${MainData.COMMENT}")
             .post(formBody)
-            .addHeader(MainData().HEADER_REFRER, "https://" + MainData().BASE_URL)
+            .addHeader(MainData.HEADER_REFRER, "https://" + MainData.BASE_URL)
+            .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId")
             .build()
         val call = client.newCall(request)
+
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                cookies.add(HttpCookie("you failed", "you failed"))
+
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    cookies = cookieManager.cookieStore.cookies
-                    var str = ""
-                    for (cookie in cookies) {
-                        str += " ${cookie.name} ${cookie.value} ;"
-                    }
-                    if (context is Registration) {
-                        context.runOnUiThread {
-                            context.setCookies(cookies)
-                        }
+
+                }else  if(response.code== MainData.ERR_403){
+                    (fragment.context as AppCompatActivity).runOnUiThread {
+                        val intent= Intent(fragment.context as AppCompatActivity, SignIn().javaClass)
+                        (fragment.context as AppCompatActivity).startActivity(intent)
+                        (fragment.context as AppCompatActivity).finish()
                     }
                 } else {
 
@@ -183,6 +119,130 @@ class PostRequests(
             }
         })
     }
+    fun viewAllPostsAccount(id:Long){
+        val formBody = FormBody.Builder()
+            .add("id", id.toString())
+            .add("csrfmiddlewaretoken", csrftoken)
+            .build()
+        val request = Request.Builder()
+            .tag(MainData.TAG_VIEW_ALL_POSTS_ACCOUNT)
+            .url("https://${MainData.BASE_URL}/${MainData.URL_PREFIX_USER_PROFILE}/${MainData.VIEW_ALL_POSTS}")
+            .post(formBody)
+            .addHeader(MainData.HEADER_REFRER, "https://" + MainData.BASE_URL)
+            .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId")
+            .build()
+        val call = client.newCall(request)
 
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
 
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val body = response.body?.string()
+                    if (body != null) {
+                        val jsonObject = JSONObject(body)
+                        val keys = jsonObject.keys()
+                        val idOfUser = jsonObject["isMyUser"]
+                        val postsList = jsonObject["posts"]
+                        val listOfPosts= mutableListOf<Post>()
+                        if (postsList is JSONArray) {
+                            val length = postsList.length()
+                            for(i in 0 until length){
+                                val value=postsList[i]
+                                if(value is JSONObject)
+                                    listOfPosts.add(
+                                        Post(
+                                            id=value["post_id"].toString().toLong(),
+                                            imageUrl = value["src"].toString(),
+                                            date = value["date"].toString().toLong(),
+                                            postText = value["description"].toString(),
+                                            countOfFires = value["likes"].toString().toLong(),
+                                            countOfComments = value["comments"].toString().toLong()
+                                        )
+                                    )
+                            }
+                        }
+                        if(fragment is AccountPostListRecyclerFragment){
+                            (fragment.context as AppCompatActivity).runOnUiThread{
+                                fragment.addPosts(listOfPosts)
+                            }
+                        }
+                    }
+                }else  if(response.code== MainData.ERR_403){
+                    (fragment.context as AppCompatActivity).runOnUiThread {
+                        val intent= Intent(fragment.context as AppCompatActivity, SignIn().javaClass)
+                        (fragment.context as AppCompatActivity).startActivity(intent)
+                        (fragment.context as AppCompatActivity).finish()
+                    }
+                } else {
+
+                }
+            }
+        })
+    }
+    fun viewAllPostsHome(lastId:Long){
+        val formBody = HttpUrl.Builder().scheme("https")
+            .host(MainData.BASE_URL)
+            .addPathSegment(MainData.URL_PREFIX_HOME)
+            .addPathSegment(MainData.HOME)
+            .addQueryParameter("id", lastId.toString())
+            .build()
+        val request = Request.Builder()
+            .tag(MainData.TAG_VIEW_ALL_POSTS_HOME)
+            .url(formBody)
+            .addHeader(MainData.HEADER_REFRER, "https://" + MainData.BASE_URL)
+            .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId")
+            .build()
+        val call = client.newCall(request)
+
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val body = response.body?.string()
+                    if (body != null) {
+                        val jsonObject = JSONObject(body)
+                        val keys = jsonObject.keys()
+                        val postsList = jsonObject["posts"]
+                        val listOfPosts= mutableListOf<Post>()
+                        if (postsList is JSONArray) {
+                            val length = postsList.length()
+                            for(i in 0 until length){
+                                val value=postsList[i]
+                                if(value is JSONObject)
+                                    listOfPosts.add(
+                                        Post(
+                                            id=value["id"].toString().toLong(),
+                                            imageUrl = value["src"].toString(),
+                                            date = value["date"].toString().toLong(),
+                                            postText = value["description"].toString(),
+                                            countOfFires = value["likes"].toString().toLong(),
+                                            countOfComments = value["comments"].toString().toLong()
+                                        )
+                                    )
+                            }
+                        }
+                        if(fragment is HomeFragment){
+                            (fragment.context as AppCompatActivity).runOnUiThread{
+                                fragment.addPosts(listOfPosts)
+                            }
+                        }
+                    }
+                }else  if(response.code== MainData.ERR_403){
+                    (fragment.context as AppCompatActivity).runOnUiThread {
+                        val intent= Intent(fragment.context as AppCompatActivity, SignIn().javaClass)
+                        (fragment.context as AppCompatActivity).startActivity(intent)
+                        (fragment.context as AppCompatActivity).finish()
+                    }
+                } else {
+
+                }
+            }
+        })
+    }
 }

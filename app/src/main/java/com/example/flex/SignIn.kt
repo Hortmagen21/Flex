@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.flex.Requests.PostRequests
+import com.example.flex.Requests.RegistRequests
 import java.net.HttpCookie
 
 class SignIn : AppCompatActivity() {
@@ -38,8 +38,8 @@ class SignIn : AppCompatActivity() {
         }
         signInButton.setOnClickListener {
             if (password.text.toString() != "" && login.text.toString() != "") {
-                val request = PostRequests(
-                    "https://"+MainData().BASE_URL + MainData().URL_LOGIN,
+                val request = RegistRequests(
+                    "https://${MainData.BASE_URL}/${MainData.URL_PREFIX_ACC_BASE}/${MainData.LOGIN}",
                     password.text.toString(), login.text.toString(),
                     "",
                     this
@@ -50,11 +50,12 @@ class SignIn : AppCompatActivity() {
         }
     }
 
-    fun setCookies(cookies: List<HttpCookie>) {
+    fun setCookies(cookies: List<HttpCookie>,id:Long) {
         val sharedPreferences=getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
         val editor=sharedPreferences.edit()
-        editor.putString(MainData().CRSFTOKEN,cookies[0].value)
-        editor.putString(MainData().SESION_ID,cookies[1].value)
+        editor.putString(MainData.CRSFTOKEN,cookies[0].value)
+        editor.putString(MainData.SESION_ID,cookies[1].value)
+        editor.putLong(MainData.YOUR_ID,id)
         editor.apply()
         val intent=Intent(this,MainActivity().javaClass)
         startActivity(intent)

@@ -1,5 +1,7 @@
 package com.example.flex
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +10,7 @@ import com.example.flex.Fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    var account = AccountFragment()
+    var account = AccountFragment(this)
     var home = HomeFragment()
     var tv = TvFragment()
     var map = MapFragment()
@@ -25,6 +27,14 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.frame_container, home, "fragment_tag")
             .commit()
         setActionListener()
+        val sharedPreferences = getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+        val sessionId = sharedPreferences.getString(MainData.SESION_ID, "")
+        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
+        if (sessionId == "" || csrftoken == "") {
+            val intent = Intent(this, Registration().javaClass)
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -55,10 +65,9 @@ class MainActivity : AppCompatActivity() {
                 when (menuItem.itemId) {
                     R.id.action_account -> {
                         if (supportFragmentManager.findFragmentByTag("fragment_tag")!! == account) {
-                            account = AccountFragment()
+                            account = AccountFragment(this)
                             isAddToBackStack = false
                         }
-                        account.activity = this
                         account
                     }
                     R.id.action_camera -> {
@@ -70,8 +79,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.action_home -> {
                         if (supportFragmentManager.findFragmentByTag("fragment_tag")!! == home) {
-                            home = HomeFragment()
-                            isAddToBackStack = false
+                            home.scrollToBeginning()
                         }
                         home
                     }

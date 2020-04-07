@@ -12,8 +12,7 @@ import com.example.flex.R
 import com.squareup.picasso.Picasso
 
 class CommentFragment(
-    private val comment: Comment,
-    private val OnCommentClick: onCommentClickListener
+    private val comment: Comment
 ) : Fragment() {
     lateinit var v: View
 
@@ -40,13 +39,9 @@ class CommentFragment(
     private fun addActionListener() {
         val photo = v.findViewById<ImageView>(R.id.user_comment_icon)
         photo.setOnClickListener {
-            OnCommentClick.onCommentClick()
         }
     }
 
-    interface onCommentClickListener {
-        fun onCommentClick()
-    }
 
     fun addThisComment(id: Int) {
         fragmentManager!!.beginTransaction().replace(id, this).commit()

@@ -15,7 +15,7 @@ class MapFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        v = inflater.inflate(R.layout.fragment_photo, container, false)
+        v = inflater.inflate(R.layout.fragment_map, container, false)
         addActionListener()
         return v
     }

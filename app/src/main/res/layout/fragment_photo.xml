@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/holo_purple">
 
     <Button
+        android:background="@drawable/main_app_buttons"
         android:id="@+id/button_registration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Registration" />
 
     <Button
+        android:background="@drawable/main_app_buttons"
         android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,6 +21,7 @@
         android:text="Sign In" />
 
     <Button
+        android:background="@drawable/main_app_buttons"
         android:id="@+id/button_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,6 +29,7 @@
         android:text="Logout" />
 
     <Button
+        android:background="@drawable/main_app_buttons"
         android:id="@+id/button_checkLog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,9 +37,31 @@
         android:text="CheckLog" />
 
     <Button
+        android:background="@drawable/main_app_buttons"
         android:id="@+id/button_change_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_checkLog"
         android:text="Change pass" />
+    <Button
+        android:background="@drawable/main_app_buttons"
+        android:id="@+id/button_get_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_change_pass"
+        android:text="Get picture" />
+
+    <Button
+        android:background="@drawable/main_app_buttons"
+        android:id="@+id/button_take_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_get_picture"
+        android:text="Take picture" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_below="@id/button_take_picture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

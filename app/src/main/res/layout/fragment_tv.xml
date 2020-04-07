@@ -7,13 +7,10 @@
         android:id="@+id/search_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_search"
-        android:layout_below="@id/search_search"
+    <FrameLayout
+        android:id="@+id/tv_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_search"/>
 
 </RelativeLayout>

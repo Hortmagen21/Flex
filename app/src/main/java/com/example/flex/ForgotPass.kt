@@ -1,5 +1,6 @@
 package com.example.flex
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -13,10 +14,24 @@ class ForgotPass : AppCompatActivity() {
     private lateinit var emailCode: EditText
     private lateinit var forgotPassBtn: Button
     private lateinit var newPassBtn: Button
+    private var request:ForgotPassRequests?=null
+    private val sharedPreferences =getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.change_password)
         setActionListener()
+        if(sharedPreferences.getBoolean("isEnabled",false)){
+            onForgotPass()
+            emailCode.setText(sharedPreferences.getString("email code",""))
+            newPass.setText(sharedPreferences.getString("new password",""))
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(request!=null){
+            request!!.stopRequests()
+        }
     }
 
     private fun setActionListener() {
@@ -30,8 +45,8 @@ class ForgotPass : AppCompatActivity() {
             request.forgotPass(emailText.text.toString())
         }
         newPassBtn.setOnClickListener {
-            val request = ForgotPassRequests(this)
-            request.changePass(
+            request = ForgotPassRequests(this)
+            request!!.changePass(
                 emailText.text.toString(),
                 newPass.text.toString(),
                 emailCode.text.toString()
@@ -40,6 +55,9 @@ class ForgotPass : AppCompatActivity() {
     }
 
     fun onForgotPass() {
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("isEnabled",true)
+        editor.apply()
         emailCode.visibility = View.VISIBLE
         newPass.visibility = View.VISIBLE
         newPassBtn.visibility = View.VISIBLE

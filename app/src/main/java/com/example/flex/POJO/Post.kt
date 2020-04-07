@@ -2,11 +2,12 @@ package com.example.flex.POJO
 
 data class Post(
     val id: Long,
-    val countOfFires: Long,
-    val countOfComments: Long,
-    val countOfShares: Long,
-    val mainUser: User,
+    val mainUser: User=User(0,""),
     val imageUrl: String,
-    val comment: Comment,
-    val postText: String
+    val postText: String,
+    val date:Long=0,
+    val countOfFires: Long=0,
+    val countOfComments: Long=0,
+    val countOfShares: Long=0,
+    val comment: Comment?=null
 )

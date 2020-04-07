@@ -18,15 +18,31 @@ class ForgotPassRequests(private val activity: AppCompatActivity) {
             .cookieJar(JavaNetCookieJar(cookieManager))
             .build()
     }
+    fun stopRequests(){
+        for(call in client.dispatcher.queuedCalls()){
+            if(call.request().tag()==MainData.TAG_CHANGE_PASS&&
+                    call.request().tag()==MainData.TAG_FORGOT_PASS){
+                call.cancel()
+            }
+        }
+        for(call in client.dispatcher.runningCalls()){
+            if(call.request().tag()==MainData.TAG_CHANGE_PASS&&
+                call.request().tag()==MainData.TAG_FORGOT_PASS){
+                call.cancel()
+            }
+        }
+    }
 
     fun forgotPass(email: String) {
         val formBody = FormBody.Builder()
             .add("email", email)
             .build()
         val request =
-            Request.Builder().url("https://" + MainData().BASE_URL + MainData().URL_FOGOT_PASS)
+            Request.Builder()
+                .tag(MainData.TAG_FORGOT_PASS)
+                .url("https://${MainData.BASE_URL}/${MainData.URL_PREFIX_ACC_BASE}/${MainData.FORGOT_PASS}")
                 .post(formBody)
-                .addHeader(MainData().HEADER_REFRER, "https://" + MainData().BASE_URL)
+                .addHeader(MainData.HEADER_REFRER, "https://" + MainData.BASE_URL)
                 .build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
@@ -55,9 +71,11 @@ class ForgotPassRequests(private val activity: AppCompatActivity) {
             .add("user_token", checkCode)
             .build()
         val request =
-            Request.Builder().url("https://" + MainData().BASE_URL + MainData().URL_CHANGE_PASS)
+            Request.Builder()
+                .tag(MainData.TAG_CHANGE_PASS)
+                .url("https://${MainData.BASE_URL}/${MainData.URL_PREFIX_ACC_BASE}/${MainData.RESET_PASS}")
                 .post(formBody)
-                .addHeader(MainData().HEADER_REFRER, "https://" + MainData().BASE_URL)
+                .addHeader(MainData.HEADER_REFRER, "https://" + MainData.BASE_URL)
                 .build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
