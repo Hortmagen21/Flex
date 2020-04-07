@@ -12,5 +12,8 @@ urlpatterns = [
     path('comment', views.comment),
     path('view_post', views.view_post),
     path('view_all_posts', views.view_all_posts),
+    path('unsubscribe', views.unsubscribe),
+    path('dislike', views.dislike),
+    path('avatar', views.ava),
 
 ]

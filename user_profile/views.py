@@ -92,12 +92,16 @@ def add_post(request):
 def view_acc(request):
     if request.method == 'POST':
         user_id = request.POST.get(['id'][0], int(request.session['_auth_user_id']))
+        avatars = list(UserAvatar.objects.filter(id_user=user_id))
         posts_row = list(PostBase.objects.filter(user_id=user_id))
         posts = []
+        avatars = []
         for post in posts_row:
             posts.append({'src_mini': post.img_mini, 'date': post.milliseconds, 'description': post.description,
                           'post_id': post.id})
-        return JsonResponse({'isMyUser': user_id, 'posts': posts}, content_type='application/json')
+        for avatar in avatars:
+            avatars.append({'id_post': avatar.id_post})
+        return JsonResponse({'isMyUser': user_id, 'posts': posts, 'ava': avatars}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -196,7 +200,7 @@ def view_all_posts(request):
 
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
-def unfollow(request):
+def unsubscribe(request):
     if request.method == 'GET':
         user_follow = request.GET.get('id', ' ')
         user_id = int(request.session['_auth_user_id'])
@@ -213,3 +217,29 @@ def unfollow(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def ava(request):
+    if request.method == 'GET':
+        post_id = request.GET.get('id', ' ')
+        user_id = int(request.session['_auth_user_id'])
+        avatar = UserAvatar(id_post=int(post_id), id_user=int(user_id))
+        avatar.save()
+        return HttpResponse('ava created')
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def dislike(request):
+    if request.method == 'POST':
+        user_id = int(request.session['_auth_user_id'])
+        id_post = request.POST.get(['id'][0], False)
+        if type(id_post) == bool:
+            return HttpResponseBadRequest()
+        post = Likes.objects.get(id_post=int(id_post), id_user=int(user_id))
+        post.delete()
+        return HttpResponse('deleted')
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
