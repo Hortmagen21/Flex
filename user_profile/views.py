@@ -19,6 +19,7 @@ core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
 
+@csrf_protect
 @login_required(login_url=core_url+'acc_base/login_redirection')
 def follow(request):
     if request.method == 'GET':
@@ -38,6 +39,7 @@ def follow(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+@csrf_protect
 @login_required(login_url=core_url+'acc_base/login_redirection')
 def check_i_follow(request):
     if request.method == 'GET':
@@ -48,6 +50,7 @@ def check_i_follow(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+@csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def followers(request):
     if request.method == 'GET':
@@ -65,16 +68,27 @@ def add_post(request):
         try:
             img = request.FILES['img']
         except MultiValueDictKeyError:
-            response = HttpResponseNotFound()
-        else:
+            try:
+                img = request.FILES['avatar']
+            except MultiValueDictKeyError:
+                HttpResponseBadRequest
+            else:
+                isAvatar = True
+        finally:
             description = request.POST.get(['description'][0], '')
             user_id = int(request.session['_auth_user_id'])
             time = datetime.datetime.today()
             milliseconds = time.timestamp()*1000
             url = "user_profile/photos/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
             url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
-            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
+            if isAvatar:
+                photo = PostBase(milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
+            else:
+                photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
             photo.save()
+            if isAvatar:
+                avatar = UserAvatar(id_post=int(photo.id), id_user=int(user_id))
+                avatar.save()
             with open(url, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
@@ -101,7 +115,7 @@ def view_acc(request):
                           'post_id': post.id})
         for avatar in avatars:
             avatars.append({'id_post': avatar.id_post})
-        return JsonResponse({'isMyUser': user_id, 'posts': posts, 'ava': avatars}, content_type='application/json')
+        return JsonResponse({'isMyUser': user_id, 'posts': posts, 'ava': avatars, 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -192,7 +206,8 @@ def view_all_posts(request):
         for post in posts_row:
             posts.append({'src': post.img, 'date': post.milliseconds, 'description': post.description,
                           'post_id': post.id, 'likes': len(list(Likes.objects.filter(id_post=int(post.id)))),
-                          'comments': len(list(Comments.objects.filter(id_post=int(post.id))))})
+                          'comments': len(list(Comments.objects.filter(id_post=int(post.id)))),
+                          'isLiked': isLiked(int(post.id), int(request.session['_auth_user_id']))})
         return JsonResponse({'isMyUser': user_id, 'posts': posts}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -245,29 +260,19 @@ def dislike(request):
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
-@csrf_protect
-@login_required(login_url=core_url + 'acc_base/login_redirection')
-def add_avatar(request):
-    if request.method == 'POST':
-        try:
-            img = request.FILES['img']
-        except MultiValueDictKeyError:
-            response = HttpResponseNotFound()
-        else:
-            user_id = int(request.session['_auth_user_id'])
-            time = datetime.datetime.today()
-            milliseconds = time.timestamp() * 1000
-            url = "user_profile/avatars/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
-            url_mini = "user_profile/avatars/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
-            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img_mini=core_url + url_mini)
-            photo.save()
-            with open(url, 'wb+') as destination:
-                for chunk in img.chunks():
-                    destination.write(chunk)
-            im = Image.open(url)
-            out = im.resize((384, 384))
-            out.save(url_mini)
-            response = HttpResponse('created')
-            return response
+def isSubscribe(my_id, user_id):
+    try:
+        follow = UserFollower.objects.get(id=user_id, follower=my_id)
+    except ObjectDoesNotExist:
+        return False
     else:
-        return HttpResponse("Pls ensure that you use POST method", status=405)
+        return True
+
+
+def isLiked(id_post, id_user):
+    try:
+        like = Likes.objects.get(id_post=id_post, id_user=id_user)
+    except ObjectDoesNotExist:
+        return False
+    else:
+        return True
