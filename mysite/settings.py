@@ -34,7 +34,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #'polls.models.AccBase',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,7 +44,7 @@ INSTALLED_APPS = [
     'acc_base.apps.AccConfig',
     'tv_shows.apps.TvShowsConfig',
     'home.apps.HomeConfig',
-    'chatroom.apps.ChatroomConfig'
+    'chatroom.apps.ChatroomConfig',
     'user_profile.apps.UserProfileConfig',
 
     #'mysite.polls.apps.PollsConfig',
