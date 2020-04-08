@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_p
 from user_profile.models import UserFollower, PostBase, Likes, Comments
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from user_profile.views import isLiked
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -31,8 +32,7 @@ def view_home(request):
             else:
                 likes = list(Likes.objects.filter(id_post=int(id_post)))
                 comments = list(Comments.objects.filter(id_post=int(id_post)))
-                information.append({'src': post.img, 'description': post.description, 'likes': len(likes), 'comments': len(comments), 'id': post.id, "date": post.milliseconds})
-
+                information.append({'src': post.img, 'description': post.description, 'likes': len(likes), 'comments': len(comments), 'id': post.id, "date": post.milliseconds, 'isLiked': isLiked(int(id_post),int(request.session['_auth_user_id']))})
         response = JsonResponse({"posts": information})
         return response
     else:
