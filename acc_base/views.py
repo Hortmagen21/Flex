@@ -200,5 +200,16 @@ def login_redirection(request):
         return http_resp
 
 
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def name(request):
+    id = request.GET.get('id', int(request.session['_auth_user_id']))
+    try:
+        user = User.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponse('Something go wrong with registration your acc,pls try again', status=404)
+    else:
+        return HttpResponse(user.username)
+
 
 

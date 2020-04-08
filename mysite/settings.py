@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'acc_base.apps.AccConfig',
     'tv_shows.apps.TvShowsConfig',
     'home.apps.HomeConfig',
+    'chatroom.apps.ChatroomConfig'
     'user_profile.apps.UserProfileConfig',
 
     #'mysite.polls.apps.PollsConfig',

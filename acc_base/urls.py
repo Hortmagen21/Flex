@@ -11,6 +11,6 @@ urlpatterns = [
     path('reset_pass', views.reset_pass),
     path('check_log', views.check_log),
     path('login_redirection', views.login_redirection),
-
+    path('name', views.name),
 ]
 
