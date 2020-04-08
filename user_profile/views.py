@@ -74,6 +74,8 @@ def add_post(request):
                 HttpResponseBadRequest
             else:
                 isAvatar = True
+        else:
+            isAvatar = False
         finally:
             description = request.POST.get(['description'][0], '')
             user_id = int(request.session['_auth_user_id'])
