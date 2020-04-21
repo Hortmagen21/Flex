@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from user_profile.models import UserFollower, PostBase, Likes, Comments, UserAvatar
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
@@ -110,14 +111,20 @@ def view_acc(request):
         user_id = request.POST.get(['id'][0], int(request.session['_auth_user_id']))
         avatars = list(UserAvatar.objects.filter(id_user=user_id))
         posts_row = list(PostBase.objects.filter(user_id=user_id))
+        try:
+            user_name = User.objects.get(id=int(user_id)).username
+        except ObjectDoesNotExist:
+            return HttpResponseNotFound()
+        except MultipleObjectsReturned:
+            return HttpResponseBadRequest()
         posts = []
         avatars = []
         for post in posts_row:
-            posts.append({'src_mini': post.img_mini, 'date': post.milliseconds, 'description': post.description,
+            posts.append({'src': post.img, 'src_mini': post.img_mini, 'date': post.milliseconds, 'description': post.description,
                           'post_id': post.id})
         for avatar in avatars:
             avatars.append({'id_post': avatar.id_post})
-        return JsonResponse({'isMyUser': user_id, 'posts': posts, 'ava': avatars, 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))}, content_type='application/json')
+        return JsonResponse({'isMyUser': user_id, 'user_name': user_name, 'posts': posts, 'ava': avatars, 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 

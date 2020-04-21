@@ -32,7 +32,7 @@ def view_home(request):
             else:
                 likes = list(Likes.objects.filter(id_post=int(id_post)))
                 comments = list(Comments.objects.filter(id_post=int(id_post)))
-                information.append({'src': post.img, 'description': post.description, 'likes': len(likes), 'comments': len(comments), 'id': post.id, "date": post.milliseconds, 'isLiked': isLiked(int(id_post),int(request.session['_auth_user_id']))})
+                information.append({'src': post.img, 'src_mini': post.img_mini, 'description': post.description, 'likes': len(likes), 'comments': len(comments), 'id': post.id, "date": post.milliseconds, 'isLiked': isLiked(int(id_post),int(request.session['_auth_user_id']))})
         response = JsonResponse({"posts": information})
         return response
     else:
