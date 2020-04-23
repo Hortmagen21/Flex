@@ -139,13 +139,14 @@ def forgot_pass(request):#is_active_check !!!!
         token = secrets.token_hex(4)
         email = request.POST.get(['email'][0], False)
         if email:
-            send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token), 'hortmagennn@gmail.com'
-                      , [email], fail_silently=False)
             try:
                 user = User.objects.get(email=email)
             except ObjectDoesNotExist:
                 return HttpResponse('User with such email is not exist', status=404)
             else:
+                send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token),
+                          'hortmagennn@gmail.com'
+                          , [email], fail_silently=False)
                 try:
                     duplicate_token = TokenConfirm.objects.get(id=user.id)
                 except ObjectDoesNotExist:
