@@ -8,31 +8,31 @@
 from django.db import models
 
 
-class Chat(models.Model):
-    chat_id = models.AutoField()
-    chat_name = models.CharField(max_length=100, blank=True, null=True)
-    chat_ava = models.CharField(max_length=100, blank=True, null=True)
-    chat_admin = models.IntegerField()
-    chat_members = models.IntegerField(blank=True, null=True)
+#class Chat(models.Model):
+    #chat_id = models.AutoField()
+    #chat_name = models.CharField(max_length=100, blank=True, null=True)
+    #chat_ava = models.CharField(max_length=100, blank=True, null=True)
+    #chat_admin = models.IntegerField()
+    #chat_members = models.IntegerField(blank=True, null=True)
 
-    class Meta:
-        db_table = 'chat'
-
-
-class ChatMembers(models.Model):
-    chat_id = models.IntegerField(primary_key=True)
-    user_id = models.IntegerField()
-
-    class Meta:
-        db_table = 'chat_members'
-        unique_together = (('chat_id', 'user_id'),)
+    #class Meta:
+        #db_table = 'chat'
 
 
-class Message(models.Model):
-    chat_id = models.IntegerField(primary_key=True)
-    message_id = models.AutoField
-    user_id = models.IntegerField()
-    date = models.IntegerField()
+#class ChatMembers(models.Model):
+    #chat_id = models.IntegerField(primary_key=True)
+    #user_id = models.IntegerField()
 
-    class Meta:
-        db_table = 'message'
+    #class Meta:
+        #db_table = 'chat_members'
+        #unique_together = (('chat_id', 'user_id'),)
+
+
+#class Message(models.Model):
+    #chat_id = models.IntegerField(primary_key=True)
+    #message_id = models.AutoField
+    #user_id = models.IntegerField()
+    #date = models.IntegerField()
+
+    #class Meta:
+        #db_table = 'message'
