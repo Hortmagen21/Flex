@@ -224,6 +224,20 @@ def view_all_posts(request):
 
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
+def view_all_comments(request):
+    if request.method == 'GET':
+        post_id = request.GET.get('id', ' ')
+        comments_list = Comments.objects.filter(id_post=int(post_id))
+        comments = []
+        for comment in comments_list:
+            comments.append({'sender_id': comment.id_user, 'description': comment.comment, 'time': comment.time})
+        return JsonResponse(comments, content_type='application/json')
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
 def unsubscribe(request):
     if request.method == 'GET':
         user_follow = request.GET.get('id', ' ')
