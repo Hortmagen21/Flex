@@ -210,8 +210,8 @@ def view_post(request):#not using
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def view_information_user(request):
     if request.method == 'GET':
-        user_id = request.GET.get('id',int(request.session['_auth_user_id']))
-        avatars = list(UserAvatar.objects.filter(id_user=user_id))
+        user_id = request.GET.get('id', int(request.session['_auth_user_id']))
+        avatars = list(UserAvatar.objects.filter(id_user=int(user_id)))
         user_followed = list(UserFollower.objects.filter(follower=int(user_id)))
         user_follower = list(UserFollower.objects.filter(id=int(user_id)))
         try:
@@ -222,7 +222,7 @@ def view_information_user(request):
         except MultipleObjectsReturned:
             return HttpResponseBadRequest()
         else:
-            return JsonResponse({'user_name': user_name, 'ava_src': post.img, "followed": len(user_followed), "i_follower":len(user_follower)})
+            return JsonResponse({'user_name': user_name, 'ava_src': post.img, "followed": len(user_followed), "i_follower":len(user_follower), 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))})
 
 
 @csrf_protect
