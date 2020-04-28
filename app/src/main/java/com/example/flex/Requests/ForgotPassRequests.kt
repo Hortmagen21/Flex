@@ -1,14 +1,16 @@
 package com.example.flex.Requests
 
-import androidx.appcompat.app.AppCompatActivity
-import com.example.flex.ForgotPass
+import androidx.lifecycle.MutableLiveData
 import com.example.flex.MainData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.IOException
 import java.net.CookieManager
 import java.net.CookiePolicy
 
-class ForgotPassRequests(private val activity: AppCompatActivity) {
+class ForgotPassRequests() {
     private val client: OkHttpClient
     private val cookieManager = CookieManager()
 
@@ -20,20 +22,20 @@ class ForgotPassRequests(private val activity: AppCompatActivity) {
     }
     fun stopRequests(){
         for(call in client.dispatcher.queuedCalls()){
-            if(call.request().tag()==MainData.TAG_CHANGE_PASS&&
+            if(call.request().tag()==MainData.TAG_CHANGE_PASS||
                     call.request().tag()==MainData.TAG_FORGOT_PASS){
                 call.cancel()
             }
         }
         for(call in client.dispatcher.runningCalls()){
-            if(call.request().tag()==MainData.TAG_CHANGE_PASS&&
+            if(call.request().tag()==MainData.TAG_CHANGE_PASS||
                 call.request().tag()==MainData.TAG_FORGOT_PASS){
                 call.cancel()
             }
         }
     }
 
-    fun forgotPass(email: String) {
+    fun forgotPass(email: String,isCanBeChanged:MutableLiveData<Boolean?>) {
         val formBody = FormBody.Builder()
             .add("email", email)
             .build()
@@ -52,10 +54,8 @@ class ForgotPassRequests(private val activity: AppCompatActivity) {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    if (activity is ForgotPass) {
-                        activity.runOnUiThread {
-                            activity.onForgotPass()
-                        }
+                    CoroutineScope(Main).launch {
+                        isCanBeChanged.value=true
                     }
                 } else {
 
@@ -85,11 +85,10 @@ class ForgotPassRequests(private val activity: AppCompatActivity) {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    if (activity is ForgotPass) {
+                    /*if (activity is ForgotPass) {
                         activity.runOnUiThread {
-
                         }
-                    }
+                    }*/
                 } else {
 
                 }

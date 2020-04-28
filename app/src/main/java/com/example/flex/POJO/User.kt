@@ -1,23 +1,16 @@
 package com.example.flex.POJO
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "user_database")
 data class User(
+    @PrimaryKey
     val id: Long,
-    val name: String
-) {
-    var imageUrl: String = ""
-    var followersCount: Long = 0
-    var followingCount: Long = 0
-
-    constructor(
-        id: Long,
-        name: String,
-        imageUrl: String,
-        followersCount: Long,
-        followedCount: Long
-    ) : this(id, name) {
-        this.imageUrl = imageUrl
-        this.followersCount = followersCount
-        this.followingCount = followedCount
-    }
-
-}
+    var name: String="",
+    @ColumnInfo(name = "image_url")var imageUrl: String = "",
+    @ColumnInfo(name = "followers_count") var followersCount: Long = 0,
+    @ColumnInfo(name = "following_count")var followingCount: Long = 0,
+    @ColumnInfo(name = "is_Subscribed")var isSubscribed:Boolean=false
+)

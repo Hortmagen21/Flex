@@ -1,20 +1,21 @@
 package com.example.flex.Requests
 
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import com.example.flex.Fragments.CameraFragment
+import androidx.lifecycle.MutableLiveData
 import com.example.flex.MainData
-import com.example.flex.SignIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.*
 import java.io.IOException
 import java.net.CookieManager
 import java.net.CookiePolicy
 
 class PhotoRequests(
-    private val fragment: Fragment,
+    private val isMustSignIn: MutableLiveData<Boolean?>,
     private val csrftoken: String,
     private val sessionId: String
 ) {
@@ -28,52 +29,25 @@ class PhotoRequests(
             .build()
     }
 
-    fun stopRequests(){
-        for(call in client.dispatcher.queuedCalls()){
-            if(call.request().tag()==MainData.TAG_DOWNLOAD_PHOTO&&
-                call.request().tag()==MainData.TAG_VIEW_PHOTO){
+    fun stopRequests() {
+        for (call in client.dispatcher.queuedCalls()) {
+            if (call.request().tag() == MainData.TAG_DOWNLOAD_PHOTO ||
+                call.request().tag() == MainData.TAG_VIEW_PHOTO
+            ) {
                 call.cancel()
             }
         }
-        for(call in client.dispatcher.runningCalls()){
-            if(call.request().tag()==MainData.TAG_DOWNLOAD_PHOTO&&
-                        call.request().tag()==MainData.TAG_VIEW_PHOTO){
+        for (call in client.dispatcher.runningCalls()) {
+            if (call.request().tag() == MainData.TAG_DOWNLOAD_PHOTO ||
+                call.request().tag() == MainData.TAG_VIEW_PHOTO
+            ) {
                 call.cancel()
             }
         }
-    }
-    fun viewPhoto(link: String) {
-        val call = makeGetPhotoCall(link,MainData.TAG_VIEW_PHOTO)
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    val inputStream = response.body!!.byteStream()
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    if (fragment is CameraFragment) {
-                        (fragment.context as AppCompatActivity).runOnUiThread {
-                            fragment.image.setImageBitmap(bitmap)
-                        }
-                    }
-                } else if (response.code == MainData.ERR_403) {
-                    (fragment.context as AppCompatActivity).runOnUiThread {
-                        val intent =
-                            Intent(fragment.context as AppCompatActivity, SignIn().javaClass)
-                        (fragment.context as AppCompatActivity).startActivity(intent)
-                        (fragment.context as AppCompatActivity).finish()
-                    }
-                } else {
-
-                }
-            }
-        })
     }
 
     fun downloadPhotoByUrl(url: String, photoView: ImageView) {
-        val call = makeGetPhotoCall(url,MainData.TAG_DOWNLOAD_PHOTO)
+        val call = makeGetPhotoCall(url, MainData.TAG_DOWNLOAD_PHOTO)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
 
@@ -81,19 +55,16 @@ class PhotoRequests(
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val inputStream = response.body!!.byteStream()
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    (fragment.context as AppCompatActivity).runOnUiThread {
-                        photoView.setImageBitmap(bitmap)
+                    CoroutineScope(IO).launch {
+                        val inputStream = response.body!!.byteStream()
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        withContext(Main) {
+                            photoView.setImageBitmap(bitmap)
+                        }
                     }
 
                 } else if (response.code == MainData.ERR_403) {
-                    (fragment.context as AppCompatActivity).runOnUiThread {
-                        val intent =
-                            Intent(fragment.context as AppCompatActivity, SignIn().javaClass)
-                        (fragment.context as AppCompatActivity).startActivity(intent)
-                        (fragment.context as AppCompatActivity).finish()
-                    }
+                    isMustSignIn.postValue(true)
                 }
             }
         })

@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.flex.Fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    var account = AccountFragment(this)
+    var account = MainUserAccountFragment()
     var home = HomeFragment()
     var tv = TvFragment()
     var map = MapFragment()
@@ -26,15 +28,15 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, home, "fragment_tag")
             .commit()
-        setActionListener()
         val sharedPreferences = getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESION_ID, "")
+        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
         if (sessionId == "" || csrftoken == "") {
-            val intent = Intent(this, Registration().javaClass)
+            val intent = Intent(this, Registration::class.java)
             startActivity(intent)
             finish()
         }
+        setActionListener()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -48,14 +50,6 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onResumeFragments() {
-        super.onResumeFragments()
-    }
-
     private fun setActionListener() {
         bnv = findViewById(R.id.bottom_bar)
         bnv.setOnNavigationItemSelectedListener { menuItem ->
@@ -64,15 +58,15 @@ class MainActivity : AppCompatActivity() {
             val selectedFragment: Fragment =
                 when (menuItem.itemId) {
                     R.id.action_account -> {
+                        isAddToBackStack = true
                         if (supportFragmentManager.findFragmentByTag("fragment_tag")!! == account) {
-                            account = AccountFragment(this)
                             isAddToBackStack = false
                         }
                         account
                     }
                     R.id.action_camera -> {
+                        isAddToBackStack = true
                         if (supportFragmentManager.findFragmentByTag("fragment_tag")!! == camera) {
-                            camera = CameraFragment()
                             isAddToBackStack = false
                         }
                         camera
@@ -84,25 +78,27 @@ class MainActivity : AppCompatActivity() {
                         home
                     }
                     R.id.action_map -> {
+                        isAddToBackStack = true
                         if (supportFragmentManager.findFragmentByTag("fragment_tag")!! == map) {
-                            map = MapFragment()
                             isAddToBackStack = false
                         }
                         map
                     }
                     R.id.action_tv -> {
+                        isAddToBackStack = true
                         if (supportFragmentManager.findFragmentByTag("fragment_tag")!! == tv) {
-                            tv = TvFragment()
                             isAddToBackStack = false
                         }
                         tv
                     }
                     else -> supportFragmentManager.findFragmentById(R.id.frame_container)!!
                 }
-            val fragmentManager = supportFragmentManager.beginTransaction()
-            fragmentManager.replace(R.id.frame_container, selectedFragment, "fragment_tag")
-            if (isAddToBackStack) fragmentManager.addToBackStack(null)
-            fragmentManager.commit()
+            if (isAddToBackStack) {
+                val fragmentManager = supportFragmentManager.beginTransaction()
+                fragmentManager.replace(R.id.frame_container, selectedFragment, "fragment_tag")
+                if (isAddToBackStack) fragmentManager.addToBackStack(null)
+                fragmentManager.commit()
+            }
             true
         }
     }

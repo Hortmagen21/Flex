@@ -1,26 +1,27 @@
 package com.example.flex.Fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.flex.*
 import com.example.flex.Adapter.PostAdapter
-import com.example.flex.MainData
 import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
-import com.example.flex.R
-import com.example.flex.Requests.PostRequests
 
-class HomeFragment : Fragment(), PostAdapter.OnUserClickListener {
+class HomeFragment : Fragment(), PostAdapter.OnUserClickListener,PostAdapter.PhotosDownload {
     lateinit var v: View
     lateinit var recycler: RecyclerView
     lateinit var postAdapter: PostAdapter
-    private var request: PostRequests? = null
+    private lateinit var mViewModel:HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,39 +29,28 @@ class HomeFragment : Fragment(), PostAdapter.OnUserClickListener {
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.fragment_home, container, false)
+        mViewModel= ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        mViewModel.allPosts.observe(viewLifecycleOwner, Observer {
+            setPosts(it)
+        })
+        mViewModel.isMustSignIn.observe(viewLifecycleOwner, Observer {
+            if(it==true){
+                val intent= Intent(this.context, SignIn::class.java)
+                startActivity(intent)
+                activity?.finish()
+            }
+        })
         loadRecyclerView()
         loadPosts()
         return v
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-
-
     private fun loadPosts() {
-        request = makePostRequest()
-        request!!.viewAllPostsHome(0)
+        mViewModel.refreshPosts(0)
     }
 
-    fun addPosts(list: List<Post>) {
-        postAdapter.addItems(list)
+    private fun setPosts(list: List<Post>) {
+        postAdapter.setItems(list)
     }
 
     private fun loadRecyclerView() {
@@ -76,32 +66,38 @@ class HomeFragment : Fragment(), PostAdapter.OnUserClickListener {
     }
 
     override fun onUserClick(user: User) {
-        val fragment = AccountFragment(v.context as AppCompatActivity)
-        fragmentManager!!.beginTransaction().replace(R.id.frame_container, fragment, "fragment_tag")
-            .commit()
-        fragment.user = user
-    }
-
-    override fun onLikeClick(postId: Long) {
-        if(request==null){
-            request=makePostRequest()
-        }
-        request!!.likePost(postId)
-    }
-
-    override fun onCommmentClick(postId: Long) {
-        if(request==null){
-            request=makePostRequest()
-        }
-        request!!.commentPost(postId)
-    }
-
-    private fun makePostRequest(): PostRequests {
-        val activity = this.activity
         val sharedPreferences =
-            activity!!.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return PostRequests(this, csrftoken, sessionId)
+            v.context.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+        if (user.id == sharedPreferences.getLong(MainData.YOUR_ID, 0)||user.id==0.toLong()) {
+            val fragment = MainUserAccountFragment()
+            fragment.mUser = user
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+        } else {
+            val fragment = AccountFragment()
+            fragment.mUser = user
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.frame_container, fragment, "fragment_tag")?.addToBackStack(null)
+                ?.commit()
+        }
+    }
+
+    override fun onLikeClick(post:Post) {
+        mViewModel.likePost(post)
+    }
+
+    override fun onCommentClick(postId:Long,text:String) {
+        val intent=Intent(this.context,CommentsEnlist::class.java)
+        intent.putExtra("PostId",postId)
+        startActivity(intent)
+    }
+
+    override fun onUnlikeClick(post:Post) {
+        mViewModel.unLikePost(post)
+    }
+
+
+    override fun photoDownload(link: String, photo: ImageView) {
+        mViewModel.downloadPhoto(link,photo)
     }
 }

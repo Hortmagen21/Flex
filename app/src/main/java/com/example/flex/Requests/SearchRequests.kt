@@ -1,12 +1,12 @@
 package com.example.flex.Requests
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import com.example.flex.DataBase.UserDao
 import com.example.flex.MainData
 import com.example.flex.POJO.User
-import com.example.flex.Fragments.SearchRecyclerFragment
-import com.example.flex.SignIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -15,9 +15,9 @@ import java.net.CookieManager
 import java.net.CookiePolicy
 
 class SearchRequests(
-    private val fragment: Fragment,
-    private val csrftoken: String,
-    private val sessionId: String
+    private val mIsMustSignIn: MutableLiveData<Boolean?>,
+    private val mCsrftoken: String,
+    private val mSessionId: String
 ) {
     private val client: OkHttpClient
     private val cookieManager = CookieManager()
@@ -28,20 +28,21 @@ class SearchRequests(
             .cookieJar(JavaNetCookieJar(cookieManager))
             .build()
     }
-    fun stopRequests(){
-        for(call in client.dispatcher.queuedCalls()){
-            if(call.request().tag()==MainData.TAG_SEARCH){
+
+    fun stopRequests() {
+        for (call in client.dispatcher.queuedCalls()) {
+            if (call.request().tag() == MainData.TAG_SEARCH) {
                 call.cancel()
             }
         }
-        for(call in client.dispatcher.runningCalls()){
-            if(call.request().tag()==MainData.TAG_SEARCH){
+        for (call in client.dispatcher.runningCalls()) {
+            if (call.request().tag() == MainData.TAG_SEARCH) {
                 call.cancel()
             }
         }
     }
 
-    fun search(search: String) {
+    fun search(search: String, userDao: UserDao, searchResult: MutableLiveData<List<User>>) {
         val urlHttp = HttpUrl.Builder().scheme("https")
             .host(MainData.BASE_URL)
             .addPathSegment(MainData.URL_PREFIX_TV_SHOWS)
@@ -51,7 +52,7 @@ class SearchRequests(
         val request = Request.Builder().url(urlHttp)
             .tag(MainData.TAG_SEARCH)
             .addHeader(MainData.HEADER_REFRER, "https://" + MainData.BASE_URL)
-            .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId")
+            .addHeader("Cookie", "csrftoken=$mCsrftoken; sessionid=$mSessionId")
             .build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
@@ -61,41 +62,57 @@ class SearchRequests(
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val isLogined = response.header("isLogin", "true")
-                    if (isLogined == "true") {
-                        val post = response.body?.string()
-                        val post1: JSONObject
-                        var map = mutableMapOf<String, Long>()
-                        if (post != null) {
-                            post1 = JSONObject(post)
-                            map = toMap(post1)
-                        }
-                        val users = mutableListOf<User>()
-                        for (user in map) {
-                            users.add(User(user.value, user.key))
-                        }
-                        if (fragment is SearchRecyclerFragment)
-                            (fragment.context as AppCompatActivity).runOnUiThread {
-                                fragment.searchAdapter.setUsers(users)
+                    CoroutineScope(IO).launch {
+                        val isLogined = response.header("isLogin", "true")
+                        if (isLogined == "true") {
+                            val post = response.body?.string()
+                            val post1: JSONObject
+                            var map = mutableMapOf<String, Long>()
+                            if (post != null) {
+                                post1 = JSONObject(post)
+                                map = toMap(post1)
                             }
-                    } else {
-                        (fragment.context as AppCompatActivity).runOnUiThread {
-                            val intent = Intent(fragment.context, SignIn().javaClass)
-                            (fragment.context as AppCompatActivity).startActivity(intent)
+                            val users = mutableListOf<User>()
+                            for (user in map) {
+                                users.add(User(user.value, user.key))
+                            }
+                            val previousList = userDao.searchUsers(query = search)
+                            userDao.insertAll(users)
+                            searchResult.postValue(users)
+                            deleteOddsFromDB(previousList, users, userDao)
                         }
                     }
                 } else if (response.code == MainData.ERR_401) {
-                    (fragment.context as AppCompatActivity).runOnUiThread {
-                        val intent =
-                            Intent(fragment.context as AppCompatActivity, SignIn().javaClass)
-                        (fragment.context as AppCompatActivity).startActivity(intent)
-                        (fragment.context as AppCompatActivity).finish()
-                    }
+                    mIsMustSignIn.postValue(true)
                 } else {
 
                 }
             }
         })
+    }
+
+    private fun deleteOddsFromDB(
+        previousList: List<User>,
+        currentList: List<User>,
+        userDao: UserDao
+    ) {
+        if (previousList != previousList.intersect(currentList)) {
+            val temp = mutableListOf<User>()
+            var a = 0
+            var b = 0
+            while (a < previousList.size - 1 && b < currentList.size - 1) {
+                if (previousList[a].id < currentList[b].id) {
+                    temp.add(previousList[a])
+                    a++
+                } else if (previousList[a].id > currentList[b].id) {
+                    b++
+                } else {
+                    a++
+                    b++
+                }
+            }
+            userDao.deleteMany(temp)
+        }
     }
 
     private fun toMap(json: JSONObject): MutableMap<String, Long> {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MakeAvatarActivity">
+    <com.example.flex.SquareImageView
+        android:id="@+id/send_image_avatar"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        />
+    <Button
+        android:background="@drawable/main_app_buttons"
+        android:id="@+id/button_submit_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/send_image_avatar"
+        android:text="Publish"
+        android:visibility="gone"/>
+    <Button
+        android:background="@drawable/main_app_buttons"
+        android:id="@+id/button_get_picture_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/send_image_avatar"
+        android:text="Get picture" />
+
+    <Button
+        android:background="@drawable/main_app_buttons"
+        android:id="@+id/button_take_picture_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_get_picture_avatar"
+        android:text="Take picture" />
+</RelativeLayout>

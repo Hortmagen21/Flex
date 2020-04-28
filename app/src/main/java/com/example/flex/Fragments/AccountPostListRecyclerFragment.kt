@@ -5,25 +5,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.flex.AccountViewModel
 import com.example.flex.Adapter.PostsAccountAdapter
 import com.example.flex.MainData
-import com.example.flex.POJO.Post
+import com.example.flex.POJO.PostAccount
 import com.example.flex.POJO.User
 import com.example.flex.R
-import com.example.flex.Requests.PostRequests
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AccountPostListRecyclerFragment(
-    private val activity: AppCompatActivity,
-    private val user: User?
-) : Fragment() {
+    private var user: User?
+) : Fragment(), PostsAccountAdapter.OnPostClickListener, PostsAccountAdapter.PhotosDownload {
     lateinit var v: View
     private lateinit var recycler: RecyclerView
     lateinit var adapter: PostsAccountAdapter
-    private var request: PostRequests? = null
+    private lateinit var mAccountViewModel: AccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,33 +36,24 @@ class AccountPostListRecyclerFragment(
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.account_post_list_recycler, container, false)
+        if (user == null) {
+            val sharedPreferences =
+                v.context.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            user = User(sharedPreferences.getLong(MainData.YOUR_ID, 0))
+        }
         loadRecycler()
+        mAccountViewModel = ViewModelProviders.of(activity!!).get(AccountViewModel::class.java)
+        mAccountViewModel.getAllPostsAccount(user!!.id).observe(viewLifecycleOwner, Observer {
+            adapter.setPosts(it)
+
+
+        })
         addActionListener()
         loadPosts()
         return v
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-
-    fun addActionListener() {
+    private fun addActionListener() {
 
     }
 
@@ -65,31 +61,31 @@ class AccountPostListRecyclerFragment(
         recycler = v.findViewById(R.id.recycler_posts_account)
         recycler.layoutManager = LinearLayoutManager(this.context)
 
-        adapter = PostsAccountAdapter(this)
+        adapter = PostsAccountAdapter(this, this)
         recycler.adapter = adapter
     }
 
-    fun loadPosts() {
-        request = makePostRequest()
-        if (user != null) {
-            request!!.viewAllPostsAccount(user.id)
-        } else {
-            val sharedPreferences =
-                activity.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-            request!!.viewAllPostsAccount(sharedPreferences.getLong(MainData.YOUR_ID, 0))
-        }
+    private fun loadPosts() {
+        mAccountViewModel.getPostsForAcc(user!!.id)
     }
 
-    private fun makePostRequest(): PostRequests {
-        val activity = this.activity
-        val sharedPreferences =
-            activity.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return PostRequests(this, csrftoken, sessionId)
-    }
-
-    fun addPosts(list: List<Post>) {
+    fun addPosts(list: List<PostAccount>) {
         adapter.addPosts(list)
+    }
+
+    override fun onLikeClick(post: PostAccount) {
+        mAccountViewModel.likePost(post)
+    }
+
+    override fun onCommentClick(post: PostAccount) {
+        mAccountViewModel.unLikePost(post)
+    }
+
+    override fun onUnlikeClick(post: PostAccount) {
+        //TODO
+    }
+
+    override fun photoDownload(link: String, photo: ImageView) {
+        mAccountViewModel.downloadPhoto(link, photo)
     }
 }

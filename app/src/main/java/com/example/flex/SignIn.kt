@@ -8,57 +8,66 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.flex.Requests.RegistRequests
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.withContext
 import java.net.HttpCookie
 
 class SignIn : AppCompatActivity() {
-    lateinit var login:EditText
-    lateinit var password:EditText
+    private lateinit var mLogin: EditText
+    private lateinit var mPassword: EditText
+    private lateinit var mViewModel: AccountViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
+        mViewModel=ViewModelProvider(this).get(AccountViewModel::class.java)
+        mViewModel.isMustSignIn.observe(this, Observer {
+            if(it==false){
+                val intent=Intent(this,MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        })
         setActionListener()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        login.setText("")
-        password.setText("")
+        mLogin.setText("")
+        mPassword.setText("")
     }
 
     private fun setActionListener() {
         val signInButton = findViewById<Button>(R.id.sign_in_button)
-        login = findViewById(R.id.login)
-        password = findViewById(R.id.password)
-        val dontAcc=findViewById<TextView>(R.id.dont_acc)
-        dontAcc.setOnClickListener{
-            val intent= Intent(this,Registration().javaClass)
+        mLogin = findViewById(R.id.login)
+        mPassword = findViewById(R.id.password)
+        val dontAcc = findViewById<TextView>(R.id.dont_acc)
+        dontAcc.setOnClickListener {
+            val intent = Intent(this, Registration().javaClass)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         }
         signInButton.setOnClickListener {
-            if (password.text.toString() != "" && login.text.toString() != "") {
-                val request = RegistRequests(
-                    "https://${MainData.BASE_URL}/${MainData.URL_PREFIX_ACC_BASE}/${MainData.LOGIN}",
-                    password.text.toString(), login.text.toString(),
-                    "",
-                    this
-                )
-                request.callLogin()
+            if (mPassword.text.toString().trim() != "" && mLogin.text.toString().trim() != "") {
+                mViewModel.login(mLogin.text.toString(),mPassword.text.toString())
             } else
                 Toast.makeText(this, "try again", Toast.LENGTH_LONG).show()
         }
     }
 
-    fun setCookies(cookies: List<HttpCookie>,id:Long) {
-        val sharedPreferences=getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-        val editor=sharedPreferences.edit()
-        editor.putString(MainData.CRSFTOKEN,cookies[0].value)
-        editor.putString(MainData.SESION_ID,cookies[1].value)
-        editor.putLong(MainData.YOUR_ID,id)
+    suspend fun setCookies(cookies: List<HttpCookie>, id: Long) {
+        val sharedPreferences = getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(MainData.CRSFTOKEN, cookies[0].value)
+        editor.putString(MainData.SESSION_ID, cookies[1].value)
+        editor.putLong(MainData.YOUR_ID, id)
         editor.apply()
-        val intent=Intent(this,MainActivity().javaClass)
-        startActivity(intent)
-        finish()
+        withContext(Main) {
+            val intent = Intent(applicationContext, MainActivity().javaClass)
+            startActivity(intent)
+            finish()
+        }
     }
 }

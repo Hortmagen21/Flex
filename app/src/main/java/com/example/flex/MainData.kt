@@ -11,7 +11,8 @@ object MainData {
     val CHECK_LOG="check_log"
     val LIKE="like"
     val COMMENT="comment"
-    val FOLLOW_API = "follow"
+    val FOLLOW = "follow"
+    val UNFOLLOW="unsubscribe"
     val LOGIN="login"
     val LOGOUT="logout"
     val FORGOT_PASS="forgot_pass"
@@ -21,7 +22,7 @@ object MainData {
     val VIEW_ACC="view_acc"
     val SEND_IMAGE="add_post"
     val VIEW_PHOTO="view_photo"
-    val SESION_ID = "session id"
+    val SESSION_ID = "session id"
     val YOUR_ID="your id"
     val ERR_403=403
     val ERR_401=401
@@ -44,4 +45,10 @@ object MainData {
     val TAG_CHECKLOG="checklog"
     val TAG_REGISTER="register"
     val TAG_UPLOAD="upload"
+    val TAG_UNLIKE="unlike"
+    val UNLIKE="dislike"
+    val NAME="name"
+    val TAG_NAME="name"
+    val VIEW_INFORMATION_USER="view_information_user"
+    val VIEW_COMMENTS_TO_POST="view_all_comments"
 }

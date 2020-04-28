@@ -5,22 +5,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flex.Adapter.PhotosAdapter
-import com.example.flex.MainData
-import com.example.flex.POJO.Post
+import com.example.flex.POJO.PostAccount
 import com.example.flex.POJO.User
 import com.example.flex.R
-import com.example.flex.Requests.UsersRequests
+import com.example.flex.AccountViewModel
+import com.example.flex.MainData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class AccountPostTableRecyclerFragment(private val activity:AppCompatActivity,private val user:User?): Fragment() {
+class AccountPostTableRecyclerFragment(private var user: User?, val updator: UserUpdates) :
+    Fragment(), PhotosAdapter.PhotosDownload {
     lateinit var v: View
     private lateinit var recycler: RecyclerView
     lateinit var adapter: PhotosAdapter
-    private var request:UsersRequests?=null
+    private lateinit var mAccountViewModel: AccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,35 +36,34 @@ class AccountPostTableRecyclerFragment(private val activity:AppCompatActivity,pr
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.account_post_table_recycler, container, false)
+        if (user == null) {
+            val sharedPreferences =
+                v.context.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            user = User(sharedPreferences.getLong(MainData.YOUR_ID, 0))
+        }
         loadRecycler()
+        mAccountViewModel = ViewModelProviders.of(activity!!).get(AccountViewModel::class.java)
+        mAccountViewModel.getAllPostsAccount(user!!.id).observe(viewLifecycleOwner, Observer {
+            adapter.setPhotos(it)
+
+        })
+        mAccountViewModel.getMainUser().observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                if (user == null || user!!.id == it.id) {
+                    user = it
+                    updator.setUser(it)
+                }
+            }
+        })
         addActionListener()
         loadPhotos()
         return v
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (request != null) {
-            request!!.stopRequests()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (request != null) {
-            request!!.stopRequests()
-        }
     }
 
     fun addActionListener() {
 
     }
+
     private fun loadRecycler() {
         recycler = v.findViewById(R.id.recycler_photos_account)
         recycler.layoutManager = GridLayoutManager(this.context, 3)
@@ -64,24 +71,20 @@ class AccountPostTableRecyclerFragment(private val activity:AppCompatActivity,pr
         adapter = PhotosAdapter(this)
         recycler.adapter = adapter
     }
-    fun loadPhotos(){
-        request=makeUserRequest()
-        if(user!=null){
-            request!!.viewAcc(user.id)
-        }else{
-            val sharedPreferences=activity.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-            request!!.viewAcc(sharedPreferences.getLong(MainData.YOUR_ID,0))
-        }
+
+    private fun loadPhotos() {
+        mAccountViewModel.getMiniPostsForAcc(user!!.id, user)
     }
-    private fun makeUserRequest(): UsersRequests {
-        val activity = this.activity
-        val sharedPreferences =
-            activity.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return UsersRequests(this,csrftoken, sessionId)
-    }
-    fun addPhotos(list:List<Post>) {
+
+    fun addPhotos(list: List<PostAccount>) {
         adapter.addPhotos(list)
+    }
+
+    interface UserUpdates {
+        fun setUser(user: User)
+    }
+
+    override fun downloadPhoto(link: String, photo: ImageView) {
+        mAccountViewModel.downloadPhoto(link, photo)
     }
 }

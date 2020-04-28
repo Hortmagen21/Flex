@@ -1,69 +1,65 @@
 package com.example.flex
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.example.flex.Requests.ForgotPassRequests
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 class ForgotPass : AppCompatActivity() {
-    private lateinit var emailText: EditText
-    private lateinit var newPass: EditText
-    private lateinit var emailCode: EditText
-    private lateinit var forgotPassBtn: Button
-    private lateinit var newPassBtn: Button
-    private var request:ForgotPassRequests?=null
-    private val sharedPreferences =getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+    private lateinit var mEmailText: EditText
+    private lateinit var mNewPass: EditText
+    private lateinit var mEmailCode: EditText
+    private lateinit var mForgotPassBtn: Button
+    private lateinit var mNewPassBtn: Button
+    private lateinit var mSharedPreferences: SharedPreferences
+    private lateinit var mViewModel: AccountViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.change_password)
-        setActionListener()
-        if(sharedPreferences.getBoolean("isEnabled",false)){
+        mViewModel = ViewModelProvider(this).get(AccountViewModel::class.java)
+        mViewModel.isPasswordCanBeChanged.observe(this, Observer {
+            if (it==true) {
+                onForgotPass()
+            }
+        })
+        mSharedPreferences = getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+        if (mSharedPreferences.getBoolean("isEnabled", false)) {
             onForgotPass()
-            emailCode.setText(sharedPreferences.getString("email code",""))
-            newPass.setText(sharedPreferences.getString("new password",""))
+            mEmailCode.setText(mSharedPreferences.getString("email code", ""))
+            mNewPass.setText(mSharedPreferences.getString("new password", ""))
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if(request!=null){
-            request!!.stopRequests()
-        }
+        setActionListener()
     }
 
     private fun setActionListener() {
-        emailText = findViewById(R.id.forgot_pass_email)
-        forgotPassBtn = findViewById(R.id.forgot_pass_button)
-        emailCode = findViewById(R.id.change_pass_code)
-        newPass = findViewById(R.id.change_pass_pass)
-        newPassBtn = findViewById(R.id.change_pass_button)
-        forgotPassBtn.setOnClickListener {
-            val request = ForgotPassRequests(this)
-            request.forgotPass(emailText.text.toString())
+        mEmailText = findViewById(R.id.forgot_pass_email)
+        mForgotPassBtn = findViewById(R.id.forgot_pass_button)
+        mEmailCode = findViewById(R.id.change_pass_code)
+        mNewPass = findViewById(R.id.change_pass_pass)
+        mNewPassBtn = findViewById(R.id.change_pass_button)
+        mForgotPassBtn.setOnClickListener {
+            mViewModel.forgotPassword(mEmailText.text.toString())
         }
-        newPassBtn.setOnClickListener {
-            request = ForgotPassRequests(this)
-            request!!.changePass(
-                emailText.text.toString(),
-                newPass.text.toString(),
-                emailCode.text.toString()
+        mNewPassBtn.setOnClickListener {
+            mViewModel.changePassword(
+                email = mEmailText.text.toString(),
+                newPassword = mNewPass.text.toString(),
+                checkCode = mEmailCode.text.toString()
             )
         }
     }
 
-    fun onForgotPass() {
-        val editor=sharedPreferences.edit()
-        editor.putBoolean("isEnabled",true)
+    private fun onForgotPass() {
+        val editor = mSharedPreferences.edit()
+        editor.putBoolean("isEnabled", true)
         editor.apply()
-        emailCode.visibility = View.VISIBLE
-        newPass.visibility = View.VISIBLE
-        newPassBtn.visibility = View.VISIBLE
-    }
-
-    fun onChangePass() {
-
+        mEmailCode.visibility = View.VISIBLE
+        mNewPass.visibility = View.VISIBLE
+        mNewPassBtn.visibility = View.VISIBLE
     }
 }
