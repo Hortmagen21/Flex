@@ -20,7 +20,8 @@ class Chat(models.Model):
 
 
 class ChatMembers(models.Model):
-    chat_id = models.IntegerField(primary_key=True)
+    ids = models.AutoField(primary_key=True)
+    chat_id = models.IntegerField()
     user_id = models.IntegerField()
 
     class Meta:
@@ -30,9 +31,11 @@ class ChatMembers(models.Model):
 
 class Message(models.Model):
     chat_id = models.IntegerField(primary_key=True)
+    message = models.CharField(max_length=100, blank=True, null=True)
     message_id = models.AutoField
     user_id = models.IntegerField()
     date = models.IntegerField()
 
     class Meta:
+        ordering = ('-date',)
         db_table = 'message'
