@@ -10,11 +10,12 @@ urlpatterns = [
     path('view_photo', views.view_photo),
     path('like', views.like),
     path('comment', views.comment),
-    path('view_post', views.view_post),
+    #path('view_post', views.view_post),
     path('view_all_posts', views.view_all_posts),
     path('unsubscribe', views.unsubscribe),
     path('dislike', views.dislike),
     path('avatar', views.ava),
     path('view_all_comments', views.view_all_comments),
+    path('view_information_user',views.view_information_user),
 
 ]

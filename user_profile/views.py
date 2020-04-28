@@ -46,6 +46,7 @@ def check_i_follow(request):
     if request.method == 'GET':
         user_id = request.GET.get('id', int(request.session['_auth_user_id']))
         user_row = list(UserFollower.objects.filter(follower=int(user_id)))
+
         return HttpResponse(len(user_row))
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
@@ -187,7 +188,7 @@ def comment(request):
 
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
-def view_post(request):
+def view_post(request):#not using
     if request.method == 'GET':
         id_post = request.GET.get('id', '')
         try:
@@ -203,6 +204,25 @@ def view_post(request):
             return response
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def view_information_user(request):
+    if request.method == 'GET':
+        user_id = request.GET.get('id',int(request.session['_auth_user_id']))
+        avatars = list(UserAvatar.objects.filter(id_user=user_id))
+        user_followed = list(UserFollower.objects.filter(follower=int(user_id)))
+        user_follower = list(UserFollower.objects.filter(id=int(user_id)))
+        try:
+            user_name = User.objects.get(id=int(user_id)).username
+            post = PostBase.objects.get(id=int(avatars[-1].id_post))
+        except ObjectDoesNotExist:
+            return HttpResponseNotFound()
+        except MultipleObjectsReturned:
+            return HttpResponseBadRequest()
+        else:
+            return JsonResponse({'user_name': user_name, 'ava_src': post.img, "followed": len(user_followed), "i_follower":len(user_follower)})
 
 
 @csrf_protect
