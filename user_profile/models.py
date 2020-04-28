@@ -44,8 +44,8 @@ class Comments(models.Model):
     id_post = models.IntegerField()
     id_user = models.IntegerField()
     comment = models.CharField(max_length=100)
-    time = models.BigIntegerField(primary_key=True)
-
+    time = models.BigIntegerField()
+    comment_id = models.AutoField(primary_key=True)
     class Meta:
         db_table = 'comments'
         unique_together = (('time', 'id_user'),)
