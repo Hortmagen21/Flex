@@ -20,7 +20,7 @@ test_url = 'http://127.0.0.1:8000/'
 def search_people(request):
     if request.method == 'GET':
         name = request.GET.get('name', '')
-        user_row = list(User.objects.filter(username__contains=name))
+        user_row = list(User.objects.filter(username__icontains=name))
         user_list = {}
         for user in user_row:
             user_list.update({user.username: user.id})
