@@ -46,11 +46,13 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'chatroom.apps.ChatroomConfig',
     'user_profile.apps.UserProfileConfig',
+    'channels',
 
     #'mysite.polls.apps.PollsConfig',
     #'mysite.polls',
 ]
 
+ASGI_APPLICATION = 'mysite.routing.application'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -79,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+#WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
 # Database
@@ -134,6 +136,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+            #'hosts':[os.environ.get('REDIS_URL','redis://localhost:6379)],'
+        },
+    },
+}
 django.setup()
 
 

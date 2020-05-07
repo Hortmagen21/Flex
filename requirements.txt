@@ -3,5 +3,5 @@ django-heroku
 djangorestframework
 gunicorn
 Pillow
-websockets
 psycopg2
+Channels

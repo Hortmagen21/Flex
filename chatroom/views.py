@@ -1,9 +1,11 @@
 from django.shortcuts import render
-import websockets
-from websockets import WebSocketServerProtocol
+
 import logging#?
 import asyncio#?
 import django
+
+import asyncio
+from channels.db import database_sync_to_async
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
 from chatroom.models import Chat,ChatMembers,Message
@@ -15,7 +17,7 @@ from django.http import JsonResponse
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
-
+#!procedurs or function
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def create_chat(request):
@@ -28,9 +30,9 @@ def create_chat(request):
             user_id = int(request.session['_auth_user_id'])
             chat_exist = False
             try:
-                receiver_avatar = list(UserAvatar.objects.filter(id_user=int(id_receiver)))[-1]
+                receiver_avatar = list(UserAvatar.objects.filter(id_user=int(id_receiver)))[-1]#new table
             except IndexError:
-                ava = "None"
+                ava = "None"#null
             except MultipleObjectsReturned:
                 return HttpResponseBadRequest()
             else:
@@ -65,7 +67,7 @@ def create_chat(request):
                                     except ObjectDoesNotExist:
                                         pass
                                     else:
-                                        chat_exist = True
+                                        chat_exist = True#break
                 messages = []
                 if chat_exist:
                     chat_response = int(chat_settings.chat_id)
@@ -152,6 +154,90 @@ def view_chat_room(request):
         return JsonResponse(response, safe=False)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def upload_messages(request):
+    if request.method == "POST":
+        chat_id = int(request.POST.get(['id'][0], ""))
+        last_id = int(request.POST.get(['id'][0], 0))
+        mess = list(Message.objects.filter(chat_id=chat_id,message_id__gt=last_id))[:10]
+        response = []
+        for msg in mess:
+            avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
+            try:
+                sender = list(User.objects.get(id=msg.user_id))
+                post = PostBase.objects.get(id=int(avatars[-1].id_post))
+            except ObjectDoesNotExist:
+                return HttpResponseNotFound()
+            except MultipleObjectsReturned:
+                return HttpResponseBadRequest()
+            except IndexError:
+                ava_src = "None"
+            else:
+                ava_src = post.img
+            response.append({'messages':msg.message,'pub_data':int(msg.date),'senders_names':sender[0].username,'senders_avatars':sender})
+        return JsonResponse({'msg_information':response})
+
+
+def create_chat_ws(receiver_name, user_name):
+    chat_exist = False
+
+    try:
+        receiver = User.objects.get(username=receiver_name)
+        user = User.objects.get(username=user_name)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+    except MultipleObjectsReturned:
+        return HttpResponseBadRequest()
+    else:
+        receiver_id = int(receiver.id)
+        user_id = int(user.id)
+        try:
+            chat_list = list(ChatMembers.objects.filter(user_id=user_id))
+        except ObjectDoesNotExist:
+            pass
+        else:
+            for chat in chat_list:
+                try:
+                    chat_settings = Chat.objects.get(chat_id=chat.chat_id)
+                except ObjectDoesNotExist:
+                    return HttpResponseNotFound()
+                except MultipleObjectsReturned:
+                    return HttpResponseBadRequest()
+                else:
+                    if int(chat_settings.chat_members) == 2:
+                        try:
+                            receiver_chat = ChatMembers.objects.get(chat_id=chat_settings.chat_id, user_id=receiver_id)
+                        except MultipleObjectsReturned:
+                            return HttpResponseBadRequest()
+                        except ObjectDoesNotExist:
+                            pass
+                        else:
+                            chat_exist = True
+                            pass
+
+                if chat_exist:
+                    chat_response = int(chat_settings.chat_id)
+                else:
+                    creating_chat = Chat(chat_admin=user_id, chat_members=2)
+                    creating_chat.save()
+                    connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
+                    connection_me.save()
+                    connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
+                    connection_receiver.save()
+                    chat_response = int(creating_chat.chat_id)
+            return chat_response
+"""async def send_messages(websocket,path):
+    message= await websockets.recv()
+    print(f'{message}')
+    await websockets.send(message)
+start_server=websockets.serve(response,'localhost',1234)
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
+
+
 #@csrf_protect
 #@login_required(login_url=core_url + 'acc_base/login_redirection')
 #def view_duo_chat_room(request):
@@ -169,4 +255,4 @@ def view_chat_room(request):
         #else:
             #return JsonResponse({'receiver_ava': img_ava, 'receiver_name': receiver_name, 'receiver_messages': "none",'receiver_online' : 'none'})
 
-
+"""
