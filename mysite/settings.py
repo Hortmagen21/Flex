@@ -52,7 +52,17 @@ INSTALLED_APPS = [
     #'mysite.polls',
 ]
 
+
+
+CACHES = {
+    "default": {
+         "BACKEND": "redis_cache.RedisCache",
+         "LOCATION": os.environ.get('REDIS_URL'),
+    }
+}
+
 ASGI_APPLICATION = 'mysite.routing.application'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
