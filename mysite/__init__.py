@@ -1,0 +1,1 @@
+from mysite.celery import app as celery_app
