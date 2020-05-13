@@ -188,7 +188,7 @@ def create_chat_ws(receiver_name, user_name):
         receiver = User.objects.get(username=receiver_name)
         user = User.objects.get(username=user_name)
     except ObjectDoesNotExist:
-        return HttpResponseNotFound()
+        return 0
     except MultipleObjectsReturned:
         return HttpResponseBadRequest()
     else:
@@ -203,7 +203,7 @@ def create_chat_ws(receiver_name, user_name):
                 try:
                     chat_settings = Chat.objects.get(chat_id=chat.chat_id)
                 except ObjectDoesNotExist:
-                    return HttpResponseNotFound()
+                    return 1
                 except MultipleObjectsReturned:
                     return HttpResponseBadRequest()
                 else:
@@ -228,7 +228,7 @@ def create_chat_ws(receiver_name, user_name):
                     connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
                     connection_receiver.save()
                     chat_response = int(creating_chat.chat_id)
-            return chat_settings
+            return chat_response
 """async def send_messages(websocket,path):
     message= await websockets.recv()
     print(f'{message}')
