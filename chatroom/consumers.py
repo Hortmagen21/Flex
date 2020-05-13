@@ -27,7 +27,7 @@ class ChatConsumer(AsyncConsumer):
             print(i,j)
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
-
+        self.treat_obj = treat_obj
         #if treat_obj != -1:
         chat_room=f"chat_{treat_obj}"
         self.chat_room =  chat_room
@@ -77,9 +77,13 @@ class ChatConsumer(AsyncConsumer):
     async def chat_message(self,event):
         print('text', event)
         # send messages
+        data={
+            "message":event['text'],
+            "chat_id":self.treat_obj,
+        }
         await self.send({
             "type": "websocket.send",
-            "text": event['text']
+            "text": json.dumps(data),
         })
 
     async def websocket_disconnect(self,event):
@@ -91,11 +95,11 @@ class ChatConsumer(AsyncConsumer):
     def get_tread(self, user, other_username):
         return create_chat_ws(other_username, user)
 
-    @database_sync_to_async
-    def get_tread(self, msg,time):
-        user_name = User.objects.get(id=int(user_id)).username
-        new_message=Message()
-        return create_chat_ws(other_username, user)
+    #@database_sync_to_async
+    #def get_tread(self, msg,time):
+        #user_name = User.objects.get(id=int(user_id)).username
+        #new_message=Message()
+        #return create_chat_ws(other_username, user)
 
 
 
