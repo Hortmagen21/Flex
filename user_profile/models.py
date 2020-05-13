@@ -23,7 +23,7 @@ class PostBase(models.Model):
     milliseconds = models.BigIntegerField()
     img = models.CharField(max_length=100)
     description = models.CharField(max_length=100, blank=True, null=True)
-    img_mini = models.CharField(max_length=100)
+    img_mini = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         ordering = ('milliseconds',)
