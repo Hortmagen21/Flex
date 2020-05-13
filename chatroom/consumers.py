@@ -5,8 +5,9 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
-from .models import ChatMembers
+from .models import Message
 from .views import create_chat_ws
+from django.contrib.auth.models import User
 
 
 
@@ -19,23 +20,15 @@ class ChatConsumer(AsyncConsumer):
             "type": "websocket.accept"
         })
 
-        #await asyncio.sleep(30)#30
+
         other_user=str(self.scope['url_route']['kwargs']['username'])
         me= str(self.scope['user'])
-
+        for i,j in self.scope.items():
+            print(i,j)
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
-        #chat_id = get_tread(me,other_user)
-        #print(chat_id,'IDD')
 
-
-
-        #chat_id=dict_data.get('chat_id')
-        #self.chat_id=chat_id
-
-
-
-        #print("chat_{chat_id}".format(chat_id=chat_id),'HERREEE')
+        #if treat_obj != -1:
         chat_room=f"chat_{treat_obj}"
         self.chat_room =  chat_room
 
@@ -43,8 +36,6 @@ class ChatConsumer(AsyncConsumer):
             chat_room,
             self.channel_name
         )
-       
-
 
     async def websocket_receive(self,event):
         front_text=event.get('text', None)#chat_id
@@ -77,8 +68,6 @@ class ChatConsumer(AsyncConsumer):
                 #"text":self.chat_room,
 
             #})
-
-
         #await self.send({
             #"type": "websocket.send",
             #"text":front_text,
@@ -100,6 +89,12 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def get_tread(self, user, other_username):
+        return create_chat_ws(other_username, user)
+
+    @database_sync_to_async
+    def get_tread(self, msg,time):
+        user_name = User.objects.get(id=int(user_id)).username
+        new_message=Message()
         return create_chat_ws(other_username, user)
 
 

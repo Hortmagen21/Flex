@@ -177,7 +177,7 @@ def upload_messages(request):
                 ava_src = "None"
             else:
                 ava_src = post.img
-            response.append({'messages':msg.message,'pub_data':int(msg.date),'senders_names':sender[0].username,'senders_avatars':sender})
+            response.append({'messages':msg.message,'pub_data':int(msg.date),'senders_names':sender[0].username,'senders_avatars':ava_src})
         return JsonResponse({'msg_information':response})
 
 
@@ -188,7 +188,7 @@ def create_chat_ws(receiver_name, user_name):
         receiver = User.objects.get(username=receiver_name)
         user = User.objects.get(username=user_name)
     except ObjectDoesNotExist:
-        return 0
+        return -1
     except MultipleObjectsReturned:
         return HttpResponseBadRequest()
     else:
@@ -203,7 +203,7 @@ def create_chat_ws(receiver_name, user_name):
                 try:
                     chat_settings = Chat.objects.get(chat_id=chat.chat_id)
                 except ObjectDoesNotExist:
-                    return 1
+                    return -1
                 except MultipleObjectsReturned:
                     return HttpResponseBadRequest()
                 else:
