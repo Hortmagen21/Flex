@@ -90,14 +90,16 @@ class ChatConsumer(AsyncConsumer):
 
     async def chat_message(self,event):
         print('text', event)
+        # send messages
+        await self.send({
+            "type": "websocket.send",
+            "text": event['text']
+        })
 
     async def websocket_disconnect(self,event):
         print('disconnected', event)
-        #send messages
-        await self.send({
-            "type":"websocket.send",
-            "text":event['text']
-        })
+
+
 
     @database_sync_to_async
     def get_tread(self, user, other_username):
