@@ -8,13 +8,13 @@ from channels.db import database_sync_to_async
 from .models import Message
 from .views import create_chat_ws
 from django.contrib.auth.models import User
+from channels.auth import login
 
 
 
 class ChatConsumer(AsyncConsumer):
 
     async def websocket_connect(self,event):
-
 
         await self.send({
             "type": "websocket.accept"
@@ -23,8 +23,6 @@ class ChatConsumer(AsyncConsumer):
 
         other_user=str(self.scope['url_route']['kwargs']['username'])
         me= str(self.scope['user'])
-        for i,j in self.scope.items():
-            print("its i:"+i+"its j:"+j)
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
 
