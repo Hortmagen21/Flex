@@ -43,10 +43,7 @@ class ChatConsumer(AsyncConsumer):
             chat_room,
             self.channel_name
         )
-        await self.send({
-            "type" : "websocket.accept"
-        })
-
+       
 
 
     async def websocket_receive(self,event):
