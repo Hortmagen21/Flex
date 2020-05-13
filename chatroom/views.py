@@ -218,16 +218,16 @@ def create_chat_ws(receiver_name, user_name):
                             chat_exist = True
                             break#pass
 
-                if chat_exist:
-                    chat_response = int(chat_settings.chat_id)
-                else:
-                    creating_chat = Chat(chat_admin=user_id, chat_members=2)
-                    creating_chat.save()
-                    connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
-                    connection_me.save()
-                    connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
-                    connection_receiver.save()
-                    chat_response = int(creating_chat.chat_id)
+            if chat_exist:
+                chat_response = int(chat_settings.chat_id)
+            else:
+                creating_chat = Chat(chat_admin=user_id, chat_members=2)
+                creating_chat.save()
+                connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
+                connection_me.save()
+                connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
+                connection_receiver.save()
+                chat_response = int(creating_chat.chat_id)
             return chat_response
 """async def send_messages(websocket,path):
     message= await websockets.recv()
