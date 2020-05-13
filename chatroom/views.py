@@ -228,7 +228,7 @@ def create_chat_ws(receiver_name, user_name):
                     connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
                     connection_receiver.save()
                     chat_response = int(creating_chat.chat_id)
-            return chat_response
+            return chat_settings
 """async def send_messages(websocket,path):
     message= await websockets.recv()
     print(f'{message}')

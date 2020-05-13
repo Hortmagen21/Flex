@@ -5,6 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
+from .models import ChatMembers
 from .views import create_chat_ws
 
 
@@ -23,7 +24,7 @@ class ChatConsumer(AsyncConsumer):
         me= str(self.scope['user'])
 
         treat_obj=await self.get_tread(me,other_user)
-        print(treat_obj,'HERE')
+        print(treat_obj.id,'HERE')
         #chat_id = get_tread(me,other_user)
         #print(chat_id,'IDD')
 
@@ -80,7 +81,7 @@ class ChatConsumer(AsyncConsumer):
 
         await self.send({
             "type": "websocket.send",
-            "text":event.text,
+            "text":front_text,
         })
         #print('receive', event)
 
