@@ -78,10 +78,10 @@ class ChatConsumer(AsyncConsumer):
             #})
 
 
-        #await self.send({
-            #"type": "websocket.send",
-            #"text":event.text,
-        #})
+        await self.send({
+            "type": "websocket.send",
+            "text":event.text,
+        })
         #print('receive', event)
 
     async def chat_message(self,event):
