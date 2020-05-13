@@ -213,10 +213,10 @@ def create_chat_ws(receiver_name, user_name):
                         except MultipleObjectsReturned:
                             return HttpResponseBadRequest()
                         except ObjectDoesNotExist:
-                            pass
+                            break#pass
                         else:
                             chat_exist = True
-                            pass
+                            break#pass
 
                 if chat_exist:
                     chat_response = int(chat_settings.chat_id)
