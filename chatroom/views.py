@@ -225,7 +225,7 @@ def create_chat_ws(receiver_name, user_name):
                 creating_chat.save()
                 connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
                 connection_me.save()
-                connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
+                connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=receiver_id)
                 connection_receiver.save()
                 chat_response = int(creating_chat.chat_id)
             return chat_response
