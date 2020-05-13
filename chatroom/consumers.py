@@ -27,7 +27,7 @@ class ChatConsumer(AsyncConsumer):
             print(i,j)
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
-        self.treat_obj = treat_obj
+
         #if treat_obj != -1:
         chat_room=f"chat_{treat_obj}"
         self.chat_room =  chat_room
@@ -36,6 +36,10 @@ class ChatConsumer(AsyncConsumer):
             chat_room,
             self.channel_name
         )
+        await self.send({
+             "type": "websocket.send",
+             "text":  treat_obj,
+             })
 
     async def websocket_receive(self,event):
         front_text=event.get('text', None)#chat_id
@@ -77,13 +81,9 @@ class ChatConsumer(AsyncConsumer):
     async def chat_message(self,event):
         print('text', event)
         # send messages
-        data={
-            "message":event['text'],
-            "chat_id":self.treat_obj,
-        }
         await self.send({
             "type": "websocket.send",
-            "text": json.dumps(data),
+            "text": event['text'],
         })
 
     async def websocket_disconnect(self,event):
