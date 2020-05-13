@@ -25,7 +25,7 @@ class ChatConsumer(AsyncConsumer):
         me= str(self.scope['user'])
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
-
+        print(self.scope["headers"],'HEADDERS')
         #if treat_obj != -1:
         chat_room=f"chat_{treat_obj}"
         self.chat_room =  chat_room
