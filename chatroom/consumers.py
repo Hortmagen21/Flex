@@ -43,7 +43,9 @@ class ChatConsumer(AsyncConsumer):
             chat_room,
             self.channel_name
         )
-
+        await self.send({
+            "type" : "websocket.accept"
+        })
 
 
 
@@ -67,7 +69,7 @@ class ChatConsumer(AsyncConsumer):
             #new_event
             {
                 "type":"chat_message",
-                "message":front_text
+                "text":front_text
             })
 
 
@@ -87,10 +89,15 @@ class ChatConsumer(AsyncConsumer):
         #print('receive', event)
 
     async def chat_message(self,event):
-        print('message', event)
+        print('text', event)
 
     async def websocket_disconnect(self,event):
         print('disconnected', event)
+        #send messages
+        await self.send({
+            "type":"websocket.send",
+            "text":event['text']
+        })
 
     @database_sync_to_async
     def get_tread(self, user, other_username):
