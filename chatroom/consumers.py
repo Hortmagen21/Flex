@@ -36,12 +36,13 @@ class ChatConsumer(AsyncConsumer):
 
 
         #print("chat_{chat_id}".format(chat_id=chat_id),'HERREEE')
-        #self.chat_room = f"chat_{chat_id}"
+        chat_room=f"chat_{treat_obj}"
+        self.chat_room =  chat_room
 
-        #await self.channel_layer.group_add(
-            #self.chat_room,
-            #self.channel_name
-        #)
+        await self.channel_layer.group_add(
+            chat_room,
+            self.channel_name
+        )
 
 
 
@@ -61,16 +62,16 @@ class ChatConsumer(AsyncConsumer):
                    #'user_name':username,
                    #}
 
-            #await self.channel_layer.group_send(
-               #self.chat_room,
-                #new_event
-                #{
-                   #"type":"chat_message",
-                   # "message":json.dumps(data),
-               # }
+        await self.channel_layer.group_send(
+            self.chat_room,
+            #new_event
+            {
+                "type":"chat_message",
+                "message":front_text
+            })
 
 
-            #)
+
             #await self.send({
                 #"type": "websocket.send",
                 #"text":json.dumps(data),
@@ -79,10 +80,10 @@ class ChatConsumer(AsyncConsumer):
             #})
 
 
-        await self.send({
-            "type": "websocket.send",
-            "text":front_text,
-        })
+        #await self.send({
+            #"type": "websocket.send",
+            #"text":front_text,
+        #})
         #print('receive', event)
 
     async def chat_message(self,event):
