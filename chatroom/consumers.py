@@ -24,7 +24,7 @@ class ChatConsumer(AsyncConsumer):
         me= str(self.scope['user'])
 
         treat_obj=await self.get_tread(me,other_user)
-        print(treat_obj.id,'HERE')
+        print(treat_obj,'HERE')
         #chat_id = get_tread(me,other_user)
         #print(chat_id,'IDD')
 
