@@ -62,6 +62,7 @@ class ChatConsumer(AsyncConsumer):
             "type":"chat_message",
             "text":json.dumps(data),
         })
+        print(dict_data['text']+" PLUS "+dict_data['time'])
         await self.save_msg(self, str(dict_data['text']), int(dict_data['time']))
 
 
