@@ -55,7 +55,7 @@ class ChatConsumer(AsyncConsumer):
                    'time':dict_data['time'],
                    }
         #print(dict_data['text'] + " PLUS " + dict_data['time'])
-        #await self.save_msg(self,str(dict_data['text']), int(dict_data['time']))
+        await self.save_msg(self,str(dict_data['text']), int(dict_data['time']))
         await self.channel_layer.group_send(
         self.chat_room,
              #new_event
@@ -102,7 +102,6 @@ class ChatConsumer(AsyncConsumer):
         user_id = (User.objects.get(username=str(self.me)))[0].id
         new_message=Message(user_id=int(user_id),message=msg,date=time)
         new_message.save()
-        return True
         #return create_chat_ws(other_username, user)
 
 
