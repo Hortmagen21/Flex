@@ -191,7 +191,7 @@ def create_chat_ws(receiver_name, user_name):
         receiver = User.objects.get(username=receiver_name)
         user = User.objects.get(username=user_name)
     except ObjectDoesNotExist:
-        return 130#test
+        return -1
     except MultipleObjectsReturned:
         return HttpResponseBadRequest()
     else:
@@ -206,7 +206,7 @@ def create_chat_ws(receiver_name, user_name):
                 try:
                     chat_settings = Chat.objects.get(chat_id=chat.chat_id)
                 except ObjectDoesNotExist:
-                    return 130
+                    return -1
                 except MultipleObjectsReturned:
                     return HttpResponseBadRequest()
                 else:

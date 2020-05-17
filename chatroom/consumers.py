@@ -23,7 +23,8 @@ class ChatConsumer(AsyncConsumer):
 
 
         other_user=str(self.scope['url_route']['kwargs']['username'])
-        me=str(self.scope['user'])
+        #me=str(self.scope['user'])
+        me=130
         self.me= me
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
