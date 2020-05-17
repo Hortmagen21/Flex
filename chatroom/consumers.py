@@ -60,7 +60,7 @@ class ChatConsumer(AsyncConsumer):
              #new_event
         {
             "type":"chat_message",
-            "text":data,
+            "text":json.dumps(data),
         })
         await self.save_msg(self, str(dict_data['text']), int(dict_data['time']))
 
