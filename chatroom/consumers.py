@@ -9,6 +9,7 @@ from .models import Message
 from .views import create_chat_ws
 from django.contrib.auth.models import User
 from channels.auth import login
+from django.db import close_old_connections
 
 
 
@@ -55,7 +56,9 @@ class ChatConsumer(AsyncConsumer):
                    'time':dict_data['time'],
                    }
         #print(dict_data['text'] + " PLUS " + dict_data['time'])
+        close_old_connections()
         await self.save_msg(str(dict_data['text']), int(dict_data['time']))
+        close_old_connections()
         await self.channel_layer.group_send(
         self.chat_room,
              #new_event
