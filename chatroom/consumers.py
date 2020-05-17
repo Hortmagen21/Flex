@@ -27,7 +27,7 @@ class ChatConsumer(AsyncConsumer):
 
         self.me= me
         treat_obj=await self.get_tread(me,other_user)
-        close_old_connections()
+        #close_old_connections()
         print(treat_obj,'HERE')
         print(self.scope["headers"],'HEADDERS')
         #if treat_obj != -1:
@@ -45,6 +45,7 @@ class ChatConsumer(AsyncConsumer):
 
     async def websocket_receive(self,event):
         front_text=event.get('text', None)#chat_id
+        user=str(self.scope['user'])
 
         if front_text is not None:
             dict_data =json.loads(front_text)
@@ -60,7 +61,7 @@ class ChatConsumer(AsyncConsumer):
         #print(dict_data['text'] + " PLUS " + dict_data['time'])
 
         await self.save_msg(str(dict_data['text']), int(dict_data['time']))
-        close_old_connections()
+        #close_old_connections()
 
         await self.channel_layer.group_send(
         self.chat_room,
@@ -106,8 +107,8 @@ class ChatConsumer(AsyncConsumer):
     @database_sync_to_async
     def save_msg(self, msg,time):
         user_id = (User.objects.get(username=str(self.me))).id
-        new_message=Message(user_id=int(user_id),message=msg,date=time)
-        new_message.save()
+        return Message(user_id=int(user_id),message=msg,date=time)
+        #new_message.save()
         #return create_chat_ws(other_username, user)
 
 
