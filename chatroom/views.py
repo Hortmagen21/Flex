@@ -49,8 +49,9 @@ def create_chat(request):
                     try:
                         chat_list = list(ChatMembers.objects.filter(user_id=user_id))
                     except ObjectDoesNotExist:
-                        pass
+                        pass#?
                     else:
+                        print(chat_list,'Chaeck')
                         for chat in chat_list:
                             try:
                                 chat_settings=Chat.objects.get(chat_id=chat.chat_id)
@@ -67,7 +68,9 @@ def create_chat(request):
                                     except ObjectDoesNotExist:
                                         pass
                                     else:
+                                        print(receiver_chat.chat_id,'Chaeck')
                                         chat_exist = True#break
+                                        break
                 messages = []
                 if chat_exist:
                     chat_response = int(chat_settings.chat_id)

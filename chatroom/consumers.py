@@ -22,7 +22,8 @@ class ChatConsumer(AsyncConsumer):
 
 
         other_user=str(self.scope['url_route']['kwargs']['username'])
-        me= str(self.scope['user'])
+        me=str(self.scope['user'])
+        self.me= me
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
         print(self.scope["headers"],'HEADDERS')
@@ -42,25 +43,26 @@ class ChatConsumer(AsyncConsumer):
     async def websocket_receive(self,event):
         front_text=event.get('text', None)#chat_id
 
-        #if front_text is not None:
-            #dict_data =json.loads(front_text)
+        if front_text is not None:
+            dict_data =json.loads(front_text)
             #msg =dict_data.get('message')
 
             #user = self.scope['user']
             #username='Anonimys'
             #if user.is_authenticated:
                 #username=user
-            #data= {'message':front_text,
-                   #'user_name':username,
-                   #}
+            data= {'text':dict_data['text'],
+                   'time':dict_data['time'],
+                   }
 
         await self.channel_layer.group_send(
-            self.chat_room,
-            #new_event
-            {
-                "type":"chat_message",
-                "text":front_text
-            })
+        self.chat_room,
+             #new_event
+        {
+            "type":"chat_message",
+            "text":json.dumps(front_text),
+        })
+        await self.save_msg(self, str(dict_data['text']), int(dict_data['time']))
 
 
 
@@ -93,10 +95,12 @@ class ChatConsumer(AsyncConsumer):
     def get_tread(self, user, other_username):
         return create_chat_ws(other_username, user)
 
-    #@database_sync_to_async
-    #def get_tread(self, msg,time):
-        #user_name = User.objects.get(id=int(user_id)).username
-        #new_message=Message()
+    @database_sync_to_async
+    def save_msg(self, msg,time):
+        user_id = User.objects.get(username=str(self.me)).id
+        new_message=Message(user_id=int(user_id),message=msg,date=time)
+        new_message.save()
+        return True
         #return create_chat_ws(other_username, user)
 
 
