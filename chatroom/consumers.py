@@ -60,6 +60,7 @@ class ChatConsumer(AsyncConsumer):
         #print(dict_data['text'] + " PLUS " + dict_data['time'])
 
         await self.save_msg(str(dict_data['text']), int(dict_data['time']))
+        close_old_connections()
 
         await self.channel_layer.group_send(
         self.chat_room,
