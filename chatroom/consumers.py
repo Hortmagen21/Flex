@@ -102,7 +102,7 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def save_msg(self, msg,time):
-        user_id = (User.objects.get(username=str(self.me)))[0].id
+        user_id = (User.objects.get(username=str(self.me))).id
         new_message=Message(user_id=int(user_id),message=msg,date=time)
         new_message.save()
         #return create_chat_ws(other_username, user)
