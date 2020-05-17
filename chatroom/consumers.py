@@ -23,8 +23,8 @@ class ChatConsumer(AsyncConsumer):
 
 
         other_user=str(self.scope['url_route']['kwargs']['username'])
-        #me=str(self.scope['user'])
-        me=130
+        me=str(self.scope['user'])
+
         self.me= me
         treat_obj=await self.get_tread(me,other_user)
         print(treat_obj,'HERE')
@@ -57,7 +57,7 @@ class ChatConsumer(AsyncConsumer):
                    'time':dict_data['time'],
                    }
         #print(dict_data['text'] + " PLUS " + dict_data['time'])
-        close_old_connections()
+
         await self.save_msg(str(dict_data['text']), int(dict_data['time']))
         close_old_connections()
         await self.channel_layer.group_send(
