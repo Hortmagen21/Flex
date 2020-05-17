@@ -13,6 +13,6 @@ from channels.routing import get_default_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 os.environ['ASGI_THREADS']="20"#!!
-os.environ['CONN_MAX_AGE']="60"
+#os.environ['CONN_MAX_AGE']="60"
 django.setup()
 application = get_default_application()
