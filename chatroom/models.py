@@ -30,7 +30,7 @@ class ChatMembers(models.Model):
 
 
 class Message(models.Model):
-    chat_id = models.AutoFieldField(primary_key=True)
+    chat_id = models.IntegerField(primary_key=True)
     message = models.CharField(max_length=100, blank=True, null=True)
     message_id = models.AutoField
     user_id = models.IntegerField()
