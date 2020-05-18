@@ -27,6 +27,7 @@ class ChatConsumer(AsyncConsumer):
 
         self.me= me
         treat_obj=await self.get_tread(me,other_user)
+        close_old_connections()
         self.treat_obj = int(treat_obj)
         #close_old_connections()
         print(treat_obj,'HERE')
@@ -61,9 +62,9 @@ class ChatConsumer(AsyncConsumer):
                    }
         #print(dict_data['text'] + " PLUS " + dict_data['time'])
 
-        new_message=await self.save_msg(self.treat_obj,str(dict_data['text']), int(dict_data['time']))
+        await self.save_msg(self.treat_obj,str(dict_data['text']), int(dict_data['time']))
 
-        #close_old_connections()
+        close_old_connections()
 
         await self.channel_layer.group_send(
         self.chat_room,
