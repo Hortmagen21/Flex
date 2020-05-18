@@ -2,7 +2,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.sessions.models import Session
 from rest_framework import authtoken
-from .models import TokenConfirm
+from .models import TokenConfirm,UniqueTokenUser
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie,csrf_protect
 import django
@@ -63,15 +63,18 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get(['username'][0], False)
         password = request.POST.get(['password'][0], False)
+        unique_token = request.POST.get(['token'][0],False)
+
         user = auth.authenticate(request, username=username, password=password)
 
-        if username == False or password == False:
+        if username == False or password == False or unique_token == False:
             return HttpResponse("NOT VALID DATA", status=415)
 
         if user is not None and user.is_active:
             auth.login(request, user)
             request.session['username'] = username
             user.save()
+            token=UniqueTokenUser(token=unique_token,user=int(user.id))
             http_resp = HttpResponse(user.id)
             # csrf_token = django.middleware.csrf.get_token(request)
             # http_resp.__setitem__(header='X-CSRF-TOKEN', value=csrf_token)

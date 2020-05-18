@@ -11,8 +11,7 @@ from django.contrib.auth.models import User
 from channels.auth import login
 from django.db import close_old_connections
 
-
-
+online_users = set()
 class ChatConsumer(AsyncConsumer):
 
     async def websocket_connect(self,event):
@@ -24,7 +23,7 @@ class ChatConsumer(AsyncConsumer):
 
         other_user=str(self.scope['url_route']['kwargs']['username'])
         me=str(self.scope['user'])
-
+        print(self.scope['user'],'IT IS USER!!!!')
         self.me= me
         treat_obj=await self.get_tread(me,other_user)
         close_old_connections()
@@ -39,6 +38,7 @@ class ChatConsumer(AsyncConsumer):
             "type": "websocket.send",
             "text": str(treat_obj),
         })
+        #online_users.add({})
         await self.channel_layer.group_add(
             chat_room,
             self.channel_name

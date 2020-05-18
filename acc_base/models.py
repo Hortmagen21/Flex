@@ -14,3 +14,12 @@ class TokenConfirm(models.Model):
 
     class Meta:
         db_table = 'token_confirm'
+
+
+class UniqueTokenUser(models.Model):
+    token = models.CharField(primary_key=True, max_length=200)
+    user_id = models.IntegerField()
+
+    class Meta:
+
+        db_table = 'UniqueTokenUser'
