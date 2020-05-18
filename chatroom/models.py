@@ -30,12 +30,13 @@ class ChatMembers(models.Model):
 
 
 class Message(models.Model):
-    chat_id = models.IntegerField(primary_key=True)
+    chat_id = models.IntegerField()
     message = models.CharField(max_length=100, blank=True, null=True)
-    message_id = models.AutoField
+    message_id = models.AutoField(primary_key=True)
     user_id = models.IntegerField()
     date = models.IntegerField()
 
     class Meta:
+        unique_together = (('chat_id', ' message_id'),)
         ordering = ('-date',)
         db_table = 'message'
