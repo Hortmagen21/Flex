@@ -83,8 +83,8 @@ def add_post(request):
             user_id = int(request.session['_auth_user_id'])
             time = datetime.datetime.today()
             milliseconds = time.timestamp()*1000
-            url = f"user_profile/photos/{milliseconds}_{user_id}.jpg"
-            url_mini = f"user_profile/photos/{milliseconds}_{user_id}_mini.jpg"
+            url = "user_profile/photos/{milliseconds}_{user_id}.jpg".format(user_id=user_id, milliseconds=milliseconds)
+            url_mini = "user_profile/photos/{milliseconds}_{user_id}_mini.jpg".format(user_id=user_id, milliseconds=milliseconds)
             if isAvatar:
                 photo = PostBase(milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
             else:
@@ -136,7 +136,6 @@ def view_photo(request):
     if request.method == 'GET':
         img = request.GET.get('img', '')
         src = urlparse(img)
-        print(src,'HERE')
         try:
             print(src[2][1:])
             file = open(src[2][1:], 'rb+')
@@ -144,7 +143,7 @@ def view_photo(request):
             print(mime_type_guess)
             if mime_type_guess is not None:
                 response = HttpResponse(file, content_type=mime_type_guess[0])
-            response['Content-Disposition'] = f'attachment; filename="{img}"'
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(img)
         except IOError:
             response = HttpResponseNotFound()
         return response
