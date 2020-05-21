@@ -214,6 +214,8 @@ def view_information_user(request):
         avatars = list(UserAvatar.objects.filter(id_user=int(user_id)))
         user_followed = list(UserFollower.objects.filter(follower=int(user_id)))
         user_follower = list(UserFollower.objects.filter(id=int(user_id)))
+        object_does_not_exist = False
+        multiple_objects = False
         try:
             user_name = User.objects.get(id=int(user_id)).username
             post = PostBase.objects.get(id=int(avatars[-1].id_post))
