@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/user_profile/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -84,8 +85,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/user_profile/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="84" column="48" lean-forward="true" selection-start-line="84" selection-start-column="48" selection-end-line="84" selection-end-column="48" />
+            <state relative-caret-position="-108">
+              <caret line="86" column="79" selection-start-line="86" selection-start-column="79" selection-end-line="86" selection-end-column="79" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -96,8 +97,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="27">
-              <caret line="1" column="23" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
+            <state>
+              <caret selection-end-line="1" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -193,7 +194,6 @@
         <option value="$PROJECT_DIR$/user_profile/urls.py" />
         <option value="$PROJECT_DIR$/mysite/urls.py" />
         <option value="$PROJECT_DIR$/chatroom/urls.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/tv_shows/views.py" />
         <option value="$PROJECT_DIR$/chatroom/routing.py" />
         <option value="$PROJECT_DIR$/mysite/routing.py" />
@@ -214,10 +214,11 @@
         <option value="$PROJECT_DIR$/chatroom/consumers.py" />
         <option value="$PROJECT_DIR$/acc_base/views.py" />
         <option value="$PROJECT_DIR$/user_profile/views.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="781" />
     <option name="width" value="1154" />
     <option name="height" value="815" />
@@ -277,12 +278,6 @@
               <item name="Flex" type="b2602c69:ProjectViewProjectNode" />
               <item name="Flex" type="462c0819:PsiDirectoryNode" />
               <item name="user_profile" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Flex" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Flex" type="462c0819:PsiDirectoryNode" />
-              <item name="user_profile" type="462c0819:PsiDirectoryNode" />
-              <item name="photos" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -383,9 +378,9 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.91543627" visible="true" weight="0.23512748" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.08456376" side_tool="true" visible="true" weight="0.23512748" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3286119" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.9147651" visible="true" weight="0.23512748" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.0852349" side_tool="true" visible="true" weight="0.23512748" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49932885" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24966443" />
@@ -686,15 +681,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="1" column="23" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
+        <state>
+          <caret selection-end-line="1" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/user_profile/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="84" column="48" lean-forward="true" selection-start-line="84" selection-start-column="48" selection-end-line="84" selection-end-column="48" />
+        <state relative-caret-position="-108">
+          <caret line="86" column="79" selection-start-line="86" selection-start-column="79" selection-end-line="86" selection-end-column="79" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
