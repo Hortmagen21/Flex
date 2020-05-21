@@ -217,16 +217,19 @@ def view_information_user(request):
         try:
             user_name = User.objects.get(id=int(user_id)).username
             post = PostBase.objects.get(id=int(avatars[-1].id_post))
-
         except ObjectDoesNotExist:
-            return HttpResponseNotFound()
+            object_does_not_exist=True
         except MultipleObjectsReturned:
-            return HttpResponseBadRequest()
+            multiple_objects = True
         except IndexError:
             ava_src="none"
         else:
             ava_src = post.img
         finally:
+            if object_does_not_exist:
+                return HttpResponseNotFound()
+            if multiple_objects:
+                return HttpResponseBadRequest()
             return JsonResponse({'user_name': user_name, 'ava_src': ava_src, "followed": len(user_followed), "i_follower":len(user_follower), 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))})
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
