@@ -1,4 +1,4 @@
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest
 from django.contrib import auth
 from django.contrib.sessions.models import Session
 from rest_framework import authtoken
@@ -25,6 +25,7 @@ def registration(request):
         username = request.POST.get(['username'][0], False)
         password = request.POST.get(['password'][0], False)
         email = request.POST.get(['email'][0], False)
+        unique_token = request.POST.get(['token'][0], False)
 
         if username == False or password == False or email == False:
             return HttpResponse("NOT VALID DATA", status=415)
@@ -46,11 +47,16 @@ def registration(request):
     # session_hash = request.session.session_key
     # HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
-            csrf_token = django.middleware.csrf.get_token(request)
+            #csrf_token = django.middleware.csrf.get_token(request)
             http_resp = HttpResponse()
-            http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
+            #http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
+
             print('I created user!!!!!!!')
             user.save()
+            #WHAT DO WHEN EXIST USER WANT CREATE NEW ADDITIONAL ACC???
+            token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
+            token.save()
+
             return HttpResponse(http_resp)
 
         return HttpResponse("Such email is already exist", status=409)
@@ -63,7 +69,7 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get(['username'][0], False)
         password = request.POST.get(['password'][0], False)
-        unique_token = request.POST.get(['token'][0],False)
+        unique_token = request.POST.get(['token'][0], False)
 
         user = auth.authenticate(request, username=username, password=password)
 
@@ -74,7 +80,10 @@ def login(request):
             auth.login(request, user)
             request.session['username'] = username
             user.save()
-            token=UniqueTokenUser(token=unique_token,user=int(user.id))
+
+            token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
+            token.save()
+
             http_resp = HttpResponse(user.id)
             # csrf_token = django.middleware.csrf.get_token(request)
             # http_resp.__setitem__(header='X-CSRF-TOKEN', value=csrf_token)

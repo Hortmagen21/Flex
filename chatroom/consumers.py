@@ -23,7 +23,10 @@ class ChatConsumer(AsyncConsumer):
 
         other_user=str(self.scope['url_route']['kwargs']['username'])
         me=str(self.scope['user'])
-        print(self.scope['user'],'IT IS USER!!!!')
+        #for i in self.scope:
+            #print(i,'test')
+        #print(self.scope['_auth_user_id'],'IT IS ID USER!!!!')
+        print(self.scope['user'], 'IT IS USER!!!!')
         self.me= me
         treat_obj=await self.get_tread(me,other_user)
         close_old_connections()
@@ -34,11 +37,16 @@ class ChatConsumer(AsyncConsumer):
         #if treat_obj != -1:
         chat_room=f"chat_{treat_obj}"
         self.chat_room =  chat_room
+
         await self.send({
             "type": "websocket.send",
             "text": str(treat_obj),
         })
-        #online_users.add({})
+
+        # 2 = userid
+        online_users.add({2:self.treat_obj})
+
+
         await self.channel_layer.group_add(
             chat_room,
             self.channel_name
@@ -99,6 +107,7 @@ class ChatConsumer(AsyncConsumer):
         })
 
     async def websocket_disconnect(self,event):
+        online_users.remove({2:self.treat_obj})
         print('disconnected', event)
 
 
