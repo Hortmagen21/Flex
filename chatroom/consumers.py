@@ -89,7 +89,7 @@ class ChatConsumer(AsyncConsumer):
                 close_old_connections()
                 token = await self.get_user_token(int(user))
                 close_old_connections()
-                fcm_send_message(registration_id=token, data={"text":"TEST"})
+                fcm_send_message(registration_id=token, data='text')
             else:
                 if user_to_chats[int(user)]==int(self.treat_obj):
                     close_old_connections()
