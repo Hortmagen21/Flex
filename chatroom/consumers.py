@@ -93,7 +93,7 @@ class ChatConsumer(AsyncConsumer):
                 print(token, 'CHECK MEE')
                 #response = FCMNotification(api_key=API_KEY)
                 #await response.notify_single_device(registration_id=token, message_body='text')
-                fcm_send_message(registration_id=token, data='text')
+                fcm_send_message(registration_id=token, data_message='text')
             else:
                 if user_to_chats[int(user)]==int(self.treat_obj):
                     close_old_connections()
