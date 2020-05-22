@@ -81,7 +81,7 @@ class ChatConsumer(AsyncConsumer):
                     'time': dict_data['time'],
                     }
 
-        isOnline = False
+
         for user in receivers_ids:
             try:
                 user_to_chats[int(user)]
