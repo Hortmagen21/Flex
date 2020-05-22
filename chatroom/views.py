@@ -249,6 +249,7 @@ def get_user_special_tokens(user_id):
     tokens = []
     for token in user:
         tokens.append(token.token)
+    return tokens
 
 
 
