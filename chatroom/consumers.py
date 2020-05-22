@@ -13,7 +13,8 @@ from django.db import close_old_connections
 from asgiref.sync import async_to_sync
 from asgiref.sync import sync_to_async
 from fcm_django.models import AbstractFCMDevice
-from fcm_django.fcm import fcm_send_message
+from fcm_django.fcm import fcm_send_message,FCMNotification
+
 
 #users_id=set()
 user_to_chats={}
@@ -89,7 +90,9 @@ class ChatConsumer(AsyncConsumer):
                 close_old_connections()
                 token = await self.get_user_token(int(user))
                 close_old_connections()
-                fcm_send_message(registration_id=token, data='text')
+                response = FCMNotification()
+                await response.notify_single_device(registration_id=token, data='text')
+                #fcm_send_message(registration_id=token, data='text')
             else:
                 if user_to_chats[int(user)]==int(self.treat_obj):
                     close_old_connections()
@@ -109,7 +112,8 @@ class ChatConsumer(AsyncConsumer):
                     close_old_connections()
                     token = await self.get_user_token(int(user))
                     close_old_connections()
-                    fcm_send_message(registration_id=token, data={"text": "TEST"})
+                    await response.notify_single_device(registration_id=token, data='text')
+                    #fcm_send_message(registration_id=token, data={"text": "TEST"})
 
 
             #for element in online_users:

@@ -60,11 +60,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="91" column="66" selection-start-line="91" selection-start-column="66" selection-end-line="91" selection-end-column="66" />
+            <state relative-caret-position="299">
+              <caret line="114" column="91" selection-start-line="114" selection-start-column="91" selection-end-line="114" selection-end-column="91" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/fcm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="115" column="23" selection-start-line="115" selection-start-column="23" selection-end-line="115" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/baseapi.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7883">
+              <caret line="301" column="55" selection-start-line="301" selection-start-column="55" selection-end-line="301" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -74,23 +92,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
               <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/acc_base/migrations/0001_initial.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/django/contrib/sessions/backends/db.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1053">
-              <caret line="69" column="34" selection-start-line="69" selection-start-column="34" selection-end-line="69" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -148,6 +149,7 @@
       <find>id_</find>
       <find>get_tr</find>
       <find>online</find>
+      <find>send_request</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -332,7 +334,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.15973154" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.15973154" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50098234" side_tool="true" weight="0.20939597" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -343,7 +345,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.914094" visible="true" weight="0.23512748" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.914094" visible="true" weight="0.23512748" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.08590604" side_tool="true" visible="true" weight="0.23512748" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49932885" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -354,14 +356,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/user_profile/testdb.py" />
-    <entry file="file://$PROJECT_DIR$/tv_shows/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="1" selection-start-line="1" selection-end-line="6" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/acc_base/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="292">
@@ -627,13 +621,6 @@
     <entry file="file://$PROJECT_DIR$/acc_base/migrations/0001_initial.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/acc_base/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="24" column="35" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/django/contrib/sessions/backends/base.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -670,6 +657,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/fcm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="115" column="23" selection-start-line="115" selection-start-column="23" selection-end-line="115" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/baseapi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7883">
+          <caret line="301" column="55" selection-start-line="301" selection-start-column="55" selection-end-line="301" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mysite/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="411">
@@ -677,6 +678,13 @@
           <folding>
             <element signature="e#306#315#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/acc_base/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="24" column="35" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="35" />
         </state>
       </provider>
     </entry>
@@ -689,8 +697,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="91" column="66" selection-start-line="91" selection-start-column="66" selection-end-line="91" selection-end-column="66" />
+        <state relative-caret-position="299">
+          <caret line="114" column="91" selection-start-line="114" selection-start-column="91" selection-end-line="114" selection-end-column="91" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
