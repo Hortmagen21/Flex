@@ -90,8 +90,8 @@ class ChatConsumer(AsyncConsumer):
                 close_old_connections()
                 token = await self.get_user_token(int(user))
                 close_old_connections()
-                response = FCMNotification()
-                await response.notify_single_device(api_key=API_KEY,registration_id=token, data='text')
+                response = FCMNotification(api_key=API_KEY)
+                await response.notify_single_device(registration_id=token, data='text')
                 #fcm_send_message(registration_id=token, data='text')
             else:
                 if user_to_chats[int(user)]==int(self.treat_obj):
@@ -112,7 +112,8 @@ class ChatConsumer(AsyncConsumer):
                     close_old_connections()
                     token = await self.get_user_token(int(user))
                     close_old_connections()
-                    await response.notify_single_device(api_key=API_KEY,registration_id=token, data='text')
+                    response = FCMNotification(api_key=API_KEY)
+                    await response.notify_single_device(registration_id=token, data='text')
                     #fcm_send_message(registration_id=token, data={"text": "TEST"})
 
 
