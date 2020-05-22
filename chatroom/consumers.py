@@ -15,7 +15,7 @@ from asgiref.sync import sync_to_async
 from fcm_django.models import AbstractFCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
 
-
+API_KEY="AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 #users_id=set()
 user_to_chats={}
 
@@ -91,7 +91,7 @@ class ChatConsumer(AsyncConsumer):
                 token = await self.get_user_token(int(user))
                 close_old_connections()
                 response = FCMNotification()
-                await response.notify_single_device(registration_id=token, data='text')
+                await response.notify_single_device(api_key=API_KEY,registration_id=token, data='text')
                 #fcm_send_message(registration_id=token, data='text')
             else:
                 if user_to_chats[int(user)]==int(self.treat_obj):
@@ -112,7 +112,7 @@ class ChatConsumer(AsyncConsumer):
                     close_old_connections()
                     token = await self.get_user_token(int(user))
                     close_old_connections()
-                    await response.notify_single_device(registration_id=token, data='text')
+                    await response.notify_single_device(api_key=API_KEY,registration_id=token, data='text')
                     #fcm_send_message(registration_id=token, data={"text": "TEST"})
 
 
