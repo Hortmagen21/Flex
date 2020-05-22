@@ -72,8 +72,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="118" column="64" selection-start-line="118" selection-start-column="64" selection-end-line="118" selection-end-column="64" />
+            <state relative-caret-position="351">
+              <caret line="120" column="24" lean-forward="true" selection-start-line="120" selection-start-column="24" selection-end-line="120" selection-end-column="24" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -84,8 +84,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/fcm_django/fcm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-774">
-              <caret line="79" column="24" lean-forward="true" selection-start-line="79" selection-start-column="24" selection-end-line="79" selection-end-column="24" />
+            <state relative-caret-position="5508">
+              <caret line="208" column="52" selection-start-line="208" selection-start-column="50" selection-end-line="208" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -102,17 +102,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/baseapi.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="136" column="26" selection-start-line="136" selection-start-column="22" selection-end-line="136" selection-end-column="26" />
+            <state relative-caret-position="153">
+              <caret line="301" column="64" selection-start-line="301" selection-start-column="51" selection-end-line="301" selection-end-column="64" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/requirements.txt">
+        <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/requests/sessions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+            <state relative-caret-position="-2752">
+              <caret line="462" column="22" selection-start-line="462" selection-start-column="22" selection-end-line="462" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -149,12 +149,15 @@
       <find>send_request</find>
       <find>api_key</find>
       <find>raise</find>
-      <find>send_request_responses</find>
       <find>do_re</find>
       <find>message_body</find>
       <find>data</find>
-      <find>online</find>
       <find>send_</find>
+      <find>online</find>
+      <find>to</find>
+      <find>send_request_responses</find>
+      <find>do_request</find>
+      <find>FCM_END_POINT</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -342,7 +345,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.15973154" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -366,9 +368,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tv_shows/models.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-162" />
@@ -687,13 +686,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/baseapi.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="136" column="26" selection-start-line="136" selection-start-column="22" selection-end-line="136" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/fcm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2997">
@@ -703,15 +695,29 @@
     </entry>
     <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/fcm_django/fcm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-774">
-          <caret line="79" column="24" lean-forward="true" selection-start-line="79" selection-start-column="24" selection-end-line="79" selection-end-column="24" />
+        <state relative-caret-position="5508">
+          <caret line="208" column="52" selection-start-line="208" selection-start-column="50" selection-end-line="208" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/baseapi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="301" column="64" selection-start-line="301" selection-start-column="51" selection-end-line="301" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/requests/sessions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2752">
+          <caret line="462" column="22" selection-start-line="462" selection-start-column="22" selection-end-line="462" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="118" column="64" selection-start-line="118" selection-start-column="64" selection-end-line="118" selection-end-column="64" />
+        <state relative-caret-position="351">
+          <caret line="120" column="24" lean-forward="true" selection-start-line="120" selection-start-column="24" selection-end-line="120" selection-end-column="24" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
