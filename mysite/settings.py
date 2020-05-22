@@ -47,10 +47,18 @@ INSTALLED_APPS = [
     'chatroom.apps.ChatroomConfig',
     'user_profile.apps.UserProfileConfig',
     'channels',
+    "fcm_django",
 
     #'mysite.polls.apps.PollsConfig',
     #'mysite.polls',
 ]
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn",
+
+    "ONE_DEVICE_PER_USER": False,
+
+    "DELETE_INACTIVE_DEVICES": True,
+}
 
 
 

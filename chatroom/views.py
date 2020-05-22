@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from chatroom.models import Chat,ChatMembers,Message
 from user_profile.models import UserAvatar,PostBase
 from django.contrib.auth.models import User
+from acc_base.models import UniqueTokenUser
 from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.http import JsonResponse
@@ -111,6 +112,7 @@ def view_chat_room(request):
                 last_message = messages.message
                 last_sender_username = User.objects.get(id=int(messages.user_id)).username
                 time_to_id[messages.date] = chat.chat_id
+
             finally:
                 try:#
                     chat_settings = Chat.objects.get(chat_id=int(chat.chat_id))
@@ -232,6 +234,27 @@ def create_chat_ws(receiver_name, user_name):
                 connection_receiver.save()
                 chat_response = int(creating_chat.chat_id)
             return chat_response
+
+
+def get_receivers_ids(chat_id):
+    members = ChatMembers.objects.filter(chat_id=chat_id)
+    members_id = []
+    for member in members:
+        members_id.append(int(member.user_id))
+    return members_id
+
+
+def get_user_special_tokens(user_id):
+    user = UniqueTokenUser.objects.filter(user_id=user_id)#try
+    tokens = []
+    for token in user:
+        tokens.append(token.token)
+
+
+
+
+
+
 """async def send_messages(websocket,path):
     message= await websockets.recv()
     print(f'{message}')

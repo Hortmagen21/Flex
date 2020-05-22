@@ -6,12 +6,17 @@ from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
 from .models import Message
-from .views import create_chat_ws
+from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens
 from django.contrib.auth.models import User
 from channels.auth import login
 from django.db import close_old_connections
+from asgiref.sync import async_to_sync
+from asgiref.sync import sync_to_async
+from fcm_django.models import AbstractFCMDevice
+from fcm_django.fcm import fcm_send_message
 
 online_users = set()
+#SERVER_KEY=
 class ChatConsumer(AsyncConsumer):
 
     async def websocket_connect(self,event):
@@ -23,7 +28,8 @@ class ChatConsumer(AsyncConsumer):
 
         other_user=str(self.scope['url_route']['kwargs']['username'])
         me=str(self.scope['user'])
-        #for i in self.scope:
+        print(self.scope['cookies']['id'],'COOKIE')
+        #for i in self.scope['cookies']:
             #print(i,'test')
         #print(self.scope['_auth_user_id'],'IT IS ID USER!!!!')
         print(self.scope['user'], 'IT IS USER!!!!')
@@ -44,7 +50,7 @@ class ChatConsumer(AsyncConsumer):
         })
 
         # 2 = userid
-        online_users.add({2:self.treat_obj})
+        online_users.add({int(self.scope['cookies']['id']):self.treat_obj})
 
 
         await self.channel_layer.group_add(
@@ -54,34 +60,42 @@ class ChatConsumer(AsyncConsumer):
 
 
     async def websocket_receive(self,event):
-        front_text=event.get('text', None)#chat_id
-        user=str(self.scope['user'])
-
-        if front_text is not None:
-            dict_data =json.loads(front_text)
-            #msg =dict_data.get('message')
-
-            #user = self.scope['user']
-            #username='Anonimys'
-            #if user.is_authenticated:
-                #username=user
-            data= {'text':dict_data['text'],
-                   'time':dict_data['time'],
-                   }
-        #print(dict_data['text'] + " PLUS " + dict_data['time'])
-
-        await self.save_msg(self.treat_obj,str(dict_data['text']), int(dict_data['time']))
-
+        front_text = event.get('text', None)#chat_id
+        user = str(self.scope['user'])
         close_old_connections()
+        receivers_ids = await self.dump_user_ids(int(self.treat_obj))
+        if front_text is not None:
+            dict_data = json.loads(front_text)
+            # msg =dict_data.get('message')
 
-        await self.channel_layer.group_send(
-        self.chat_room,
-             #new_event
-        {
-            "type":"chat_message",
-            #"text":json.dumps(data),
-            "text": front_text,
-        })
+            # if user.is_authenticated:
+            # username=user
+            data = {'text': dict_data['text'],
+                    'time': dict_data['time'],
+                    }
+        for user in receivers_ids:
+            close_old_connections()
+            try:
+                online_users[int(user)]
+            except KeyError:
+                token=await self.get_user_token(int(user))
+                close_old_connections()
+                fcm_send_message(registration_id=token, data={"text":"TEST"})
+            else:
+                close_old_connections()
+                await self.save_msg(self.treat_obj,str(dict_data['text']), int(dict_data['time']))
+
+                close_old_connections()
+
+                await self.channel_layer.group_send(
+                self.chat_room,
+
+                {
+                    "type":"chat_message",
+                    "text":json.dumps(data),
+                    #"text": front_text,
+                })
+            close_old_connections()
 
 
 
@@ -122,6 +136,14 @@ class ChatConsumer(AsyncConsumer):
         return Message.objects.create(chat_id=threat_obj,user_id=int(user_id),message=msg,date=time)
         #new_message.save()
         #return create_chat_ws(other_username, user)
+
+    @database_sync_to_async
+    def dump_user_ids(self,chat_id):
+        return get_receivers_ids(chat_id)
+
+    @database_sync_to_async
+    def get_user_token(self,user_id):
+        return get_user_special_tokens(int(user_id))
 
 
 
