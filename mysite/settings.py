@@ -182,11 +182,11 @@ django.setup()
 django_heroku.settings(locals())
 
 EMAIL_HOST = 'smtp.mail.yahoo.com'#'smtp.gmail.com'
-EMAIL_PORT =465#465
+EMAIL_PORT =587#465
 EMAIL_HOST_USER = 'flexsender@yahoo.com'#'hortmagennn@gmail.com'
 EMAIL_HOST_PASSWORD = 'rexwex21'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_USE_TLS = True#False
+EMAIL_USE_SSL = False#True
 
 
 
