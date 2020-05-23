@@ -255,7 +255,7 @@ def get_user_special_tokens(user_id):
 
 
 def get_receiver_avatar(user_id):
-    receiver_avatar = UserAvatar.objects.filter(id_user=int(user_id))[-1]
+    receiver_avatar = list(UserAvatar.objects.filter(id_user=int(user_id)))[-1]
     img_ava = PostBase.objects.get(id=int(receiver_avatar.id_post))
     ava = img_ava.img
     return ava
