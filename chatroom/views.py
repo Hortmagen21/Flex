@@ -72,12 +72,14 @@ def create_chat(request):
                                         print(receiver_chat.chat_id,'Chaeck')
                                         chat_exist = True#break
                                         break
-                messages = []
+                date = []
+
                 if chat_exist:
                     chat_response = int(chat_settings.chat_id)
                     mess = list(Message.objects.filter(chat_id=chat_response))[:10]
                     for msg in mess:
-                        messages.append(msg.message)
+                        date.append({"text":msg.message,"time":msg.date})
+
                 else:
                     creating_chat = Chat(chat_admin=user_id, chat_members=2)
                     creating_chat.save()
@@ -86,7 +88,7 @@ def create_chat(request):
                     connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
                     connection_receiver.save()
                     chat_response = int(creating_chat.chat_id)
-            return JsonResponse({'isNew': not chat_exist, 'chat_id':  chat_response, 'receiver_ava': ava, 'receiver_name': receiver_name.username, 'receiver_online': 'none', 'messages': messages})
+            return JsonResponse({'isNew': not chat_exist, 'chat_id':  chat_response, 'receiver_ava': ava, 'receiver_name': receiver_name.username, 'receiver_online': 'none', 'messages': date})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 

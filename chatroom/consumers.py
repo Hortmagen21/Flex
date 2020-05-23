@@ -107,8 +107,8 @@ class ChatConsumer(AsyncConsumer):
 
                         {
                             "type": "chat_message",
-                            "text": json.dumps(data),
-                            # "text": front_text,
+                            #"text": json.dumps(data),
+                            "text": front_text,
                         })
                 else:
                     close_old_connections()
