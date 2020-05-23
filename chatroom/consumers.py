@@ -119,7 +119,7 @@ class ChatConsumer(AsyncConsumer):
                     #response = FCMNotification(api_key=API_KEY)
                         print(i,'CHECK MEE')
                     #await response.notify_single_device(registration_id=token, message_body='text')
-                        fcm_send_message(registration_id=i, data={"text": "DIMA=PETYX"})
+                        fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id)}, body=dict_data['text'][:20])
 
 
             #for element in online_users:
