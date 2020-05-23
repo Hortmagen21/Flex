@@ -81,7 +81,7 @@ class ChatConsumer(AsyncConsumer):
             data = {'text': dict_data['text'],
                     'time': dict_data['time'],
                     }
-
+            msg_obj = await self.save_msg(self.treat_obj, str(dict_data['text']), int(dict_data['time']))
 
         for user in receivers_ids:
             try:
@@ -94,11 +94,11 @@ class ChatConsumer(AsyncConsumer):
                     # response = FCMNotification(api_key=API_KEY)
                     print(i, 'CHECK MEE')
                     # await response.notify_single_device(registration_id=token, message_body='text')
-                    fcm_send_message(registration_id=i, data={"text": "DIMA=PETYX"})
+                    fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id)}, body=dict_data['text'][:20])
             else:
                 if user_to_chats[int(user)]==int(self.treat_obj):
                     close_old_connections()
-                    await self.save_msg(self.treat_obj, str(dict_data['text']), int(dict_data['time']))
+
 
                     close_old_connections()
 
