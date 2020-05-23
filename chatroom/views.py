@@ -88,7 +88,7 @@ def create_chat(request):
                     connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
                     connection_receiver.save()
                     chat_response = int(creating_chat.chat_id)
-            return JsonResponse({'isNew': not chat_exist, 'chat_id':  chat_response, 'receiver_ava': ava, 'receiver_name': receiver_name.username, 'receiver_online': 'none', 'messages': date})
+            return JsonResponse({'isNew': not chat_exist, 'chat_id':  chat_response, 'receiver_ava': ava, 'receiver_name': receiver_name.username, 'receiver_online': 'none', 'messages': date, 'sender_id': user_id})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -252,6 +252,13 @@ def get_user_special_tokens(user_id):
     for token in user:
         tokens.append(token.token)
     return tokens
+
+
+def get_receiver_avatar(user_id):
+    receiver_avatar = UserAvatar.objects.filter(id_user=int(user_id))[-1]
+    img_ava = PostBase.objects.get(id=int(receiver_avatar.id_post))
+    ava = img_ava.img
+    return ava
 
 
 
