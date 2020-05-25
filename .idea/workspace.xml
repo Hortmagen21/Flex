@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/mysite/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tv_shows/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tv_shows/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +19,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="262" column="28" selection-start-line="262" selection-start-column="28" selection-end-line="262" selection-end-column="28" />
+            <state relative-caret-position="380">
+              <caret line="127" column="120" selection-start-line="127" selection-start-column="95" selection-end-line="127" selection-end-column="120" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -28,19 +29,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/user_profile/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-588">
-              <caret line="25" column="70" selection-start-line="25" selection-start-column="70" selection-end-line="25" selection-end-column="70" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mysite/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="397">
-              <caret line="188" column="26" lean-forward="true" selection-start-line="188" selection-start-column="26" selection-end-line="188" selection-end-column="26" />
+            <state relative-caret-position="4941">
+              <caret line="185" column="51" selection-start-line="185" selection-start-column="51" selection-end-line="185" selection-end-column="51" />
               <folding>
                 <element signature="e#306#315#0" expanded="true" />
               </folding>
@@ -51,7 +43,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/acc_base/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
+            <state relative-caret-position="702">
               <caret line="41" column="67" selection-start-line="41" selection-start-column="67" selection-end-line="41" selection-end-column="67" />
             </state>
           </provider>
@@ -60,7 +52,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/acc_base/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
+            <state relative-caret-position="270">
               <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
@@ -72,10 +64,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-972">
-              <caret line="101" column="100" lean-forward="true" selection-start-line="101" selection-start-column="100" selection-end-line="101" selection-end-column="100" />
+            <state relative-caret-position="276">
+              <caret line="101" column="100" selection-start-line="101" selection-start-column="100" selection-end-line="101" selection-end-column="100" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="353">
+              <caret line="30" column="97" selection-start-line="30" selection-start-column="97" selection-end-line="30" selection-end-column="97" />
+              <folding>
+                <element signature="e#0#57#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,7 +88,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/fcm_django/fcm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1224">
+            <state relative-caret-position="2079">
               <caret line="78" column="17" selection-start-line="78" selection-start-column="4" selection-end-line="78" selection-end-column="17" />
             </state>
           </provider>
@@ -93,7 +97,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/fcm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2997">
+            <state relative-caret-position="3078">
               <caret line="115" column="18" selection-start-line="115" selection-start-column="13" selection-end-line="115" selection-end-column="18" />
             </state>
           </provider>
@@ -102,7 +106,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/baseapi.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
+            <state relative-caret-position="7911">
               <caret line="301" column="64" selection-start-line="301" selection-start-column="51" selection-end-line="301" selection-end-column="64" />
             </state>
           </provider>
@@ -111,7 +115,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/requests/sessions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2752">
+            <state relative-caret-position="11718">
               <caret line="462" column="22" selection-start-line="462" selection-start-column="22" selection-end-line="462" selection-end-column="22" />
             </state>
           </provider>
@@ -195,7 +199,6 @@
         <option value="$PROJECT_DIR$/user_profile/urls.py" />
         <option value="$PROJECT_DIR$/mysite/urls.py" />
         <option value="$PROJECT_DIR$/chatroom/urls.py" />
-        <option value="$PROJECT_DIR$/tv_shows/views.py" />
         <option value="$PROJECT_DIR$/chatroom/routing.py" />
         <option value="$PROJECT_DIR$/mysite/routing.py" />
         <option value="$PROJECT_DIR$/mysite/__init__.py" />
@@ -217,12 +220,13 @@
         <option value="$PROJECT_DIR$/chatroom/consumers.py" />
         <option value="$PROJECT_DIR$/chatroom/views.py" />
         <option value="$PROJECT_DIR$/mysite/settings.py" />
+        <option value="$PROJECT_DIR$/tv_shows/views.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="781" />
-    <option name="width" value="1154" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="780" />
+    <option name="width" value="1155" />
     <option name="height" value="815" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -231,6 +235,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -256,6 +261,11 @@
             <path>
               <item name="Flex" type="b2602c69:ProjectViewProjectNode" />
               <item name="Flex" type="462c0819:PsiDirectoryNode" />
+              <item name="tv_shows" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Flex" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Flex" type="462c0819:PsiDirectoryNode" />
               <item name="user_profile" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -267,7 +277,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -350,8 +359,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.15973154" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.16174497" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50098234" side_tool="true" weight="0.20939597" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -362,8 +372,8 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.914094" visible="true" weight="0.23512748" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.08590604" side_tool="true" visible="true" weight="0.23512748" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.9134228" visible="true" weight="0.23512748" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.086577184" side_tool="true" visible="true" weight="0.23512748" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49932885" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -427,16 +437,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
           <caret line="2" column="53" lean-forward="true" selection-start-line="2" selection-start-column="53" selection-end-line="2" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="24" column="29" lean-forward="true" selection-start-line="24" selection-start-column="29" selection-end-line="24" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -542,13 +542,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/models.py" />
     <entry file="file://$PROJECT_DIR$/user_profile/avtars/.keep">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -599,11 +593,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/acc_base/migrations/0002_uniquetokenuser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-143" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/acc_base/migrations/0002_uniquetokenuser.py" />
     <entry file="file://$PROJECT_DIR$/acc_base/migrations/0001_initial.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -647,9 +637,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/user_profile/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="675">
+          <caret line="25" column="70" selection-start-line="25" selection-start-column="70" selection-end-line="25" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4941">
+          <caret line="185" column="51" selection-start-line="185" selection-start-column="51" selection-end-line="185" selection-end-column="51" />
+          <folding>
+            <element signature="e#306#315#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/acc_base/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="702">
+          <caret line="41" column="67" selection-start-line="41" selection-start-column="67" selection-end-line="41" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/acc_base/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
+        <state relative-caret-position="270">
           <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
@@ -657,52 +671,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/acc_base/views.py">
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/fcm_django/fcm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="41" column="67" selection-start-line="41" selection-start-column="67" selection-end-line="41" selection-end-column="67" />
+        <state relative-caret-position="2079">
+          <caret line="78" column="17" selection-start-line="78" selection-start-column="4" selection-end-line="78" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/fcm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2997">
+        <state relative-caret-position="3078">
           <caret line="115" column="18" selection-start-line="115" selection-start-column="13" selection-end-line="115" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/pyfcm/baseapi.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
+        <state relative-caret-position="7911">
           <caret line="301" column="64" selection-start-line="301" selection-start-column="51" selection-end-line="301" selection-end-column="64" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/requests/sessions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2752">
+        <state relative-caret-position="11718">
           <caret line="462" column="22" selection-start-line="462" selection-start-column="22" selection-end-line="462" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/fcm_django/fcm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1224">
-          <caret line="78" column="17" selection-start-line="78" selection-start-column="4" selection-end-line="78" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/user_profile/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-588">
-          <caret line="25" column="70" selection-start-line="25" selection-start-column="70" selection-end-line="25" selection-end-column="70" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-972">
-          <caret line="101" column="100" lean-forward="true" selection-start-line="101" selection-start-column="100" selection-end-line="101" selection-end-column="100" />
+        <state relative-caret-position="276">
+          <caret line="101" column="100" selection-start-line="101" selection-start-column="100" selection-end-line="101" selection-end-column="100" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
@@ -711,20 +711,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="262" column="28" selection-start-line="262" selection-start-column="28" selection-end-line="262" selection-end-column="28" />
+        <state relative-caret-position="380">
+          <caret line="127" column="120" selection-start-line="127" selection-start-column="95" selection-end-line="127" selection-end-column="120" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mysite/settings.py">
+    <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="188" column="26" lean-forward="true" selection-start-line="188" selection-start-column="26" selection-end-line="188" selection-end-column="26" />
+        <state relative-caret-position="353">
+          <caret line="30" column="97" selection-start-line="30" selection-start-column="97" selection-end-line="30" selection-end-column="97" />
           <folding>
-            <element signature="e#306#315#0" expanded="true" />
+            <element signature="e#0#57#0" expanded="true" />
           </folding>
         </state>
       </provider>
