@@ -12,5 +12,6 @@ urlpatterns = [
     path('check_log', views.check_log),
     path('login_redirection', views.login_redirection),
     path('name', views.name),
+    path('resend_email', views.resend_email),
 ]
 

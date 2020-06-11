@@ -14,11 +14,22 @@ from django.urls import reverse
 from django.template import loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
-
+@csrf_exempt
+def resend_email(request):
+    if request.method == 'POST':
+        email = request.POST.get(['email'][0], False)
+        user_id = request.POST.get(['user_id'][0], False)
+        token = secrets.token_hex(nbytes=10)
+        token_confirm = TokenConfirm(id=user_id, token=token)
+        token_confirm.save()
+        url_confirm = core_url+'acc_base/registration/ended?token={}'.format(token)
+        send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
+                      , 'hortmagennn@gmail.com', [email], fail_silently=False, )
 @csrf_exempt
 def registration(request):
     if request.method == 'POST':
@@ -48,7 +59,7 @@ def registration(request):
     # HttpResponse.__setitem__(header='Authorization', value=session_hash)
 
             #csrf_token = django.middleware.csrf.get_token(request)
-            http_resp = HttpResponse()
+            #http_resp = HttpResponse()
             #http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
 
             print('I created user!!!!!!!')
@@ -57,7 +68,7 @@ def registration(request):
             token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
             token.save()
 
-            return HttpResponse(http_resp)
+            return JsonResponse({'user_id': int(user.id)})
 
         return HttpResponse("Such email is already exist", status=409)
     else:
