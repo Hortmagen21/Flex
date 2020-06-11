@@ -1,4 +1,4 @@
-package com.example.flex.Adapter
+package com.example.flex.Adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

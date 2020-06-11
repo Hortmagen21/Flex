@@ -1,13 +1,8 @@
 package com.example.flex.Requests
 
-import androidx.lifecycle.MutableLiveData
-import com.example.flex.DataBase.PostAccountDao
-import com.example.flex.DataBase.PostDao
 import com.example.flex.MainData
 import com.example.flex.POJO.Comment
 import com.example.flex.POJO.Post
-import com.example.flex.POJO.PostAccount
-import com.example.flex.POJO.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -180,14 +175,14 @@ class PostRequests(
                             //val isSubscribed=jsonObject["isSubscribed"]
                             //val userName=jsonObject["name"]
                             val postsList = jsonObject["posts"]
-                            val listOfPosts = mutableListOf<PostAccount>()
+                            val listOfPosts = mutableListOf<Post>()
                             if (postsList is JSONArray) {
                                 val length = postsList.length()
                                 for (i in 0 until length) {
                                     val value = postsList[i]
                                     if (value is JSONObject)
                                         listOfPosts.add(
-                                            PostAccount(
+                                            Post(
                                                 id = value["post_id"].toString().toLong(),
                                                 imageUrl = value["src"].toString(),
                                                 date = value["date"].toString().toLong(),
@@ -196,13 +191,13 @@ class PostRequests(
                                                 countOfComments = value["comments"].toString()
                                                     .toLong(),
                                                 //imageUrlMini = value["src_mini"].toString(),
-                                                isLiked = value["isLiked"] == "true",
+                                                isLiked = value["isLiked"].toString().toBoolean(),
                                                 belongsTo = id
                                             )
                                         )
                                 }
                             }
-                            mPostRequestsInteraction.savePostAccountToDb(listOfPosts)
+                            mPostRequestsInteraction.savePostsToDb(listOfPosts)
                         }
                     }
                 } else if (response.code == MainData.ERR_403) {
@@ -258,7 +253,9 @@ class PostRequests(
                                                     .toLong(),
                                                 countOfComments = value["comments"].toString()
                                                     .toLong(),
-                                                isLiked = value["isLiked"] == true
+                                                isLiked = value["isLiked"].toString().toBoolean(),
+                                                belongsTo = value["user_id"].toString().toLong(),
+                                                showInFeed = true
                                             )
                                         )
                                 }
@@ -337,7 +334,6 @@ class PostRequests(
     interface PostRequestsInteraction {
         fun mustSignIn()
         fun savePostsToDb(posts: List<Post>)
-        fun savePostAccountToDb(posts: List<PostAccount>)
         fun saveCommentsToDb(comments: List<Comment>)
         fun updatePost(post: Post)
     }

@@ -31,7 +31,6 @@
             android:layout_toEndOf="@id/user_icon"
             android:layout_toRightOf="@id/user_icon"
             android:gravity="center_vertical"
-            android:text="Name"
             android:textSize="25sp" />
 
         <TextView
@@ -91,7 +90,6 @@
             android:layout_marginLeft="8dp"
             android:layout_toEndOf="@id/fire_icon"
             android:layout_toRightOf="@id/fire_icon"
-            android:text="1234"
             android:textSize="20sp" />
 
         <TextView
@@ -119,7 +117,6 @@
             android:layout_marginLeft="8dp"
             android:layout_toEndOf="@id/comments_icon"
             android:layout_toRightOf="@id/comments_icon"
-            android:text="1234"
             android:textSize="20sp" />
 
         <TextView
@@ -147,7 +144,6 @@
             android:layout_marginLeft="8dp"
             android:layout_toEndOf="@id/share_icon"
             android:layout_toRightOf="@id/share_icon"
-            android:text="1234"
             android:textSize="20sp" />
 
         <FrameLayout

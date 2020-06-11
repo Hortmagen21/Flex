@@ -51,4 +51,9 @@ object MainData {
     val TAG_NAME="name"
     val VIEW_INFORMATION_USER="view_information_user"
     val VIEW_COMMENTS_TO_POST="view_all_comments"
+    val SHARED_PREFERENCES="shared prefs"
+    val CHAT="chatroom"
+    val PUT_USER_NAME="put name"
+    val PUT_USER_ID="put id"
+    val CREATE_CHAT="create_chat"
 }

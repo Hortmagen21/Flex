@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".Activities.CommentsEnlist">
+    tools:context=".Activities.ChatActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_recycler"
@@ -15,7 +15,6 @@
         tools:layout_editor_absoluteY="1dp" />
 
     <EditText
-        android:hint="@string/write_comment"
         android:id="@+id/send_message_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,8 +25,9 @@
         android:layout_marginBottom="15dp"
         android:layout_toStartOf="@id/send_message_button"
         android:layout_toLeftOf="@id/send_message_button"
+        android:hint="@string/write_message"
         android:inputType="textMultiLine"
-        android:maxLength="100"/>
+        android:maxLength="100" />
 
     <Button
         android:id="@+id/send_message_button"

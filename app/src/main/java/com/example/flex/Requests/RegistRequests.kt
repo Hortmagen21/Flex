@@ -2,8 +2,8 @@ package com.example.flex.Requests
 
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.MutableLiveData
 import com.example.flex.MainData
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -60,6 +60,7 @@ class RegistRequests(private val mRegistRequestInteraction: RegistRequestInterac
         val formBody = FormBody.Builder()
             .add("password", password)
             .add("username", login)
+            .add("token", FirebaseInstanceId.getInstance().token ?: "-1")
             .build()
         val request = Request.Builder()
             .url("https://${MainData.BASE_URL}/${MainData.URL_PREFIX_ACC_BASE}/${MainData.LOGIN}")
@@ -171,6 +172,7 @@ class RegistRequests(private val mRegistRequestInteraction: RegistRequestInterac
             .add("password", password)
             .add("username", login)
             .add("email", email)
+            .add("token", FirebaseInstanceId.getInstance().token ?: "-1")
             .build()
         val request = Request.Builder()
             .url("https://${MainData.BASE_URL}/${MainData.URL_PREFIX_ACC_BASE}/${MainData.REGISTRATON}")

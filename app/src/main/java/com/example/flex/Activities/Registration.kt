@@ -1,4 +1,4 @@
-package com.example.flex
+package com.example.flex.Activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.flex.AccountViewModel
+import com.example.flex.R
 
 class Registration : AppCompatActivity() {
     private lateinit var mEmail: EditText
@@ -50,7 +52,7 @@ class Registration : AppCompatActivity() {
                 mViewModel.register(
                     email = mEmail.text.toString(),
                     login = mLogin.text.toString(),
-                    password = mEmail.text.toString()
+                    password = mPassword.text.toString()
                 )
                 Toast.makeText(
                     this,

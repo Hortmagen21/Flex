@@ -15,7 +15,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.flex.*
-import com.example.flex.Requests.PhotoRequests
+import com.example.flex.Activities.ForgotPass
+import com.example.flex.Activities.MakePostActivity
+import com.example.flex.Activities.Registration
+import com.example.flex.Activities.SignIn
 
 class CameraFragment : Fragment() {
     lateinit var v: View

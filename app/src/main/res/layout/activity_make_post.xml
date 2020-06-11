@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MakePostActivity">
+    tools:context=".Activities.MakePostActivity">
     <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout"
-        android:text="Publish"
+        android:text="@string/publish"
         android:visibility="gone"/>
     <Button
         android:background="@drawable/main_app_buttons"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout"
-        android:text="Get picture" />
+        android:text="@string/get_picture" />
 
     <Button
         android:background="@drawable/main_app_buttons"
@@ -44,5 +44,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_get_picture"
-        android:text="Take picture" />
+        android:text="@string/take_picture" />
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.flex.Adapter
+package com.example.flex.Adapters
 
 import android.view.LayoutInflater
 import android.view.View

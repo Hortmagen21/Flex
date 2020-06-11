@@ -85,10 +85,7 @@ class ForgotPassRequests() {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    /*if (activity is ForgotPass) {
-                        activity.runOnUiThread {
-                        }
-                    }*/
+                    //TODO
                 } else {
 
                 }

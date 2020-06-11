@@ -1,8 +1,7 @@
 package com.example.flex.Requests
 
-import androidx.lifecycle.MutableLiveData
 import com.example.flex.MainData
-import com.example.flex.POJO.PostAccount
+import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -58,14 +57,14 @@ class UserRequests(
                             val postsList = jsonObject["posts"]
                             val nameOfUser = jsonObject["user_name"]
                             val isSubscribed = jsonObject["isSubscribed"]
-                            val listOfPosts = mutableListOf<PostAccount>()
+                            val listOfPosts = mutableListOf<Post>()
                             if (postsList is JSONArray) {
                                 val length = postsList.length()
                                 for (i in 0 until length) {
                                     val value = postsList[i]
                                     if (value is JSONObject) {
                                         listOfPosts.add(
-                                            PostAccount(
+                                            Post(
                                                 id = value["post_id"].toString().toLong(),
                                                 imageUrlMini = value["src_mini"].toString(),
                                                 imageUrl = value["src"].toString(),
@@ -77,7 +76,7 @@ class UserRequests(
                                     }
                                 }
                             }
-                            mUserRequestsInteraction.savePostsAccountToDb(
+                            mUserRequestsInteraction.savePostsToDb(
                                 listOfPosts,
                                 idOfUser.toString().toLong()
                             )
@@ -231,7 +230,7 @@ class UserRequests(
         fun follow(userId: Long)
         fun unfollow(userId:Long)
         fun mustSignIn()
-        fun savePostsAccountToDb(posts: List<PostAccount>, idOfUser: Long)
+        fun savePostsToDb(posts: List<Post>, idOfUser: Long)
         fun updateUserInDb(user: User)
     }
 

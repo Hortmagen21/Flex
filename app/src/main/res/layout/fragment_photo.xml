@@ -10,7 +10,7 @@
         android:id="@+id/button_registration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Registration" />
+        android:text="@string/registration" />
 
     <Button
         android:background="@drawable/main_app_buttons"
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_registration"
-        android:text="Sign In" />
+        android:text="@string/sign_in" />
 
     <Button
         android:background="@drawable/main_app_buttons"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_login"
-        android:text="Logout" />
+        android:text="@string/logout" />
 
     <Button
         android:background="@drawable/main_app_buttons"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_logout"
-        android:text="CheckLog" />
+        android:text="@string/checklog" />
 
     <Button
         android:background="@drawable/main_app_buttons"
@@ -42,12 +42,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_checkLog"
-        android:text="Change pass" />
+        android:text="@string/change_password" />
     <Button
         android:id="@+id/button_make_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/main_app_buttons"
         android:layout_below="@id/button_change_pass"
-        android:text="Make post"/>
+        android:text="@string/make_post"/>
 </RelativeLayout>

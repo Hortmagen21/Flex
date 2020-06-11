@@ -1,14 +1,12 @@
-package com.example.flex.Adapter
+package com.example.flex.Adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flex.POJO.Comment
-import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
 import com.example.flex.R
 import kotlinx.coroutines.CoroutineScope

@@ -1,6 +1,7 @@
 package com.example.flex.Fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,22 +13,19 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flex.AccountViewModel
-import com.example.flex.Adapter.PostsAccountAdapter
+import com.example.flex.Activities.CommentsEnlist
+import com.example.flex.Adapters.PostAdapter
 import com.example.flex.MainData
-import com.example.flex.POJO.PostAccount
+import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
 import com.example.flex.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AccountPostListRecyclerFragment(
     private var user: User?
-) : Fragment(), PostsAccountAdapter.OnPostClickListener, PostsAccountAdapter.PhotosDownload {
+) : Fragment(), PostAdapter.OnUserClickListener, PostAdapter.PostsInteraction {
     lateinit var v: View
-    private lateinit var recycler: RecyclerView
-    lateinit var adapter: PostsAccountAdapter
+    private lateinit var mRecycler: RecyclerView
+    lateinit var adapter: PostAdapter
     private lateinit var mAccountViewModel: AccountViewModel
 
     override fun onCreateView(
@@ -44,13 +42,15 @@ class AccountPostListRecyclerFragment(
         loadRecycler()
         mAccountViewModel = ViewModelProviders.of(activity!!).get(AccountViewModel::class.java)
         mAccountViewModel.getAllPostsAccount(user!!.id).observe(viewLifecycleOwner, Observer {
-            adapter.setPosts(it)
-
+            adapter.submitList(it)
 
         })
         addActionListener()
         loadPosts()
         return v
+    }
+    fun scrollToPost(postNumber:Int){
+        mRecycler.scrollToPosition(postNumber)
     }
 
     private fun addActionListener() {
@@ -58,34 +58,49 @@ class AccountPostListRecyclerFragment(
     }
 
     private fun loadRecycler() {
-        recycler = v.findViewById(R.id.recycler_posts_account)
-        recycler.layoutManager = LinearLayoutManager(this.context)
+        mRecycler = v.findViewById(R.id.recycler_posts_account)
+        mRecycler.layoutManager = LinearLayoutManager(this.context)
 
-        adapter = PostsAccountAdapter(this, this)
-        recycler.adapter = adapter
+        adapter = PostAdapter(this, this)
+        mRecycler.adapter = adapter
     }
 
     private fun loadPosts() {
         mAccountViewModel.getPostsForAcc(user!!.id)
     }
 
-    fun addPosts(list: List<PostAccount>) {
-        adapter.addPosts(list)
+    override fun onUserClick(user: User) {
+        if(true){
+            //TODO
+        }
     }
 
-    override fun onLikeClick(post: PostAccount) {
+    override fun onLikeClick(post: Post) {
         mAccountViewModel.likePost(post)
     }
 
-    override fun onCommentClick(post: PostAccount) {
+
+    override fun onUnlikeClick(post: Post) {
         mAccountViewModel.unLikePost(post)
     }
 
-    override fun onUnlikeClick(post: PostAccount) {
-        //TODO
+    override fun onCommentClick(postId: Long) {
+        val intent= Intent(this.context,
+            CommentsEnlist::class.java)
+        intent.putExtra("PostId",postId)
+        v.context.startActivity(intent)
     }
+
 
     override fun photoDownload(link: String, photo: ImageView) {
         mAccountViewModel.downloadPhoto(link, photo)
+    }
+
+    override suspend fun getUserFromDB(userId: Long): User {
+        return mAccountViewModel.getUserValueFromDB(userId)
+    }
+
+    override suspend fun getUserFromNetwork(userId: Long): User {
+        return mAccountViewModel.getUserById(userId)
     }
 }

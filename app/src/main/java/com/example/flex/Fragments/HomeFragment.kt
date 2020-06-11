@@ -13,15 +13,17 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flex.*
-import com.example.flex.Adapter.PostAdapter
+import com.example.flex.Activities.CommentsEnlist
+import com.example.flex.Activities.SignIn
+import com.example.flex.Adapters.PostAdapter
 import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
 
-class HomeFragment : Fragment(), PostAdapter.OnUserClickListener,PostAdapter.PhotosDownload {
+class HomeFragment : Fragment(), PostAdapter.OnUserClickListener, PostAdapter.PostsInteraction {
     lateinit var v: View
     lateinit var recycler: RecyclerView
     lateinit var postAdapter: PostAdapter
-    private lateinit var mViewModel:HomeViewModel
+    private lateinit var mViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,13 +31,14 @@ class HomeFragment : Fragment(), PostAdapter.OnUserClickListener,PostAdapter.Pho
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.fragment_home, container, false)
-        mViewModel= ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        mViewModel.allPosts.observe(viewLifecycleOwner, Observer {
+        mViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        mViewModel.postsInFeed.observe(viewLifecycleOwner, Observer {
             setPosts(it)
         })
+
         mViewModel.isMustSignIn.observe(viewLifecycleOwner, Observer {
-            if(it==true){
-                val intent= Intent(this.context, SignIn::class.java)
+            if (it == true) {
+                val intent = Intent(this.context, SignIn::class.java)
                 startActivity(intent)
                 activity?.finish()
             }
@@ -50,7 +53,7 @@ class HomeFragment : Fragment(), PostAdapter.OnUserClickListener,PostAdapter.Pho
     }
 
     private fun setPosts(list: List<Post>) {
-        postAdapter.setItems(list)
+        postAdapter.submitList(list)
     }
 
     private fun loadRecyclerView() {
@@ -68,7 +71,7 @@ class HomeFragment : Fragment(), PostAdapter.OnUserClickListener,PostAdapter.Pho
     override fun onUserClick(user: User) {
         val sharedPreferences =
             v.context.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
-        if (user.id == sharedPreferences.getLong(MainData.YOUR_ID, 0)||user.id==0.toLong()) {
+        if (user.id == sharedPreferences.getLong(MainData.YOUR_ID, 0) || user.id == 0.toLong()) {
             val fragment = MainUserAccountFragment()
             fragment.mUser = user
             fragmentManager?.beginTransaction()
@@ -82,22 +85,33 @@ class HomeFragment : Fragment(), PostAdapter.OnUserClickListener,PostAdapter.Pho
         }
     }
 
-    override fun onLikeClick(post:Post) {
+    override fun onLikeClick(post: Post) {
         mViewModel.likePost(post)
     }
 
-    override fun onCommentClick(postId:Long,text:String) {
-        val intent=Intent(this.context,CommentsEnlist::class.java)
-        intent.putExtra("PostId",postId)
+    override fun onCommentClick(postId: Long) {
+        val intent = Intent(
+            this.context,
+            CommentsEnlist::class.java
+        )
+        intent.putExtra("PostId", postId)
         startActivity(intent)
     }
 
-    override fun onUnlikeClick(post:Post) {
+    override fun onUnlikeClick(post: Post) {
         mViewModel.unLikePost(post)
     }
 
 
     override fun photoDownload(link: String, photo: ImageView) {
-        mViewModel.downloadPhoto(link,photo)
+        mViewModel.downloadPhoto(link, photo)
+    }
+
+    override suspend fun getUserFromDB(userId: Long): User {
+        return mViewModel.getUserValueFromBD(userId)
+    }
+
+    override suspend fun getUserFromNetwork(userId: Long): User {
+        return mViewModel.getUserById(userId)
     }
 }

@@ -1,10 +1,11 @@
 package com.example.flex.POJO
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "post_database")
+@Entity(tableName = "posts_account_database")
 data class Post(
     @PrimaryKey val id: Long
 ) {
@@ -18,9 +19,10 @@ data class Post(
     var countOfComments: Long = 0
     var countOfShares: Long = 0
 
-    @Ignore
-    var comment: Comment? = null
     var isLiked: Boolean = false
+    @ColumnInfo(name = "belongs")
+    var belongsTo:Long=0
+    var showInFeed=false
 
     constructor(
         id: Long = 0,
@@ -32,8 +34,9 @@ data class Post(
         countOfFires: Long = 0,
         countOfComments: Long = 0,
         countOfShares: Long = 0,
-        comment: Comment? = null,
-        isLiked: Boolean = false
+        isLiked: Boolean = false,
+        belongsTo:Long=0,
+        showInFeed: Boolean =false
     ) : this(id){
         this.mainUser=mainUser
         this.imageUrl=imageUrl
@@ -42,8 +45,9 @@ data class Post(
         this.countOfFires=countOfFires
         this.countOfComments=countOfComments
         this.countOfShares=countOfShares
-        this.comment=comment
         this.isLiked=isLiked
         this.imageUrlMini=imageUrlMini
+        this.belongsTo=belongsTo
+        this.showInFeed=showInFeed
     }
 }

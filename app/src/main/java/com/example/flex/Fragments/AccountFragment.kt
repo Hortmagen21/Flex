@@ -15,7 +15,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.example.flex.*
-import com.example.flex.Adapter.ViewPagerAdapter
+import com.example.flex.Activities.ChatActivity
+import com.example.flex.Activities.SignIn
+import com.example.flex.Adapters.ViewPagerAdapter
 import com.example.flex.POJO.User
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
@@ -27,21 +29,22 @@ import kotlinx.coroutines.withContext
 
 class AccountFragment : Fragment(),
     AccountPostTableRecyclerFragment.UserUpdates {
-    private lateinit var activity: AppCompatActivity
+    private lateinit var mActivity: AppCompatActivity
     lateinit var avatar: ImageView
-    private lateinit var followingCount: TextView
-    private lateinit var followersCount: TextView
+    private lateinit var mFollowingCount: TextView
+    private lateinit var mFollowersCount: TextView
     var mUser: User? = null
     private lateinit var v: View
     lateinit var followBtn: Button
-    private lateinit var tableRecyclerView: AccountPostTableRecyclerFragment
-    private lateinit var listRecyclerView: AccountPostListRecyclerFragment
-    private lateinit var currentRecycler: Fragment
-    private lateinit var switchTab: TabLayout
-    private lateinit var viewPager: ViewPager
+    private lateinit var mTableRecyclerView: AccountPostTableRecyclerFragment
+    private lateinit var mListRecyclerView: AccountPostListRecyclerFragment
+    private lateinit var mCurrentRecycler: Fragment
+    private lateinit var mSwitchTab: TabLayout
+    private lateinit var mViewPager: ViewPager
     lateinit var userName: TextView
     private lateinit var mAccountViewModel: AccountViewModel
     private lateinit var mLiveAccountUser: LiveData<User>
+    private lateinit var mMakeChat: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,17 +52,17 @@ class AccountFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.fragment_account, container, false)
-        activity = v.context as AppCompatActivity
+        mActivity = v.context as AppCompatActivity
 
         mAccountViewModel = ViewModelProviders.of(this).get(AccountViewModel::class.java)
         mAccountViewModel.isMustSignIn.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 val intent = Intent(v.context, SignIn::class.java)
                 startActivity(intent)
-                activity.finish()
+                mActivity.finish()
             }
         })
-        mAccountViewModel.refreshUser(mUser)
+        //mAccountViewModel.refreshUser(mUser)
         CoroutineScope(IO).launch {
             mLiveAccountUser = mAccountViewModel.getAccountUser(
                 if (mUser == null) {
@@ -71,7 +74,9 @@ class AccountFragment : Fragment(),
             withContext(Main) {
                 addActionListener()
                 mLiveAccountUser.observe(viewLifecycleOwner, Observer {
-                    setUser(it)
+                    if (it != null) {
+                        setUser(it)
+                    }
                 })
                 mAccountViewModel.refreshUser(mUser)
 
@@ -79,8 +84,8 @@ class AccountFragment : Fragment(),
                     mUser!!.imageUrl,
                     avatar
                 )
-                followersCount.text = mUser!!.followersCount.toString()
-                followingCount.text = mUser!!.followingCount.toString()
+                mFollowersCount.text = mUser!!.followersCount.toString()
+                mFollowingCount.text = mUser!!.followingCount.toString()
             }
         }
         return v
@@ -94,40 +99,47 @@ class AccountFragment : Fragment(),
     private fun addActionListener() {
         userName = v.findViewById(R.id.user_name)
         avatar = v.findViewById(R.id.user_icon_main)
-        followingCount = v.findViewById(R.id.followed_count)
-        followersCount = v.findViewById(R.id.followers_count)
-        tableRecyclerView = AccountPostTableRecyclerFragment(mUser, this)
-        listRecyclerView = AccountPostListRecyclerFragment(mUser)
+        mFollowingCount = v.findViewById(R.id.followed_count)
+        mFollowersCount = v.findViewById(R.id.followers_count)
+        mTableRecyclerView = AccountPostTableRecyclerFragment(mUser, this)
+        mListRecyclerView = AccountPostListRecyclerFragment(mUser)
+        mMakeChat = v.findViewById(R.id.button_connect_chat)
         if (mUser != null) {
             if (mUser!!.imageUrl != "") Picasso.get().load(mUser!!.imageUrl).into(avatar)
-            followersCount.text = mUser!!.followersCount.toString()
-            followingCount.text = mUser!!.followingCount.toString()
+            mFollowersCount.text = mUser!!.followersCount.toString()
+            mFollowingCount.text = mUser!!.followingCount.toString()
         }
-        switchTab = v.findViewById(R.id.switchRecyclers)
-        viewPager = v.findViewById(R.id.recycler_fragment)
+        mMakeChat.setOnClickListener {
+            val intent = Intent(this.context, ChatActivity::class.java)
+            intent.putExtra(MainData.PUT_USER_NAME, mUser?.name)
+            intent.putExtra(MainData.PUT_USER_ID, mUser?.id)
+            startActivity(intent)
+        }
+        mSwitchTab = v.findViewById(R.id.switchRecyclers)
+        mViewPager = v.findViewById(R.id.recycler_fragment)
         val viewPagerAdapter = fragmentManager?.let { ViewPagerAdapter(it) }
-        viewPagerAdapter!!.addFragment(tableRecyclerView, "Grid")
-        viewPagerAdapter.addFragment(listRecyclerView, "List")
-        viewPager.adapter = viewPagerAdapter
-        switchTab.setupWithViewPager(viewPager)
+        viewPagerAdapter!!.addFragment(mTableRecyclerView, "Grid")
+        viewPagerAdapter.addFragment(mListRecyclerView, "List")
+        mViewPager.adapter = viewPagerAdapter
+        mSwitchTab.setupWithViewPager(mViewPager)
         followBtn = v.findViewById(R.id.button_follow)
         followBtn.text = if (mUser!!.isSubscribed) {
             "Unfollow"
         } else {
             "Follow"
         }
-        followBtn.setOnClickListener(
-            if (mUser!!.isSubscribed) {
-                follow()
+        followBtn.setOnClickListener {
+            if (!mUser!!.isSubscribed) {
+                followBtn.setOnClickListener(follow())
             } else {
-                unfollow()
+                followBtn.setOnClickListener(unfollow())
             }
-        )
+        }
     }
 
     private fun follow(): View.OnClickListener {
         followBtn.text = "Unfollow"
-        followersCount.text = (followersCount.text.toString().toLong() + 1).toString()
+        mFollowersCount.text = (mFollowersCount.text.toString().toLong() + 1).toString()
         mAccountViewModel.follow(mUser!!.id)
         return View.OnClickListener {
             followBtn.setOnClickListener(unfollow())
@@ -136,7 +148,7 @@ class AccountFragment : Fragment(),
 
     private fun unfollow(): View.OnClickListener {
         followBtn.text = "Follow"
-        followersCount.text = (followersCount.text.toString().toLong() - 1).toString()
+        mFollowersCount.text = (mFollowersCount.text.toString().toLong() - 1).toString()
         mAccountViewModel.unfollow(mUser!!.id)
         return View.OnClickListener {
             followBtn.setOnClickListener(follow())
@@ -146,9 +158,14 @@ class AccountFragment : Fragment(),
     override fun setUser(user: User) {
         mUser = user
         userName.text = user.name
-        followingCount.text = user.followingCount.toString()
-        followersCount.text = user.followersCount.toString()
+        mFollowingCount.text = user.followingCount.toString()
+        mFollowersCount.text = user.followersCount.toString()
         mAccountViewModel.downloadPhoto(user.imageUrl, avatar)
+    }
+
+    override fun postScrollTo(postNumber: Int) {
+        mViewPager.setCurrentItem(1,true)
+        mListRecyclerView.scrollToPost(postNumber)
     }
 }
 

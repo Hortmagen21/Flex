@@ -1,31 +1,50 @@
-package com.example.flex.Adapter
+package com.example.flex.Adapters
 
-import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.flex.CommentsEnlist
-import com.example.flex.Fragments.CommentFragment
 import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
 import com.example.flex.R
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class PostAdapter(private var mOnUserClickListener: OnUserClickListener, private val mDownloadPhoto:PhotosDownload) :
-    RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
-    private var postList = mutableListOf<Post>()
+class PostAdapter(
+    private val mOnUserClickListener: OnUserClickListener,
+    private val mPostsInteraction: PostsInteraction
+) : ListAdapter<Post, PostAdapter.PostViewHolder>(object : DiffUtil.ItemCallback<Post>() {
+    override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+        return oldItem.isLiked == newItem.isLiked &&
+                oldItem.belongsTo == newItem.belongsTo &&
+                oldItem.countOfComments == newItem.countOfComments &&
+                oldItem.countOfFires == newItem.countOfFires &&
+                oldItem.countOfShares == newItem.countOfShares &&
+                oldItem.imageUrl == newItem.imageUrl &&
+                oldItem.postText == newItem.postText &&
+                oldItem.date == newItem.date
+    }
+
+}) {
 
     class PostViewHolder(
         private val v: View,
-        private var mOnUserClickListener: OnUserClickListener,
-        private val mDownloadPhoto:PhotosDownload
+        private val mOnUserClickListener: OnUserClickListener,
+        private val mPostsInteraction: PostsInteraction
     ) :
         RecyclerView.ViewHolder(v) {
         private val mainUserAvatar: ImageView = v.findViewById(R.id.user_icon)
@@ -37,12 +56,12 @@ class PostAdapter(private var mOnUserClickListener: OnUserClickListener, private
         private val commentIcon: TextView = v.findViewById(R.id.comments_icon)
         private val shareCount: TextView = v.findViewById(R.id.share_count)
         private val postText: TextView = v.findViewById(R.id.post_text)
-        private val fragmentContainer = v.findViewById<FrameLayout>(R.id.comment_frame)
-        private lateinit var comment: CommentFragment
         private lateinit var post: Post
         private var isLiked = false
+        private val mPicasso = Picasso.get()
 
         init {
+            mPicasso.setIndicatorsEnabled(true)
             mainUserAvatar.setOnClickListener {
                 mOnUserClickListener.onUserClick(post.mainUser)
             }
@@ -50,97 +69,92 @@ class PostAdapter(private var mOnUserClickListener: OnUserClickListener, private
                 if (!isLiked) {
                     mOnUserClickListener.onLikeClick(post)
                     firesCount.text = (firesCount.text.toString().toLong() + 1).toString()
-                    post.isLiked=true
-                    post.countOfFires=firesCount.text.toString().toLong()
+                    post.isLiked = true
+                    post.countOfFires = firesCount.text.toString().toLong()
                     fireIcon.setTextColor(Color.RED)
                     isLiked = true
                 } else {
                     mOnUserClickListener.onUnlikeClick(post)
                     firesCount.text = (firesCount.text.toString().toLong() - 1).toString()
-                    post.isLiked=false
-                    post.countOfFires=firesCount.text.toString().toLong()
+                    post.isLiked = false
+                    post.countOfFires = firesCount.text.toString().toLong()
                     fireIcon.setTextColor(Color.GRAY)
                     isLiked = false
                 }
             }
             commentIcon.setOnClickListener {
-                val intent= Intent(v.context,CommentsEnlist::class.java)
-                intent.putExtra("PostId",post.id)
-                v.context.startActivity(intent)
+                mOnUserClickListener.onCommentClick(post.id)
             }
         }
 
         fun bind(post: Post) {
-            isLiked=post.isLiked
+            isLiked = post.isLiked
             this.post = post
-            mDownloadPhoto.photoDownload(post.imageUrl, postImage)
-            mainUserName.text = post.mainUser.name
-            if(isLiked){
+            setMainUser(post.mainUser)
+            if (isLiked) {
                 fireIcon.setTextColor(Color.RED)
-            }else{
+            } else {
                 fireIcon.setTextColor(Color.GRAY)
             }
-            if (post.mainUser.imageUrl != "") Picasso.get().load(post.mainUser.imageUrl)
-                .into(mainUserAvatar)
-            if (post.imageUrl != "") Picasso.get().load(post.imageUrl).into(postImage)
+            if (post.imageUrl != "") {
+                mPostsInteraction.photoDownload(post.imageUrl,postImage)
+            }
             if (post.postText != "") {
                 postText.text = post.postText
                 postText.layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-            } else postText.height = 0
+            } else {
+                postText.height = 0
+            }
             firesCount.text = post.countOfFires.toString()
             commentsCount.text = post.countOfComments.toString()
             shareCount.text = post.countOfShares.toString()
-            if (post.comment != null && post.mainUser != null)
-                if (post.comment!!.text != "" && post.mainUser.name != "" && post.mainUser.imageUrl != "") {
-                    comment = CommentFragment(post.comment!!)
-                    val activity: AppCompatActivity = v.context as AppCompatActivity
-                    activity.supportFragmentManager.beginTransaction()
-                        .replace(R.id.comment_frame, comment).commit()
+            CoroutineScope(IO).launch {
+                var user: User = mPostsInteraction.getUserFromDB(post.belongsTo)
+                withContext(Main) {
+                    setMainUser(user)
                 }
+                user = mPostsInteraction.getUserFromNetwork(post.belongsTo)
+                withContext(Main) {
+                    setMainUser(user)
+                }
+            }
         }
 
+        private fun setMainUser(user: User?) {
+            if (user != null) {
+                if (user.imageUrl != "") {
+                    mPostsInteraction.photoDownload(user.imageUrl,mainUserAvatar)
+                }
+                mainUserName.text = user.name
+            }
+        }
     }
 
     interface OnUserClickListener {
         fun onUserClick(user: User)
         fun onLikeClick(post: Post)
-        fun onUnlikeClick(post:Post)
-        fun onCommentClick(postId: Long,text: String)
-    }
-
-    fun addItems(posts: List<Post>) {
-        postList.addAll(posts)
-        notifyDataSetChanged()
-    }
-    fun setItems(posts:List<Post>){
-        postList.clear()
-        postList.addAll(posts)
-        notifyDataSetChanged()
-    }
-
-    fun clearItems() {
-        postList.clear()
-        notifyDataSetChanged()
+        fun onUnlikeClick(post: Post)
+        fun onCommentClick(postId: Long)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view: View = inflater.inflate(R.layout.published_photo_layout, parent, false)
-        return PostViewHolder(view, mOnUserClickListener, mDownloadPhoto)
+        return PostViewHolder(view, mOnUserClickListener, mPostsInteraction)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(postList[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return postList.size
-    }
-    interface PhotosDownload{
-        fun photoDownload(link:String,photo:ImageView)
+
+    interface PostsInteraction {
+        fun photoDownload(link: String, photo: ImageView)
+        suspend fun getUserFromDB(userId: Long): User
+        suspend fun getUserFromNetwork(userId: Long): User
     }
 
 }

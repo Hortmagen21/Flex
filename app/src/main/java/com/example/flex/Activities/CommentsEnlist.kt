@@ -1,4 +1,4 @@
-package com.example.flex
+package com.example.flex.Activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,9 +11,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.flex.Adapter.CommentsAdapter
+import com.example.flex.Adapters.CommentsAdapter
+import com.example.flex.HomeViewModel
 import com.example.flex.POJO.Comment
 import com.example.flex.POJO.User
+import com.example.flex.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -49,8 +51,8 @@ class CommentsEnlist : AppCompatActivity(), CommentsAdapter.CommentInterface {
     }
 
     private fun addActionListener() {
-        mSendCommentBtn = findViewById(R.id.send_comment_button)
-        mCommentText = findViewById(R.id.send_comment_text)
+        mSendCommentBtn = findViewById(R.id.send_message_button)
+        mCommentText = findViewById(R.id.send_message_text)
         mSendCommentBtn.setOnClickListener {
             val intent = intent
             mViewModel.commentPost(intent.getLongExtra("PostId", 0), mCommentText.text.toString())
@@ -59,7 +61,7 @@ class CommentsEnlist : AppCompatActivity(), CommentsAdapter.CommentInterface {
     }
 
     private fun loadRecycler() {
-        mRecyclerView = findViewById(R.id.comments_recycler)
+        mRecyclerView = findViewById(R.id.messages_recycler)
         mRecyclerView.layoutManager = LinearLayoutManager(this)
         val intent = intent
         mRecyclerAdapter = CommentsAdapter(intent.getLongExtra("PostId", 0), this)

@@ -1,16 +1,13 @@
 package com.example.flex
 
 import android.app.Application
-import android.content.Context
 import android.widget.ImageView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.flex.POJO.Comment
 import com.example.flex.POJO.Post
-import com.example.flex.POJO.PostAccount
 import com.example.flex.POJO.User
-import com.example.flex.Requests.PhotoRequests
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -29,11 +26,16 @@ class AccountViewModel(private val app: Application) : AndroidViewModel(app) {
         isPasswordCanBeChanged = mRepository.isPasswordCanBeChanged
         isMustSignIn = mRepository.isMustSignIn
     }
-
+    suspend fun getUserValueFromDB(userId:Long):User{
+        return mRepository.getUserValueFromDB(userId)
+    }
+    suspend fun getUserById(userId:Long):User {
+        return mRepository.getUserById(userId)
+    }
     suspend fun getAccountUser(userId: Long): LiveData<User> {
         return mRepository.getAccountUser(userId)
     }
-    fun getAllPostsAccount(userId: Long):LiveData<List<PostAccount>>{
+    fun getAllPostsAccount(userId: Long):LiveData<List<Post>>{
         return mRepository.getPostsForAccount(userId)
     }
 
@@ -66,12 +68,12 @@ class AccountViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun unLikePost(post: PostAccount) {
-        mRepository.unLikePostAccount(post)
+    fun unLikePost(post: Post) {
+        mRepository.unLikePost(post)
     }
 
-    fun likePost(post: PostAccount) {
-        mRepository.likePostAccount(post)
+    fun likePost(post: Post) {
+        mRepository.likePost(post)
     }
 
     fun downloadPhoto(link: String, photo: ImageView) {
@@ -107,7 +109,7 @@ class AccountViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun register(email: String, login: String, password: String) {
-        mRepository.register(email, login, password)
+        mRepository.register(email=email, login=login, password = password)
     }
 
     fun forgotPassword(email: String) {

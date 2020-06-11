@@ -1,4 +1,4 @@
-package com.example.flex
+package com.example.flex.Activities
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.flex.Requests.RegistRequests
+import com.example.flex.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
 import java.net.HttpCookie
@@ -25,7 +25,7 @@ class SignIn : AppCompatActivity() {
         mViewModel=ViewModelProvider(this).get(AccountViewModel::class.java)
         mViewModel.isMustSignIn.observe(this, Observer {
             if(it==false){
-                val intent=Intent(this,MainActivity::class.java)
+                val intent=Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }

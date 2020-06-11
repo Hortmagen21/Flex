@@ -1,4 +1,4 @@
-package com.example.flex
+package com.example.flex.Activities
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,6 +9,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.flex.AccountViewModel
+import com.example.flex.R
 
 class ForgotPass : AppCompatActivity() {
     private lateinit var mEmailText: EditText

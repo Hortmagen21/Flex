@@ -1,4 +1,4 @@
-package com.example.flex
+package com.example.flex.Activities
 
 import android.app.Activity
 import android.content.Intent
@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
+import com.example.flex.AccountViewModel
+import com.example.flex.R
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

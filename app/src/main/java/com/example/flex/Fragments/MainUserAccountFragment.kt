@@ -14,7 +14,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.example.flex.*
-import com.example.flex.Adapter.ViewPagerAdapter
+import com.example.flex.Activities.MakeAvatarActivity
+import com.example.flex.Activities.SignIn
+import com.example.flex.Adapters.ViewPagerAdapter
 import com.example.flex.POJO.User
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
@@ -25,17 +27,17 @@ import kotlinx.coroutines.withContext
 
 class MainUserAccountFragment : Fragment(),
     AccountPostTableRecyclerFragment.UserUpdates {
-    private lateinit var activity: AppCompatActivity
+    private lateinit var mActivity: AppCompatActivity
     lateinit var avatar: ImageView
-    private lateinit var followingCount: TextView
-    private lateinit var followersCount: TextView
+    private lateinit var mFollowingCount: TextView
+    private lateinit var mFollowersCount: TextView
     var mUser: User? = null
     private lateinit var v: View
-    private lateinit var tableRecyclerView: AccountPostTableRecyclerFragment
-    private lateinit var listRecyclerView: AccountPostListRecyclerFragment
-    private lateinit var currentRecycler: Fragment
-    private lateinit var switchTab: TabLayout
-    private lateinit var viewPager: ViewPager
+    private lateinit var mTableRecyclerView: AccountPostTableRecyclerFragment
+    private lateinit var mListRecyclerView: AccountPostListRecyclerFragment
+    private lateinit var mCurrentRecycler: Fragment
+    private lateinit var mSwitchTab: TabLayout
+    private lateinit var mViewPager: ViewPager
     private lateinit var mLiveAccountUser: LiveData<User>
     lateinit var userName: TextView
     private lateinit var mAccountViewModel: AccountViewModel
@@ -46,13 +48,13 @@ class MainUserAccountFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.main_user_account_fragment, container, false)
-        activity = v.context as AppCompatActivity
-        mAccountViewModel = ViewModelProviders.of(activity).get(AccountViewModel::class.java)
+        mActivity = v.context as AppCompatActivity
+        mAccountViewModel = ViewModelProviders.of(mActivity).get(AccountViewModel::class.java)
         mAccountViewModel.isMustSignIn.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 val intent = Intent(v.context, SignIn::class.java)
                 startActivity(intent)
-                activity.finish()
+                mActivity.finish()
             }
         })
         mAccountViewModel.refreshUser(mUser)
@@ -71,8 +73,8 @@ class MainUserAccountFragment : Fragment(),
                         mUser!!.imageUrl,
                         avatar
                     )
-                    followersCount.text = mUser!!.followersCount.toString()
-                    followingCount.text = mUser!!.followingCount.toString()
+                    mFollowersCount.text = mUser!!.followersCount.toString()
+                    mFollowingCount.text = mUser!!.followingCount.toString()
                 }
             }
         }
@@ -87,42 +89,50 @@ class MainUserAccountFragment : Fragment(),
     private fun addActionListener() {
         userName = v.findViewById(R.id.user_name)
         avatar = v.findViewById(R.id.user_icon_main)
-        followingCount = v.findViewById(R.id.followed_count)
-        followersCount = v.findViewById(R.id.followers_count)
-        tableRecyclerView = AccountPostTableRecyclerFragment(mUser, this)
-        listRecyclerView = AccountPostListRecyclerFragment(mUser)
+        mFollowingCount = v.findViewById(R.id.followed_count)
+        mFollowersCount = v.findViewById(R.id.followers_count)
+        mTableRecyclerView = AccountPostTableRecyclerFragment(mUser, this)
+        mListRecyclerView = AccountPostListRecyclerFragment(mUser)
         avatar.setOnClickListener {
-            val intent=Intent(this.context,MakeAvatarActivity::class.java)
+            val intent = Intent(
+                this.context,
+                MakeAvatarActivity::class.java
+            )
             startActivity(intent)
         }
         if (mUser != null) {
             if (mUser!!.imageUrl != "") Picasso.get().load(mUser!!.imageUrl).into(avatar)
-            followersCount.text = mUser!!.followersCount.toString()
-            followingCount.text = mUser!!.followingCount.toString()
+            mFollowersCount.text = mUser!!.followersCount.toString()
+            mFollowingCount.text = mUser!!.followingCount.toString()
         }
-        switchTab = v.findViewById(R.id.switchRecyclers)
-        viewPager = v.findViewById(R.id.recycler_fragment)
+        mSwitchTab = v.findViewById(R.id.switchRecyclers)
+        mViewPager = v.findViewById(R.id.recycler_fragment)
         val viewPagerAdapter = fragmentManager?.let { ViewPagerAdapter(it) }
-        viewPagerAdapter!!.addFragment(tableRecyclerView, "Grid")
-        viewPagerAdapter.addFragment(listRecyclerView, "List")
-        viewPager.adapter = viewPagerAdapter
-        switchTab.setupWithViewPager(viewPager)
+        viewPagerAdapter!!.addFragment(mTableRecyclerView, "Grid")
+        viewPagerAdapter.addFragment(mListRecyclerView, "List")
+        mViewPager.adapter = viewPagerAdapter
+        mSwitchTab.setupWithViewPager(mViewPager)
     }
 
     private fun setMainUser(user: User) {
         mUser = user
         userName.text = user.name
-        followingCount.text = user.followingCount.toString()
-        followersCount.text = user.followersCount.toString()
+        mFollowingCount.text = user.followingCount.toString()
+        mFollowersCount.text = user.followersCount.toString()
         mAccountViewModel.downloadPhoto(user.imageUrl, avatar)
     }
 
     override fun setUser(user: User) {
         mUser = user
         userName.text = user.name
-        followingCount.text = user.followingCount.toString()
-        followersCount.text = user.followersCount.toString()
+        mFollowingCount.text = user.followingCount.toString()
+        mFollowersCount.text = user.followersCount.toString()
         mAccountViewModel.downloadPhoto(user.imageUrl, avatar)
+    }
+
+    override fun postScrollTo(postNumber: Int) {
+        mViewPager.setCurrentItem(1, true)
+        mListRecyclerView.scrollToPost(postNumber)
     }
 }
 

@@ -11,12 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.flex.Adapter.SearchAdapter
+import com.example.flex.Adapters.SearchAdapter
 import com.example.flex.MainData
 import com.example.flex.POJO.User
 import com.example.flex.R
 import com.example.flex.SearchViewModel
-import com.example.flex.SignIn
+import com.example.flex.Activities.SignIn
 
 class SearchRecyclerFragment : Fragment(), SearchAdapter.OnUserClickListener {
 
@@ -32,7 +32,6 @@ class SearchRecyclerFragment : Fragment(), SearchAdapter.OnUserClickListener {
         mViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
         mViewModel.searchResult.observe(viewLifecycleOwner, Observer {
             searchAdapter.setUsers(it)
-            //TODO make local pre-search before receiving answer from server
         })
         mViewModel.isMustSignIn.observe(viewLifecycleOwner, Observer {
             if (it == true) {

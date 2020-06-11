@@ -1,5 +1,6 @@
 package com.example.flex.Requests
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.flex.MainData
 import okhttp3.*
@@ -10,6 +11,7 @@ import java.io.File
 import java.io.IOException
 import java.net.CookieManager
 import java.net.CookiePolicy
+import java.util.*
 
 class UploadFileRequests(
     private val mIsMustSignIn: MutableLiveData<Boolean?>,
@@ -57,6 +59,7 @@ class UploadFileRequests(
             .addHeader("Cookie", "csrftoken=$mCsrftoken; sessionid=$mSessionId")
             .build()
         val call = mClient.newCall(request)
+        Log.d("timeSending","${Calendar.getInstance().timeInMillis}")
 
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -65,6 +68,8 @@ class UploadFileRequests(
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
+                    Log.d("timeSent","${Calendar.getInstance().timeInMillis}")
+                    val time= Calendar.getInstance().timeInMillis
                     val isLogined = response.header("isLogin", "true")
                     if (isLogined == "true") {
                         val post = response.body?.string()
@@ -103,6 +108,7 @@ class UploadFileRequests(
             .addHeader("Cookie", "csrftoken=$mCsrftoken; sessionid=$mSessionId")
             .build()
         val call = mClient.newCall(request)
+        Log.d("timeSending","${Calendar.getInstance().timeInMillis}")
 
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -111,6 +117,7 @@ class UploadFileRequests(
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
+                    Log.d("timeSent","${Calendar.getInstance().timeInMillis}")
                     val isLogined = response.header("isLogin", "true")
                     if (isLogined == "true") {
                         val post = response.body?.string()

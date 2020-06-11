@@ -24,7 +24,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
-            android:text="Name:"
             android:textSize="20sp" />
 
         <TextView
@@ -36,8 +35,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
-            android:maxLines="1"
-            android:text="Usual comment to test ellipsize sfsdfsdfgfgsdfgdfgsdfgsdfgsdfgsdfgsdfgsdfg"
             android:textSize="18sp" />
     </LinearLayout>
 </RelativeLayout>

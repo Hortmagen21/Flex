@@ -27,4 +27,6 @@ interface UserDao {
     fun getUserValue(id:Long):User
     @Query("select * from user_database where name like ('%'||:query||'%')")
     fun searchUsers(query:String):List<User>
+    @Query("select id from user_database where is_Subscribed=1")
+    fun getIdOfFollowingUsers():List<Long>
 }

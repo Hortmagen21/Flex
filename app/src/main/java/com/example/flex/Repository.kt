@@ -6,55 +6,98 @@ import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.flex.DataBase.*
+import com.example.flex.POJO.ChatMessage
 import com.example.flex.POJO.Comment
 import com.example.flex.POJO.Post
-import com.example.flex.POJO.PostAccount
 import com.example.flex.POJO.User
 import com.example.flex.Requests.*
+import com.example.flex.Websockets.ChatInteraction
+import com.example.flex.Websockets.ChatWebsocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.*
 
 class Repository(private val application: Application) : UserRequests.UserRequestsInteraction,
-    PostRequests.PostRequestsInteraction,RegistRequests.RegistRequestInteraction {
+    PostRequests.PostRequestsInteraction, RegistRequests.RegistRequestInteraction, ChatInteraction {
     val postDao: PostDao
-    private val mPostAccountsDao: PostAccountDao
+    val postsInFeed: LiveData<List<Post>>
     private val mPosts: LiveData<List<Post>>
     private val mUserDao: UserDao
     private val mCommentDao: CommentDao
+    private val mChatMessageDao: ChatMessageDao
+    private lateinit var mChatWebsocket: ChatWebsocket
     val mainUser: LiveData<User>
     var searchResult: MutableLiveData<List<User>>
     val isPasswordCanBeChanged: MutableLiveData<Boolean?>
     val isMustSignIn: MutableLiveData<Boolean?>
+    val chatId: MutableLiveData<Long>
 
     init {
         val postDatabase = PostDatabase.get(application)
         postDao = postDatabase.getPostDao()
         mPosts = postDao.getSortedPosts()
         mUserDao = postDatabase.getUserDao()
-        mPostAccountsDao = postDatabase.getPostAccountDao()
+        mChatMessageDao = postDatabase.getChatMessageDao()
         isPasswordCanBeChanged = MutableLiveData(null)
         isMustSignIn = MutableLiveData(null)
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         mainUser = mUserDao.getUser(sharedPreferences.getLong(MainData.YOUR_ID, 0))
         searchResult = MutableLiveData(mutableListOf())
         mCommentDao = postDatabase.getCommentDao()
+        postsInFeed = postDao.getPostsToFeed()
+        chatId = MutableLiveData()
+    }
+
+    fun createChat(userId: Long) {
+        mChatWebsocket = makeChatWebsocket()
+        mChatWebsocket.createChat(userId)
+    }
+
+    suspend fun getUserValueFromDB(userId: Long): User {
+        return mUserDao.getUserValue(userId)
+    }
+
+    fun sendMessage(text: String, user: User) {
+        CoroutineScope(IO).launch {
+            val message = ChatMessage(
+                text = text,
+                isMy = true,
+                userId = user.id,
+                userImgLink = user.imageUrl,
+                userName = user.name,
+                belongsToChat = mChatWebsocket.chatId,
+                timeSended = Calendar.getInstance().timeInMillis
+            )
+            mChatWebsocket.sendMessage(message)
+            mChatMessageDao.insert(
+                message
+            )
+        }
     }
 
     fun refreshCommentsForPost(postId: Long) {
         val request = makePostRequests()
         request.viewCommentsToPost(postId)
     }
-    fun getPostsForAccount(userId:Long):LiveData<List<PostAccount>>{
-        return mPostAccountsDao.getAllPostsOfUser(userId)
+
+    fun getPostsForAccount(userId: Long): LiveData<List<Post>> {
+        return postDao.getAllPostsOfUser(userId)
+    }
+
+    fun connectToChat(user: String) {
+        val sharedPreferences =
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong(MainData.YOUR_ID, 0)
+        mChatWebsocket.connectChat(user, userId)
     }
 
     suspend fun getUserById(userId: Long): User {
         val temp = CoroutineScope(IO).async {
-            var user = mUserDao.getUserValue(userId)
+            var user: User? = mUserDao.getUserValue(userId)
             if (userId != 0.toLong()) {
                 if (user == null) {
                     user = User(userId)
@@ -65,8 +108,7 @@ class Repository(private val application: Application) : UserRequests.UserReques
             }
         }
         temp.await()
-        val user = mUserDao.getUserValue(userId)
-        return user
+        return mUserDao.getUserValue(userId)
     }
 
     suspend fun insertUser(user: User) {
@@ -94,13 +136,13 @@ class Repository(private val application: Application) : UserRequests.UserReques
     suspend fun refreshMainUser() {
         val request = makeUserRequests()
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         request.viewUserInformation(User(sharedPreferences.getLong(MainData.YOUR_ID, 0)))
     }
 
     override fun setSessionId(sessionId: String) {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString(MainData.SESSION_ID, sessionId)
         editor.apply()
@@ -108,15 +150,15 @@ class Repository(private val application: Application) : UserRequests.UserReques
 
     override fun setYourId(id: Long) {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putLong(MainData.YOUR_ID,id)
+        editor.putLong(MainData.YOUR_ID, id)
         editor.apply()
     }
 
     override fun setCSRFToken(csrftoken: String) {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString(MainData.CRSFTOKEN, csrftoken)
         editor.apply()
@@ -144,18 +186,6 @@ class Repository(private val application: Application) : UserRequests.UserReques
     fun refreshPostsHome(idOfLast: Long) {
         CoroutineScope(IO).launch {
             refreshPostsAsync(idOfLast)
-        }
-    }
-
-    fun unLikePostAccount(post: PostAccount) {
-        CoroutineScope(IO).launch {
-            unLikePostAccountAsync(post)
-        }
-    }
-
-    fun likePostAccount(post: PostAccount) {
-        CoroutineScope(IO).launch {
-            likePostAccountAsync(post)
         }
     }
 
@@ -266,14 +296,18 @@ class Repository(private val application: Application) : UserRequests.UserReques
 
     fun unfollowUser(userId: Long) {
         CoroutineScope(IO).launch {
-            unfollowUser(userId)
+            unfollowUserAsync(userId)
         }
     }
 
     fun followUser(userId: Long) {
         CoroutineScope(IO).launch {
-            followUser(userId)
+            followUserAsync(userId)
         }
+    }
+
+    suspend fun getChatMessages(chatId: Long): LiveData<List<ChatMessage>> {
+        return mChatMessageDao.getMessagesFromChat(chatId)
     }
 
     private suspend fun followUserAsync(userId: Long) {
@@ -344,21 +378,6 @@ class Repository(private val application: Application) : UserRequests.UserReques
         request.search(query, mUserDao, searchResult)
     }
 
-    private suspend fun likePostAccountAsync(post: PostAccount) {
-        val request = makePostRequests()
-        val postTemp = Post()
-        request.likePost(post.toPost())
-        postDao.insert(post.toPost())
-        mPostAccountsDao.insert(post)
-    }
-
-    private suspend fun unLikePostAccountAsync(post: PostAccount) {
-        val request = makePostRequests()
-        request.unLikePost(post.toPost())
-        postDao.insert(post.toPost())
-        mPostAccountsDao.insert(post)
-    }
-
     private suspend fun likePostAsync(post: Post) {
         val request = makePostRequests()
         request.likePost(post)
@@ -408,9 +427,17 @@ class Repository(private val application: Application) : UserRequests.UserReques
         postDao.insert(post)
     }
 
+    private fun makeChatWebsocket(): ChatWebsocket {
+        val sharedPreferences =
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
+        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
+        return ChatWebsocket(this, csrftoken, sessionId)
+    }
+
     private fun makePostRequests(): PostRequests {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
         return PostRequests(this, csrftoken, sessionId)
@@ -418,7 +445,7 @@ class Repository(private val application: Application) : UserRequests.UserReques
 
     private fun makeUploadFileRequests(): UploadFileRequests {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
         return UploadFileRequests(isMustSignIn, csrftoken, sessionId)
@@ -426,7 +453,7 @@ class Repository(private val application: Application) : UserRequests.UserReques
 
     private fun makeUserRequests(): UserRequests {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
         val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         return UserRequests(this, csrftoken, sessionId)
@@ -434,7 +461,7 @@ class Repository(private val application: Application) : UserRequests.UserReques
 
     private fun makeSearchRequest(): SearchRequests {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
         return SearchRequests(isMustSignIn, csrftoken, sessionId)
@@ -442,15 +469,15 @@ class Repository(private val application: Application) : UserRequests.UserReques
 
     private fun makeRegistRequest(): RegistRequests {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return RegistRequests(this,csrftoken, sessionId)
+        return RegistRequests(this, csrftoken, sessionId)
     }
 
     private fun makePhotoRequest(): PhotoRequests {
         val sharedPreferences =
-            application.getSharedPreferences("shared prefs", Context.MODE_PRIVATE)
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
         return PhotoRequests(isMustSignIn, csrftoken, sessionId)
@@ -476,10 +503,12 @@ class Repository(private val application: Application) : UserRequests.UserReques
     }
 
     override fun unfollow(userId: Long) {
-        val userTemp = mUserDao.getUserValue(userId)
-        userTemp.isSubscribed = false
-        userTemp.followersCount--
-        mUserDao.insert(userTemp)
+        val userTemp: User? = mUserDao.getUserValue(userId)
+        if (userTemp != null) {
+            userTemp.isSubscribed = false
+            userTemp.followersCount--
+            mUserDao.insert(userTemp)
+        }
     }
 
     override fun mustSignIn() {
@@ -494,10 +523,6 @@ class Repository(private val application: Application) : UserRequests.UserReques
         postDao.insertAll(posts)
     }
 
-    override fun savePostAccountToDb(posts: List<PostAccount>) {
-        mPostAccountsDao.insertAll(posts)
-    }
-
     override fun saveCommentsToDb(comments: List<Comment>) {
         mCommentDao.insertAll(comments)
     }
@@ -506,11 +531,25 @@ class Repository(private val application: Application) : UserRequests.UserReques
         postDao.insert(post)
     }
 
-    override fun savePostsAccountToDb(posts: List<PostAccount>, idOfUser: Long) {
-        mPostAccountsDao.insertAll(posts)
+    override fun savePostsToDb(posts: List<Post>, idOfUser: Long) {
+        postDao.insertAll(posts)
     }
 
     override fun updateUserInDb(user: User) {
         mUserDao.insert(user)
+    }
+
+    override fun receiveMessage(message: ChatMessage) {
+        mChatMessageDao.insert(message)
+    }
+
+    override fun receiveMessages(messages: List<ChatMessage>) {
+        if (messages.isNotEmpty()) {
+            mChatMessageDao.insert(messages)
+        }
+    }
+
+    override fun setChatId(chatId: Long) {
+        this.chatId.postValue(chatId)
     }
 }
