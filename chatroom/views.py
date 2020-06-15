@@ -51,7 +51,7 @@ def create_chat(request):
                     conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
                                             password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946', host='ec2-54-83-1-101.compute-1.amazonaws.com')
                     cursor = conn.cursor()
-                    cursor.callproc('isChat', [user_id, id_receiver, ])
+                    cursor.callproc('is_chat', [user_id, id_receiver, ])
                     print(cursor.fetcall(),'FETCHALL')
                     """try:
                         chat_list = list(ChatMembers.objects.filter(user_id=user_id))
