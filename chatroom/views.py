@@ -49,7 +49,7 @@ def create_chat(request):
                     return HttpResponseBadRequest()
                 else:
                     conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
-                                            password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946', host=' ec2-54-83-1-101.compute-1.amazonaws.com')
+                                            password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946', host='ec2-54-83-1-101.compute-1.amazonaws.com')
                     cursor = conn.cursor()
                     cursor.callproc('isChat', [user_id, id_receiver, ])
                     print(cursor.fetcall(),'FETCHALL')
@@ -96,6 +96,9 @@ def create_chat(request):
                     connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=id_receiver)
                     connection_receiver.save()
                     chat_response = int(creating_chat.chat_id)
+
+            cursor.close()
+            conn.close()
             return JsonResponse({'isNew': not chat_exist, 'chat_id':  chat_response, 'receiver_ava': ava, 'receiver_name': receiver_name.username, 'receiver_online': 'none', 'messages': date, 'sender_id': user_id})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
