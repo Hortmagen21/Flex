@@ -53,7 +53,7 @@ def create_chat(request):
                     cursor = conn.cursor()
                     cursor.callproc('is_chat', [user_id, id_receiver, ])
                     chat_exist = cursor.fetchall()[0][0]
-                    print(cursor.fetchall()[0][0],'FETCHALL')
+                    #print(cursor.fetchall()[0][0],'FETCHALL')
                     """try:
                         chat_list = list(ChatMembers.objects.filter(user_id=user_id))
                     except ObjectDoesNotExist:
