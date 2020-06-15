@@ -15,6 +15,7 @@ from acc_base.models import UniqueTokenUser
 from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.http import JsonResponse
+import psycopg2
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -47,12 +48,17 @@ def create_chat(request):
                 except MultipleObjectsReturned:
                     return HttpResponseBadRequest()
                 else:
-                    try:
+                    conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
+                                            password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946', host=' ec2-54-83-1-101.compute-1.amazonaws.com')
+                    cursor = conn.cursor()
+                    cursor.callproc('isChat', [user_id, id_receiver, ])
+                    print(cursor.fetcall(),'FETCHALL')
+                    """try:
                         chat_list = list(ChatMembers.objects.filter(user_id=user_id))
                     except ObjectDoesNotExist:
                         pass#?
                     else:
-                        print(chat_list,'Chaeck')
+                        print(chat_list,'Check')
                         for chat in chat_list:
                             try:
                                 chat_settings=Chat.objects.get(chat_id=chat.chat_id)
@@ -71,14 +77,16 @@ def create_chat(request):
                                     else:
                                         print(receiver_chat.chat_id,'Chaeck')
                                         chat_exist = True#break
-                                        break
+                                        break"""
                 date = []
 
                 if chat_exist:
+                    cursor.callproc('chat_id', [user_id, id_receiver, ])
+                    chat_settings = cursor.fetcall()
                     chat_response = int(chat_settings.chat_id)
                     mess = list(Message.objects.filter(chat_id=chat_response))[:10]
                     for msg in mess:
-                        date.append({"text":msg.message,"time":msg.date})
+                        date.append({"text": msg.message, "time": msg.date})
 
                 else:
                     creating_chat = Chat(chat_admin=user_id, chat_members=2)
