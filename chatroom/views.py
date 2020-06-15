@@ -52,6 +52,7 @@ def create_chat(request):
                                             password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946', host='ec2-54-83-1-101.compute-1.amazonaws.com')
                     cursor = conn.cursor()
                     cursor.callproc('is_chat', [user_id, id_receiver, ])
+                    chat_exist = cursor.fetchall()[0][0]
                     print(cursor.fetchall()[0][0],'FETCHALL')
                     """try:
                         chat_list = list(ChatMembers.objects.filter(user_id=user_id))
@@ -82,8 +83,7 @@ def create_chat(request):
 
                 if chat_exist:
                     cursor.callproc('chat_id', [user_id, id_receiver, ])
-                    chat_settings = cursor.fetchall()
-                    chat_response = int(chat_settings.chat_id)
+                    chat_response = int(cursor.fetchall()[0][0])
                     mess = list(Message.objects.filter(chat_id=chat_response))[:10]
                     for msg in mess:
                         date.append({"text": msg.message, "time": msg.date})
