@@ -86,7 +86,7 @@ class ChatConsumer(AsyncConsumer):
             else:
                 if user_to_chats[int(user)] == int(self.treat_obj):
                     close_old_connections()
-                    async_to_sync(self.channel_layer.group_discard)(self.chat_room, self.channel_name)
+                    await self.channel_layer.group_discard(self.chat_room, self.channel_name)
                     await self.channel_layer.group_send(
                         self.chat_room,
 
@@ -95,7 +95,7 @@ class ChatConsumer(AsyncConsumer):
                             #"text": json.dumps(data),
                             "text": front_text,
                         })
-                    async_to_sync(self.channel_layer.group_add)(self.chat_room, self.channel_name)
+                    await self.channel_layer.group_add(self.chat_room, self.channel_name)
                 else:
                     close_old_connections()
                     token = await self.get_user_token(int(user))
