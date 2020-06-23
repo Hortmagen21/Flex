@@ -21,13 +21,13 @@ class ChatAdapter(private val mChatInterction: ChatInteraction) :
     androidx.recyclerview.widget.ListAdapter<ChatMessage, ChatAdapter.ChatViewHolder>(object :
         DiffUtil.ItemCallback<ChatMessage>() {
         override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.userId == newItem.userId&&
+                    oldItem.timeSent==newItem.timeSent
         }
 
         override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
             return oldItem.text == newItem.text &&
                     oldItem.isMy == newItem.isMy &&
-                    oldItem.userId == newItem.userId &&
                     oldItem.userName == newItem.userName
         }
 

@@ -9,7 +9,7 @@ import com.example.flex.POJO.Comment
 import com.example.flex.POJO.Post
 import com.example.flex.POJO.User
 
-@Database(entities = [Post::class, User::class,Comment::class,ChatMessage::class], version = 3,exportSchema = false)
+@Database(entities = [Post::class, User::class,Comment::class,ChatMessage::class], version = 4,exportSchema = false)
 abstract class PostDatabase : RoomDatabase() {
     companion object {
         private var mInstance: PostDatabase? = null

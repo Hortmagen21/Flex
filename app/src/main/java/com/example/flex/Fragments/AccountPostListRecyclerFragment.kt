@@ -49,7 +49,8 @@ class AccountPostListRecyclerFragment(
         loadPosts()
         return v
     }
-    fun scrollToPost(postNumber:Int){
+
+    fun scrollToPost(postNumber: Int) {
         mRecycler.scrollToPosition(postNumber)
     }
 
@@ -70,9 +71,7 @@ class AccountPostListRecyclerFragment(
     }
 
     override fun onUserClick(user: User) {
-        if(true){
-            //TODO
-        }
+        //TODO
     }
 
     override fun onLikeClick(post: Post) {
@@ -85,9 +84,11 @@ class AccountPostListRecyclerFragment(
     }
 
     override fun onCommentClick(postId: Long) {
-        val intent= Intent(this.context,
-            CommentsEnlist::class.java)
-        intent.putExtra("PostId",postId)
+        val intent = Intent(
+            this.context,
+            CommentsEnlist::class.java
+        )
+        intent.putExtra("PostId", postId)
         v.context.startActivity(intent)
     }
 

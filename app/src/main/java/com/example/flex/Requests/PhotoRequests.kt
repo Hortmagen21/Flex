@@ -3,13 +3,16 @@ package com.example.flex.Requests
 import android.graphics.BitmapFactory
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
+import com.example.flex.CacheInterceptor
 import com.example.flex.MainData
+import com.example.flex.PicassoInterceptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.*
+import java.io.File
 import java.io.IOException
 import java.net.CookieManager
 import java.net.CookiePolicy
@@ -17,7 +20,8 @@ import java.net.CookiePolicy
 class PhotoRequests(
     private val isMustSignIn: MutableLiveData<Boolean?>,
     private val csrftoken: String,
-    private val sessionId: String
+    private val sessionId: String,
+    private val cache:Cache
 ) {
     private val cookieManager = CookieManager()
     private val client: OkHttpClient
@@ -26,6 +30,8 @@ class PhotoRequests(
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         client = OkHttpClient.Builder()
             .cookieJar(JavaNetCookieJar(cookieManager))
+            .addNetworkInterceptor(CacheInterceptor())
+            .cache(cache)
             .build()
     }
 

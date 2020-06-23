@@ -29,7 +29,7 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ChatInteraction {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: ChatAdapter
     private var chatId: Long = 0
-    private var mTempLiveData:LiveData<List<ChatMessage>>?=null
+    private var mTempLiveData: LiveData<List<ChatMessage>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,10 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ChatInteraction {
 
     private fun loadRecycler() {
         mRecyclerView = findViewById(R.id.messages_recycler)
-        mRecyclerView.layoutManager = LinearLayoutManager(this)
+        mRecyclerView.layoutManager = LinearLayoutManager(this).apply {
+            stackFromEnd = true
+            reverseLayout = true
+        }
         mAdapter = ChatAdapter(this)
         mRecyclerView.adapter = mAdapter
     }
@@ -81,9 +84,14 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ChatInteraction {
             withContext(Main) {
                 mViewModel.getChatMessages(chatId).observe(tempOwner, Observer {
                     mAdapter.submitList(it)
+                    scrollToNewest()
                 })
             }
         }
+    }
+
+    private fun scrollToNewest() {
+        mRecyclerView.smoothScrollToPosition(0)
     }
 
     override suspend fun getUserById(id: Long): User {

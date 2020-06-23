@@ -2,6 +2,8 @@ package com.example.flex
 
 import android.app.Application
 import android.content.Context
+import android.os.Environment
+import android.os.StatFs
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import okhttp3.*
 import java.io.File
 import java.util.*
 
@@ -66,11 +69,11 @@ class Repository(private val application: Application) : UserRequests.UserReques
             val message = ChatMessage(
                 text = text,
                 isMy = true,
-                userId = user.id,
+                userId = getYourId(),
                 userImgLink = user.imageUrl,
                 userName = user.name,
                 belongsToChat = mChatWebsocket.chatId,
-                timeSended = Calendar.getInstance().timeInMillis
+                timeSent = Calendar.getInstance().timeInMillis
             )
             mChatWebsocket.sendMessage(message)
             mChatMessageDao.insert(
@@ -165,6 +168,31 @@ class Repository(private val application: Application) : UserRequests.UserReques
     }
 
     fun downloadPhoto(link: String, photo: ImageView) {
+        /*val pair = getCSRFTokenAndSessionId()
+        val httpCacheDirectory = File(application.applicationContext.cacheDir, "http-cache")
+        val cacheSize: Long = 10 * 1024 * 1024
+        val cache = Cache(httpCacheDirectory, cacheSize)
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(PicassoInterceptor(pair.first, pair.second))
+            .cache(cache)
+            .build()
+        val picasso = Picasso.Builder(application.applicationContext)
+            .downloader(
+                OkHttp3Downloader(
+                    okHttpClient
+                )
+            )
+            .indicatorsEnabled(BuildConfig.DEBUG)
+            .build()
+        val urlHttp = HttpUrl.Builder().scheme("https")
+            .host(MainData.BASE_URL)
+            .addPathSegment(MainData.URL_PREFIX_USER_PROFILE)
+            .addPathSegment(MainData.VIEW_PHOTO)
+            .addQueryParameter("img", link)
+            .build()
+        picasso.load(urlHttp.toString()).into(photo)*/
+        //TODO cache images
+
         CoroutineScope(IO).launch {
             downloadPhotoAsync(link, photo)
         }
@@ -426,61 +454,73 @@ class Repository(private val application: Application) : UserRequests.UserReques
     private suspend fun insertPostAsync(post: Post) {
         postDao.insert(post)
     }
+    private fun getFreeDiscSpace():Long{
+        val stats=StatFs(Environment.getDataDirectory().absolutePath)
+        return stats.availableBlocksLong*stats.blockSizeLong
+    }
 
     private fun makeChatWebsocket(): ChatWebsocket {
-        val sharedPreferences =
-            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return ChatWebsocket(this, csrftoken, sessionId)
+        val pair = getCSRFTokenAndSessionId()
+        val id=getYourId()
+        return ChatWebsocket(this, pair.first, pair.second,id)
     }
 
     private fun makePostRequests(): PostRequests {
-        val sharedPreferences =
-            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return PostRequests(this, csrftoken, sessionId)
+        val pair = getCSRFTokenAndSessionId()
+        return PostRequests(this, pair.first, pair.second)
     }
 
     private fun makeUploadFileRequests(): UploadFileRequests {
-        val sharedPreferences =
-            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return UploadFileRequests(isMustSignIn, csrftoken, sessionId)
+        val pair = getCSRFTokenAndSessionId()
+        return UploadFileRequests(isMustSignIn, pair.first, pair.second)
     }
 
     private fun makeUserRequests(): UserRequests {
-        val sharedPreferences =
-            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
-        return UserRequests(this, csrftoken, sessionId)
+        val pair = getCSRFTokenAndSessionId()
+        return UserRequests(this, pair.first, pair.second)
     }
 
     private fun makeSearchRequest(): SearchRequests {
-        val sharedPreferences =
-            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return SearchRequests(isMustSignIn, csrftoken, sessionId)
+        val pair = getCSRFTokenAndSessionId()
+        return SearchRequests(isMustSignIn, pair.first, pair.second)
     }
 
     private fun makeRegistRequest(): RegistRequests {
-        val sharedPreferences =
-            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
-        val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return RegistRequests(this, csrftoken, sessionId)
+        val pair = getCSRFTokenAndSessionId()
+        return RegistRequests(this, pair.first, pair.second)
     }
 
     private fun makePhotoRequest(): PhotoRequests {
+        val pair = getCSRFTokenAndSessionId()
+        val httpCacheDirectory = File(application.applicationContext.cacheDir, "http-cache")
+        val cacheSize: Long = getFreeDiscSpace()/20
+        val cache = Cache(httpCacheDirectory, cacheSize)
+        return PhotoRequests(isMustSignIn, pair.first, pair.second,cache)
+    }
+
+    private fun getCSRFToken(): String {
+        val sharedPreferences =
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(MainData.CRSFTOKEN, "")
+    }
+
+    private fun getSessionId(): String {
+        val sharedPreferences =
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(MainData.SESSION_ID, "")
+    }
+
+    private fun getCSRFTokenAndSessionId(): Pair<String, String> {
         val sharedPreferences =
             application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         val sessionId = sharedPreferences.getString(MainData.SESSION_ID, "")
         val csrftoken = sharedPreferences.getString(MainData.CRSFTOKEN, "")
-        return PhotoRequests(isMustSignIn, csrftoken, sessionId)
+        return Pair(csrftoken, sessionId)
+    }
+    private fun getYourId():Long{
+        val sharedPreferences =
+            application.getSharedPreferences(MainData.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        return sharedPreferences.getLong(MainData.YOUR_ID, 0)
     }
 
     override fun setFollowingCount(userId: Long, count: Long) {
@@ -547,6 +587,10 @@ class Repository(private val application: Application) : UserRequests.UserReques
         if (messages.isNotEmpty()) {
             mChatMessageDao.insert(messages)
         }
+    }
+
+    override fun clearChat(chatId: Long) {
+        mChatMessageDao.deleteAllFromChat(chatId)
     }
 
     override fun setChatId(chatId: Long) {

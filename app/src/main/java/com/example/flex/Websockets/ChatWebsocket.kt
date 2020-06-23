@@ -13,21 +13,23 @@ import java.io.IOException
 class ChatWebsocket(
     val mChatInteraction: ChatInteraction,
     val csrftoken: String,
-    val sessionId: String
+    val sessionId: String,
+    private val mUserId:Long
 ) {
-    private var webSocket: WebSocket? = null
     var user: String = ""
         private set
     var chatId: Long = 0
     val client: OkHttpClient = OkHttpClient.Builder().build()
     var isFirst: Boolean = true
+    private var mWebSocket: WebSocket? = null
+    private val mMaxCountOfMessages=10
     fun connectChat(user: String,yourUserId:Long) {
         this.user = user
         val request = Request.Builder()
             .url("wss://${MainData.BASE_URL}/${MainData.CHAT}/$user")
             .addHeader("Cookie", "csrftoken=$csrftoken; sessionid=$sessionId;id=$yourUserId")
             .build()
-        webSocket = client.newWebSocket(request, object : WebSocketListener() {
+        mWebSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 if (true) {
                 }
@@ -46,9 +48,10 @@ class ChatWebsocket(
                     mChatInteraction.receiveMessage(
                         ChatMessage(
                             text =temp["text"].toString(),
-                            timeSended = temp["time"].toString().toLong(),
+                            timeSent = temp["time"].toString().toLong(),
                             belongsToChat = chatId,
-                            isMy = false
+                            userId = temp["user_id"].toString().toLong(),
+                            isMy = temp["user_id"].toString().toLong()==mUserId
                         )
                     )
                 }
@@ -75,9 +78,9 @@ class ChatWebsocket(
     }
 
     fun sendMessage(message: ChatMessage) {
-        if (webSocket != null) {
+        if (mWebSocket != null) {
             val text=encodeMessageToJson(message)
-            webSocket!!.send(text)
+            mWebSocket!!.send(text)
         }
     }
 
@@ -120,8 +123,10 @@ class ChatWebsocket(
                                         listOfMessages.add(
                                             ChatMessage(
                                                 text =temp["text"].toString(),
-                                                timeSended = temp["time"].toString().toLong(),
-                                                belongsToChat = chatId
+                                                timeSent = temp["time"].toString().toLong(),
+                                                belongsToChat = chatId,
+                                                userId = temp["sender_id"].toString().toLong(),
+                                                isMy = temp["sender_id"].toString().toLong()==mUserId
                                             )
                                         )
                                     }
@@ -129,6 +134,9 @@ class ChatWebsocket(
                             }
                             setThisChatId(chatId)
                             mChatInteraction.setChatId(chatId)
+                            if(listOfMessages.size<mMaxCountOfMessages){
+                                mChatInteraction.clearChat(chatId)
+                            }
                             mChatInteraction.receiveMessages(listOfMessages)
                         }
                     }
@@ -146,7 +154,8 @@ class ChatWebsocket(
     private fun encodeMessageToJson(message: ChatMessage): String {
         return "{" +
                 "\"text\":\"${message.text}\"," +
-                "\"time\":\"${message.timeSended}\"" +
+                "\"time\":\"${message.timeSent}\"," +
+                "\"user_id\":\"${message.userId}\""+
                 "}"
 
     }
@@ -155,4 +164,5 @@ interface ChatInteraction {
     fun receiveMessage(message: ChatMessage)
     fun receiveMessages(messages: List<ChatMessage>)
     fun setChatId(chatId: Long)
+    fun clearChat(chatId: Long)
 }

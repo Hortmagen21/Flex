@@ -130,7 +130,9 @@ class UserRequests(
         val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                if(true){
 
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
