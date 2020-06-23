@@ -60,7 +60,7 @@ class ChatConsumer(AsyncConsumer):
         close_old_connections()
         ava = await self.get_ava(int(self.scope['cookies']['id']))
         if front_text is not None:
-            print(front_text, 'FRONT_TEXT')
+            print(front_text,'FRONT_TEXT')
             dict_data = json.loads(front_text)
             # msg =dict_data.get('message')
 

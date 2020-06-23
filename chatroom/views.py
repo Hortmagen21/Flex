@@ -86,7 +86,7 @@ def create_chat(request):
                     chat_response = int(cursor.fetchall()[0][0])
                     mess = list(Message.objects.filter(chat_id=chat_response))[:10]
                     for msg in mess:
-                        date.append({"text": msg.message, "time": msg.date})
+                        date.append({"text": msg.message, "time": msg.date, 'sender_id': int(msg.user_id)})
 
                 else:
                     creating_chat = Chat(chat_admin=user_id, chat_members=2)
