@@ -86,7 +86,7 @@ class ChatConsumer(AsyncConsumer):
             else:
                 if user_to_chats[int(user)] == int(self.treat_obj):
                     close_old_connections()
-                    await self.channel_layer.group_discard(self.chat_room, self.channel_name)
+                    #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
                     await self.channel_layer.group_send(
                         self.chat_room,
 
@@ -95,7 +95,7 @@ class ChatConsumer(AsyncConsumer):
                             #"text": json.dumps(data),
                             "text": front_text,
                         })
-                    await self.channel_layer.group_add(self.chat_room, self.channel_name)
+                    #await self.channel_layer.group_add(self.chat_room, self.channel_name)
                 else:
                     close_old_connections()
                     token = await self.get_user_token(int(user))
@@ -106,19 +106,6 @@ class ChatConsumer(AsyncConsumer):
                         print(i,'CHECK MEE')
                     #await response.notify_single_device(registration_id=token, message_body='text')
                         fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-
-
-
-
-                #await self.channel_layer.group_send(
-                #self.chat_room,
-
-                #{
-                    #"type":"chat_message",
-                    #"text":json.dumps(data),
-                    #"text": front_text,
-                #})
-            #else:
 
             close_old_connections()
 
