@@ -51,7 +51,6 @@ class ChatConsumer(AsyncConsumer):
                 self.channel_name
             )
 
-
     async def websocket_receive(self,event):
         front_text = event.get('text', None)#chat_id
         user = str(self.scope['user'])
@@ -87,6 +86,7 @@ class ChatConsumer(AsyncConsumer):
             else:
                 if user_to_chats[int(user)] == int(self.treat_obj):
                     close_old_connections()
+                    await self.group_discard(self.chat_room, self.channel_name)
                     await self.channel_layer.group_send(
                         self.chat_room,
 
@@ -94,8 +94,8 @@ class ChatConsumer(AsyncConsumer):
                             "type": "chat_message",
                             #"text": json.dumps(data),
                             "text": front_text,
-                            "user_id": self.scope["user"],
                         })
+                    await self.group_add(self.chat_room, self.channel_name)
                 else:
                     close_old_connections()
                     token = await self.get_user_token(int(user))
@@ -128,7 +128,6 @@ class ChatConsumer(AsyncConsumer):
         await self.send({
             "type": "websocket.send",
             "text": event['text'],
-            "user_id": event["user_id"],
         })
 
     async def websocket_disconnect(self,event):
