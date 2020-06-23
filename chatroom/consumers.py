@@ -53,12 +53,14 @@ class ChatConsumer(AsyncConsumer):
 
     async def websocket_receive(self,event):
         front_text = event.get('text', None)#chat_id
+
         user = str(self.scope['user'])
         close_old_connections()
         receivers_ids = await self.dump_user_ids(int(self.treat_obj))
         close_old_connections()
         ava = await self.get_ava(int(self.scope['cookies']['id']))
         if front_text is not None:
+            print(front_text, 'FRONT_TEXT')
             dict_data = json.loads(front_text)
             # msg =dict_data.get('message')
 
