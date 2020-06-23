@@ -5,7 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
-from .models import Message
+from .models import Message,Chat
 from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens,get_receiver_avatar
 from django.contrib.auth.models import User
 from channels.auth import login
@@ -31,7 +31,7 @@ class ChatConsumer(AsyncConsumer):
         me = str(self.scope['user'])
         #print(self.scope['user'], 'IT IS USER!!!!')
         self.me= me
-        treat_obj=await self.get_tread(me,other_user)
+        treat_obj=await self.get_tread(me,other_user)#treat_obj == chat_id
         close_old_connections()
         self.treat_obj = int(treat_obj)
         #print(self.scope["headers"],'HEADDERS')
@@ -67,7 +67,8 @@ class ChatConsumer(AsyncConsumer):
                     'ava': str(ava),
                     }
             msg_obj = await self.save_msg(self.treat_obj, str(dict_data['text']), int(dict_data['time']))
-
+            close_old_connections()
+            await self.msg_priority(self.treat_obj, 1)
         for user in receivers_ids:
             try:
                 user_to_chats[int(user)]
@@ -141,6 +142,13 @@ class ChatConsumer(AsyncConsumer):
         return Message.objects.create(chat_id=threat_obj,user_id=int(user_id),message=msg,date=time)
         #new_message.save()
         #return create_chat_ws(other_username, user)
+
+    @database_sync_to_async
+    def msg_priority(self,chat_id,priority_change):
+        obj = Chat.objects.get(chat_id=chat_id)
+        obj.priority += priority_change
+        obj.save()
+        return True
 
     @database_sync_to_async
     def dump_user_ids(self, chat_id):
