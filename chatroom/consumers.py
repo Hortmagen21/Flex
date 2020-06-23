@@ -28,25 +28,28 @@ class ChatConsumer(AsyncConsumer):
             "type": "websocket.accept"
         })
         other_user = str(self.scope['url_route']['kwargs']['username'])
-        me = str(self.scope['user'])
-        #print(self.scope['user'], 'IT IS USER!!!!')
-        self.me= me
-        treat_obj=await self.get_tread(me,other_user)#treat_obj == chat_id
-        close_old_connections()
-        self.treat_obj = int(treat_obj)
-        #print(self.scope["headers"],'HEADDERS')
-        chat_room=f"chat_{treat_obj}"
-        self.chat_room =  chat_room
-        await self.send({
-            "type": "websocket.send",
-            "text": str(treat_obj),
-        })
-        user_to_chats[int(self.scope['cookies']['id'])] = int(treat_obj)
-        print(user_to_chats,'USERS_TO_CHAT')
-        await self.channel_layer.group_add(
-            chat_room,
-            self.channel_name
-        )
+        if self.scope['user'].is_anonymous:
+            await self.close()
+        else:
+            me = str(self.scope['user'])
+            #print(self.scope['user'], 'IT IS USER!!!!')
+            self.me= me
+            treat_obj=await self.get_tread(me,other_user)#treat_obj == chat_id
+            close_old_connections()
+            self.treat_obj = int(treat_obj)
+            #print(self.scope["headers"],'HEADDERS')
+            chat_room=f"chat_{treat_obj}"
+            self.chat_room =  chat_room
+            await self.send({
+                "type": "websocket.send",
+                "text": str(treat_obj),
+            })
+            user_to_chats[int(self.scope['cookies']['id'])] = int(treat_obj)
+            print(user_to_chats,'USERS_TO_CHAT')
+            await self.channel_layer.group_add(
+                chat_room,
+                self.channel_name
+            )
 
 
     async def websocket_receive(self,event):
@@ -91,6 +94,7 @@ class ChatConsumer(AsyncConsumer):
                             "type": "chat_message",
                             #"text": json.dumps(data),
                             "text": front_text,
+                            "user_id": self.scope["user"],
                         })
                 else:
                     close_old_connections()
@@ -124,6 +128,7 @@ class ChatConsumer(AsyncConsumer):
         await self.send({
             "type": "websocket.send",
             "text": event['text'],
+            "user_id": event["user_id"],
         })
 
     async def websocket_disconnect(self,event):
