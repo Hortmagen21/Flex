@@ -195,7 +195,7 @@ def upload_messages(request):
                 ava_src = "None"
             else:
                 ava_src = post.img
-            response.append({'messages':msg.message,'pub_data':int(msg.date),'senders_names':sender[0].username,'senders_avatars':ava_src})
+            response.append({'messages':msg.message,'pub_data':int(msg.date), 'senders_names': sender[0].username, 'senders_avatars':ava_src})
         return JsonResponse({'msg_information':response})
 
 
@@ -279,30 +279,4 @@ def get_receiver_avatar(user_id):
 
 
 
-"""async def send_messages(websocket,path):
-    message= await websockets.recv()
-    print(f'{message}')
-    await websockets.send(message)
-start_server=websockets.serve(response,'localhost',1234)
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
 
-
-#@csrf_protect
-#@login_required(login_url=core_url + 'acc_base/login_redirection')
-#def view_duo_chat_room(request):
-    #if request.method == "GET":
-        #id_receiver = request.GET.get('id', "")
-        #user_id = int(request.session['_auth_user_id'])
-        #try:
-            #receiver_avatar=UserAvatar.objects.filter(id_user=int(id_receiver)).last()
-            #receiver_name = User.objects.get(id=int(id_receiver))
-            #img_ava = PostBase.objects.get(id=int(receiver_avatar.id_post))
-        #except ObjectDoesNotExist:
-            #return HttpResponseNotFound()
-        #except MultipleObjectsReturned:
-            #return HttpResponseBadRequest()
-        #else:
-            #return JsonResponse({'receiver_ava': img_ava, 'receiver_name': receiver_name, 'receiver_messages': "none",'receiver_online' : 'none'})
-
-"""
