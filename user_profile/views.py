@@ -314,6 +314,25 @@ def dislike(request):
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def view_subscribes(request):
+    if request.method == 'GET':
+        user_id = int(request.session['_auth_user_id'])
+        followers = UserFollower.objects.filter(id=user_id)
+        response = []
+        for follower in followers:
+            followed_user = User.objects.get(id=int(follower.follower))
+            try:
+                follower_ava = list(UserAvatar.objects.filter(id=int(follower.follower)))[-1]
+                ava_post = (PostBase.objects.get(id=int(follower_ava.id_post))).img
+            except IndexError:
+                ava_post = 'None'
+            finally:
+                response.append({'id': follower.follower, 'username': followed_user.username, 'ava_src': ava_post})
+        return JsonResponse(response)
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
 
 def isSubscribe(my_id, user_id):
     try:

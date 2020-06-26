@@ -15,7 +15,7 @@ from asgiref.sync import sync_to_async
 from fcm_django.models import AbstractFCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
 
-API_KEY="AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
+API_KEY = "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 
 user_to_chats = {}
 
@@ -32,14 +32,13 @@ class ChatConsumer(AsyncConsumer):
             await self.close()
         else:
             me = str(self.scope['user'])
-            #print(self.scope['user'], 'IT IS USER!!!!')
             self.me= me
             treat_obj=await self.get_tread(me,other_user)#treat_obj == chat_id
             close_old_connections()
             self.treat_obj = int(treat_obj)
-            #print(self.scope["headers"],'HEADDERS')
+            print(self.scope["headers"],'HEADDERS')
             chat_room=f"chat_{treat_obj}"
-            self.chat_room =  chat_room
+            self.chat_room = chat_room
             await self.send({
                 "type": "websocket.send",
                 "text": str(treat_obj),
@@ -52,9 +51,7 @@ class ChatConsumer(AsyncConsumer):
             )
 
     async def websocket_receive(self,event):
-        front_text = event.get('text', None)#chat_id
-
-        user = str(self.scope['user'])
+        front_text = event.get('text', None)
         close_old_connections()
         receivers_ids = await self.dump_user_ids(int(self.treat_obj))
         close_old_connections()
@@ -62,17 +59,13 @@ class ChatConsumer(AsyncConsumer):
         if front_text is not None:
             print(front_text,'FRONT_TEXT')
             dict_data = json.loads(front_text)
-            # msg =dict_data.get('message')
-
-            # if user.is_authenticated:
-            # username=user
             data = {'text': dict_data['text'],
                     'time': dict_data['time'],
                     'ava': str(ava),
                     }
             msg_obj = await self.save_msg(self.treat_obj, str(dict_data['text']), int(dict_data['time']))
-            close_old_connections()
-            await self.msg_priority(self.treat_obj, 1)
+            #close_old_connections()
+            #await self.msg_priority(self.treat_obj, 1)
         for user in receivers_ids:
             try:
                 user_to_chats[int(user)]
@@ -81,7 +74,6 @@ class ChatConsumer(AsyncConsumer):
                 token = await self.get_user_token(int(user))
                 for i in token:
                     close_old_connections()
-                    # response = FCMNotification(api_key=API_KEY)
                     print(i, 'CHECK MEE')
                     # await response.notify_single_device(registration_id=token, message_body='text')
                     fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
@@ -96,6 +88,7 @@ class ChatConsumer(AsyncConsumer):
                             "type": "chat_message",
                             #"text": json.dumps(data),
                             "text": front_text,
+                            "ava": str(ava),
                         })
                     #await self.channel_layer.group_add(self.chat_room, self.channel_name)
                 else:
@@ -104,7 +97,6 @@ class ChatConsumer(AsyncConsumer):
 
                     for i in token:
                         close_old_connections()
-                    #response = FCMNotification(api_key=API_KEY)
                         print(i,'CHECK MEE')
                     #await response.notify_single_device(registration_id=token, message_body='text')
                         fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
@@ -117,6 +109,7 @@ class ChatConsumer(AsyncConsumer):
         await self.send({
             "type": "websocket.send",
             "text": event['text'],
+            "ava": event['ava'],
         })
 
     async def websocket_disconnect(self,event):
@@ -136,7 +129,7 @@ class ChatConsumer(AsyncConsumer):
         #new_message.save()
         #return create_chat_ws(other_username, user)
 
-    @database_sync_to_async
+    @database_sync_to_async# ISNT USING ANYMORE
     def msg_priority(self,chat_id,priority_change):
         obj = Chat.objects.get(chat_id=chat_id)
         obj.priority += priority_change
@@ -155,7 +148,25 @@ class ChatConsumer(AsyncConsumer):
     def get_ava(self, user_id):
         return get_receiver_avatar(int(user_id))
 
-
+class GroupChatConsumer(ChatConsumer):
+    async def websocket_connect(self, event):
+        await self.send({
+            "type": "websocket.accept"
+        })
+        if self.scope['user'].is_anonymous:
+            await self.close()
+        else:
+            me = str(self.scope['user'])
+            self.me= me
+            chat_id = self.scope['cookies']['chat_id']
+            self.chat_id = chat_id
+            chat_room = f"chat_{chat_id}"
+            self.chat_room = chat_room
+            user_to_chats[int(self.scope['cookies']['id'])] = int(chat_id)
+            await self.channel_layer.group_add(
+                chat_room,
+                self.channel_name
+            )
 
 
 

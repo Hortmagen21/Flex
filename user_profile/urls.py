@@ -17,5 +17,6 @@ urlpatterns = [
     path('avatar', views.ava),
     path('view_all_comments', views.view_all_comments),
     path('view_information_user',views.view_information_user),
+    path('view_subscribes',views.view_subscribes),#rewrite SQL
 
 ]

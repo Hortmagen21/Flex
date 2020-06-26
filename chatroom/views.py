@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from chatroom.models import Chat,ChatMembers,Message
 from user_profile.models import UserAvatar,PostBase
 from django.contrib.auth.models import User
+from django.db.models import Max
 from acc_base.models import UniqueTokenUser
 from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
@@ -153,16 +154,17 @@ def view_chat_room(request):
                                 ava_src = "None"
                             else:
                                 ava_src = post.img
-                            try:
-                                chat_name = User.objects.get(id=int(receiver_id.user_id)).username
-                            except ObjectDoesNotExist:
-                                return HttpResponseNotFound()
-                            except MultipleObjectsReturned:
-                                return HttpResponseBadRequest()
+                            finally:#it was added so it can be laged
+                                try:
+                                    chat_name = User.objects.get(id=int(receiver_id.user_id)).username
+                                except ObjectDoesNotExist:
+                                    return HttpResponseNotFound()
+                                except MultipleObjectsReturned:
+                                    return HttpResponseBadRequest()
                     else:
                         chat_name = chat_settings.chat_name
                         ava_src = chat_settings.chat_ava
-                    chaters[chat.chat_id] = {'chat_name': chat_name, 'chat_ava': ava_src, 'last_message': last_message, 'last_sender': last_sender_username, 'priority': int(chat_settings.priority)}
+                    chaters[chat.chat_id] = {'chat_name': chat_name, 'chat_ava': ava_src, 'last_message': last_message, 'last_sender': last_sender_username}
                 i = i-1
         sorted_id = sorted(time_to_id.keys())
         sorted_id.reverse()
@@ -180,7 +182,7 @@ def upload_messages(request):
     if request.method == "POST":
         chat_id = int(request.POST.get(['id'][0], ""))
         last_id = int(request.POST.get(['id'][0], 0))
-        mess = list(Message.objects.filter(chat_id=chat_id,message_id__gt=last_id))[:10]
+        mess = list(Message.objects.filter(chat_id=chat_id,message_id__gt=last_id))[:30]
         response = []
         for msg in mess:
             avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
@@ -197,6 +199,30 @@ def upload_messages(request):
                 ava_src = post.img
             response.append({'messages':msg.message,'pub_data':int(msg.date), 'senders_names': sender[0].username, 'senders_avatars':ava_src})
         return JsonResponse({'msg_information':response})
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def create_group_chat(request):
+    if request.method == "POST":
+        group_name = str(request.POST.get(['group_name'][0], False))
+        members_count = int(request.POST.get(['members_count'][0], False))
+        members_id = list(request.POST.get(['members_id'][0], False))
+        ava_src = str(request.POST.get(['ava_src'][0], 'nothing'))
+        user_id = int(request.session['_auth_user_id'])
+        if group_name and members_id and members_count:
+            # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max'])
+            group_chat = Chat(chat_name=group_name, chat_ava=ava_src, chat_admin=user_id, chat_members=members_count)
+            group_chat.save()
+            for member_id in members_id:
+                chat_conn = ChatMembers(chat_id=int(group_chat.chat_id), user_id=int(member_id))
+                chat_conn.save()
+        else:
+            return HttpResponse("NOT VALID DATA", status=415)
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
 def create_chat_ws(receiver_name, user_name):
@@ -212,7 +238,13 @@ def create_chat_ws(receiver_name, user_name):
     else:
         receiver_id = int(receiver.id)
         user_id = int(user.id)
-        try:
+        conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
+                                password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946',
+                                host='ec2-54-83-1-101.compute-1.amazonaws.com')
+        cursor = conn.cursor()
+        cursor.callproc('is_chat', [user_id, receiver_id, ])
+        chat_exist = cursor.fetchall()[0][0]
+        """try:
             chat_list = list(ChatMembers.objects.filter(user_id=user_id))
         except ObjectDoesNotExist:
             pass
@@ -231,22 +263,26 @@ def create_chat_ws(receiver_name, user_name):
                         except MultipleObjectsReturned:
                             return HttpResponseBadRequest()
                         except ObjectDoesNotExist:
-                            break#pass
+                            pass
                         else:
                             chat_exist = True
-                            break#pass
+                            break"""
 
-            if chat_exist:
-                chat_response = int(chat_settings.chat_id)
-            else:
-                creating_chat = Chat(chat_admin=user_id, chat_members=2)
-                creating_chat.save()
-                connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
-                connection_me.save()
-                connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=receiver_id)
-                connection_receiver.save()
-                chat_response = int(creating_chat.chat_id)
-            return chat_response
+        if chat_exist:
+            cursor.callproc('chat_id', [user_id, receiver_id, ])
+            chat_response = int(cursor.fetchall()[0][0])
+        else:
+
+            creating_chat = Chat(chat_admin=user_id, chat_members=2)
+            creating_chat.save()
+            connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
+            connection_me.save()
+            connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=receiver_id)
+            connection_receiver.save()
+            chat_response = int(creating_chat.chat_id)
+        cursor.close()
+        conn.close()
+        return chat_response
 
 
 def get_receivers_ids(chat_id):

@@ -41,3 +41,6 @@ class Message(models.Model):
         managed = False
         ordering = ('-date',)
         db_table = 'message'
+
+
+
