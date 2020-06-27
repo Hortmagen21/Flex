@@ -15,7 +15,6 @@ class Chat(models.Model):
     chat_admin = models.IntegerField()
     chat_members = models.IntegerField(blank=True, null=True)
 
-
     class Meta:
         db_table = 'chat'
 

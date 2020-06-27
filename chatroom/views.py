@@ -203,13 +203,14 @@ def upload_messages(request):
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
-@csrf_protect
+#@csrf_protect
+@csrf_exempt
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def create_group_chat(request):
     if request.method == "POST":
         group_name = str(request.POST.get(['group_name'][0], False))
         members_count = int(request.POST.get(['members_count'][0], False))
-        members_id = list(request.POST.get(['members_id'][0], False))
+        members_id = request.POST.get(['members_id'][0], False)
         ava_src = str(request.POST.get(['ava_src'][0], 'nothing'))
         user_id = int(request.session['_auth_user_id'])
         if group_name and members_id and members_count:
@@ -219,6 +220,7 @@ def create_group_chat(request):
             for member_id in members_id:
                 chat_conn = ChatMembers(chat_id=int(group_chat.chat_id), user_id=int(member_id))
                 chat_conn.save()
+            return HttpResponse(int(group_chat.chat_id))
         else:
             return HttpResponse("NOT VALID DATA", status=415)
     else:
@@ -226,8 +228,6 @@ def create_group_chat(request):
 
 
 def create_chat_ws(receiver_name, user_name):
-    chat_exist = False
-
     try:
         receiver = User.objects.get(username=receiver_name)
         user = User.objects.get(username=user_name)

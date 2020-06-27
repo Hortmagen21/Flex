@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="" />
+    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/chatroom/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatroom/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatroom/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatroom/views.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="166" column="79" selection-start-line="166" selection-start-column="79" selection-end-line="166" selection-end-column="79" />
+            <state relative-caret-position="379">
+              <caret line="223" column="55" selection-start-line="223" selection-start-column="55" selection-end-line="223" selection-end-column="55" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -105,8 +108,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1215">
-              <caret line="45" selection-start-line="45" selection-end-line="45" />
+            <state relative-caret-position="344">
+              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
             </state>
           </provider>
         </entry>
@@ -131,7 +134,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>comment</find>
       <find>int(</find>
       <find>lower</find>
       <find>user_followers</find>
@@ -161,6 +163,7 @@
       <find>ava</find>
       <find>priori</find>
       <find>headers</find>
+      <find>priority</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -213,12 +216,12 @@
         <option value="$PROJECT_DIR$/acc_base/views.py" />
         <option value="$PROJECT_DIR$/acc_base/urls.py" />
         <option value="$PROJECT_DIR$/models.py" />
-        <option value="$PROJECT_DIR$/chatroom/models.py" />
         <option value="$PROJECT_DIR$/chatroom/routing.py" />
         <option value="$PROJECT_DIR$/chatroom/consumers.py" />
         <option value="$PROJECT_DIR$/user_profile/views.py" />
         <option value="$PROJECT_DIR$/user_profile/urls.py" />
         <option value="$PROJECT_DIR$/chatroom/urls.py" />
+        <option value="$PROJECT_DIR$/chatroom/models.py" />
         <option value="$PROJECT_DIR$/chatroom/views.py" />
       </list>
     </option>
@@ -702,13 +705,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/chatroom/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1215">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/requests/sessions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="11718">
@@ -726,10 +722,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/chatroom/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="166" column="79" selection-start-line="166" selection-start-column="79" selection-end-line="166" selection-end-column="79" />
+        <state relative-caret-position="379">
+          <caret line="223" column="55" selection-start-line="223" selection-start-column="55" selection-end-line="223" selection-end-column="55" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
