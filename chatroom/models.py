@@ -14,7 +14,7 @@ class Chat(models.Model):
     chat_ava = models.CharField(max_length=100, blank=True, null=True)
     chat_admin = models.IntegerField()
     chat_members = models.IntegerField(blank=True, null=True)
-    priority = models.BigIntegerField()
+   
 
     class Meta:
         db_table = 'chat'
