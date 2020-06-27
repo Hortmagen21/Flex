@@ -210,9 +210,10 @@ def create_group_chat(request):
     if request.method == "POST":
         group_name = str(request.POST.get(['group_name'][0], False))
         members_count = int(request.POST.get(['members_count'][0], False))
-        members_id = request.POST.get(['members_id'][0], False)
+        members_id = (request.POST.get(['members_id'][0], False)).split()
         ava_src = str(request.POST.get(['ava_src'][0], 'nothing'))
         user_id = int(request.session['_auth_user_id'])
+        print(members_id,'MEMBERS')
         if group_name and members_id and members_count:
             # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max'])
             group_chat = Chat(chat_name=group_name, chat_ava=ava_src, chat_admin=user_id, chat_members=members_count)
