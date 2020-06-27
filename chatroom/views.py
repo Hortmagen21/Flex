@@ -164,7 +164,7 @@ def view_chat_room(request):
                     else:
                         chat_name = chat_settings.chat_name
                         ava_src = chat_settings.chat_ava
-                    chaters[chat.chat_id] = {'chat_name': chat_name, 'chat_ava': ava_src, 'last_message': last_message, 'last_sender': last_sender_username}
+                    chaters[chat.chat_id] = {'chat_id': chat_settings.chat_id, 'chat_name': chat_name, 'chat_ava': ava_src, 'last_message': last_message, 'last_sender': last_sender_username}
                 i = i-1
         sorted_id = sorted(time_to_id.keys())
         sorted_id.reverse()
