@@ -33,17 +33,17 @@ class ChatConsumer(AsyncConsumer):
         else:
             me = str(self.scope['user'])
             self.me= me
-            treat_obj=await self.get_tread(me,other_user)#treat_obj == chat_id
+            chat_id=await self.get_tread(me, other_user)#treat_obj == chat_id
             close_old_connections()
-            self.treat_obj = int(treat_obj)
+            self.chat_id = int(chat_id)
             print(self.scope["headers"],'HEADDERS')
-            chat_room=f"chat_{treat_obj}"
+            chat_room=f"chat_{chat_id}"
             self.chat_room = chat_room
             await self.send({
                 "type": "websocket.send",
-                "text": str(treat_obj),
+                "text": str(chat_id),
             })
-            user_to_chats[int(self.scope['cookies']['id'])] = int(treat_obj)
+            user_to_chats[int(self.scope['cookies']['id'])] = int(chat_id)
             print(user_to_chats,'USERS_TO_CHAT')
             await self.channel_layer.group_add(
                 chat_room,
@@ -53,7 +53,7 @@ class ChatConsumer(AsyncConsumer):
     async def websocket_receive(self,event):
         front_text = event.get('text', None)
         close_old_connections()
-        receivers_ids = await self.dump_user_ids(int(self.treat_obj))
+        receivers_ids = await self.dump_user_ids(int(self.chat_id))
         close_old_connections()
         ava = await self.get_ava(int(self.scope['cookies']['id']))
         if front_text is not None:
@@ -63,7 +63,7 @@ class ChatConsumer(AsyncConsumer):
                     'time': dict_data['time'],
                     'ava': str(ava),
                     }
-            msg_obj = await self.save_msg(self.treat_obj, str(dict_data['text']), int(dict_data['time']))
+            msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
             #close_old_connections()
             #await self.msg_priority(self.treat_obj, 1)
         for user in receivers_ids:
@@ -78,7 +78,7 @@ class ChatConsumer(AsyncConsumer):
                     # await response.notify_single_device(registration_id=token, message_body='text')
                     fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
             else:
-                if user_to_chats[int(user)] == int(self.treat_obj):
+                if user_to_chats[int(user)] == int(self.chat_id):
                     close_old_connections()
                     #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
                     await self.channel_layer.group_send(
