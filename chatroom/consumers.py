@@ -57,7 +57,7 @@ class ChatConsumer(AsyncConsumer):
     async def websocket_receive(self,event):
         front_text = event.get('text', None)
         close_old_connections()
-        receivers_ids = await self.dump_user_ids(int(self.chat_id))
+        #receivers_ids = await self.dump_user_ids(int(self.chat_id))
         close_old_connections()
         ava = await self.get_ava(int(self.scope['cookies']['id']))
         if front_text is not None:
