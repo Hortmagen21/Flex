@@ -27,14 +27,19 @@ class ChatConsumer(AsyncConsumer):
         await self.send({
             "type": "websocket.accept"
         })
-        other_user = str(self.scope['url_route']['kwargs']['username'])
-        if self.scope['user'].is_anonymous:
-            await self.close()
-        else:
-            me = str(self.scope['user'])
-            self.me= me
-            chat_id=await self.get_tread(me, other_user)#treat_obj == chat_id
-            close_old_connections()
+        try:
+            chat_id = self.scope['cookies']['chat_id']
+        except KeyError:
+
+            other_user = str(self.scope['url_route']['kwargs']['username'])
+            if self.scope['user'].is_anonymous:
+                await self.close()
+            else:
+                me = str(self.scope['user'])
+                self.me= me
+                chat_id = await self.get_tread(me, other_user)#treat_obj == chat_id
+                close_old_connections()
+        finally:
             self.chat_id = int(chat_id)
             print(self.scope["headers"],'HEADDERS')
             chat_room=f"chat_{chat_id}"
@@ -167,6 +172,7 @@ class GroupChatConsumer(ChatConsumer):
                 chat_room,
                 self.channel_name
             )
+
 
 
 
