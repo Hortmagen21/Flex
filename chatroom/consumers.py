@@ -69,16 +69,16 @@ class ChatConsumer(AsyncConsumer):
                     }
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
             #close_old_connections()
-            #await self.msg_priority(self.treat_obj, 1)
+
 
 
         #for user in receivers_ids:#delete
 
         try:
-            user_to_chats[int(user)]
+            user_to_chats[int(self.scope['cookies']['id'])]
         except KeyError:
             close_old_connections()
-            token = await self.get_user_token(int(user))
+            token = await self.get_user_token(int(self.scope['cookies']['id']))
             print(token, 'TOKENS')
             for i in token:
                 close_old_connections()
@@ -86,7 +86,7 @@ class ChatConsumer(AsyncConsumer):
                 # await response.notify_single_device(registration_id=token, message_body='text')
                 fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
         else:
-            if user_to_chats[int(user)] == int(self.chat_id):
+            if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
                 close_old_connections()
                 #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
                 await self.channel_layer.group_send(
@@ -100,7 +100,7 @@ class ChatConsumer(AsyncConsumer):
                 #await self.channel_layer.group_add(self.chat_room, self.channel_name)
             else:
                 close_old_connections()
-                token = await self.get_user_token(int(user))
+                token = await self.get_user_token(int(self.scope['cookies']['id']))
 
                 for i in token:
                     close_old_connections()
@@ -110,7 +110,7 @@ class ChatConsumer(AsyncConsumer):
 
         close_old_connections()
 
-    async def chat_message(self,event):
+    async def chat_message(self, event):
         print('text', event)
         # send messages
         await self.send({
@@ -119,11 +119,9 @@ class ChatConsumer(AsyncConsumer):
             "ava": event['ava'],
         })
 
-    async def websocket_disconnect(self,event):
+    async def websocket_disconnect(self, event):
         del user_to_chats[int(self.scope['cookies']['id'])]
         print('disconnected', event)
-
-
 
     @database_sync_to_async
     def get_tread(self, user, other_username):
@@ -135,13 +133,6 @@ class ChatConsumer(AsyncConsumer):
         return Message.objects.create(chat_id=threat_obj,user_id=int(user_id),message=msg,date=time)
         #new_message.save()
         #return create_chat_ws(other_username, user)
-
-    @database_sync_to_async# ISNT USING ANYMORE
-    def msg_priority(self,chat_id,priority_change):
-        obj = Chat.objects.get(chat_id=chat_id)
-        obj.priority += priority_change
-        obj.save()
-        return True
 
     @database_sync_to_async
     def dump_user_ids(self, chat_id):
