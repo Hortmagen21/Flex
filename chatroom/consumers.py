@@ -70,7 +70,11 @@ class ChatConsumer(AsyncConsumer):
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
             #close_old_connections()
             #await self.msg_priority(self.treat_obj, 1)
+        print(receivers_ids,'RECEIVERS_IDS')#check
+        i = 0#check
         for user in receivers_ids:
+            print(i,"IIIIII")#check
+            i+=1#check
             try:
                 user_to_chats[int(user)]
             except KeyError:
@@ -152,25 +156,7 @@ class ChatConsumer(AsyncConsumer):
     def get_ava(self, user_id):
         return get_receiver_avatar(int(user_id))
 
-class GroupChatConsumer(ChatConsumer):
-    async def websocket_connect(self, event):
-        await self.send({
-            "type": "websocket.accept"
-        })
-        if self.scope['user'].is_anonymous:
-            await self.close()
-        else:
-            me = str(self.scope['user'])
-            self.me= me
-            chat_id = self.scope['cookies']['chat_id']
-            self.chat_id = chat_id
-            chat_room = f"chat_{chat_id}"
-            self.chat_room = chat_room
-            user_to_chats[int(self.scope['cookies']['id'])] = int(chat_id)
-            await self.channel_layer.group_add(
-                chat_room,
-                self.channel_name
-            )
+
 
 
 
