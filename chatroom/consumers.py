@@ -70,47 +70,45 @@ class ChatConsumer(AsyncConsumer):
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
             #close_old_connections()
             #await self.msg_priority(self.treat_obj, 1)
-        print(receivers_ids,'RECEIVERS_IDS')#check
-        i = 0#check
-        for user in receivers_ids:
-            print(i,"IIIIII")#check
-            i+=1#check
-            try:
-                user_to_chats[int(user)]
-            except KeyError:
+
+
+        #for user in receivers_ids:#delete
+
+        try:
+            user_to_chats[int(user)]
+        except KeyError:
+            close_old_connections()
+            token = await self.get_user_token(int(user))
+            print(token, 'TOKENS')
+            for i in token:
+                close_old_connections()
+                print(i, 'CHECK MEE')
+                # await response.notify_single_device(registration_id=token, message_body='text')
+                fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+        else:
+            if user_to_chats[int(user)] == int(self.chat_id):
+                close_old_connections()
+                #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
+                await self.channel_layer.group_send(
+                    self.chat_room,
+                    {
+                        "type": "chat_message",
+                        #"text": json.dumps(data),
+                        "text": front_text,
+                        "ava": str(ava),
+                    })
+                #await self.channel_layer.group_add(self.chat_room, self.channel_name)
+            else:
                 close_old_connections()
                 token = await self.get_user_token(int(user))
-                print(token, 'TOKENS')
+
                 for i in token:
                     close_old_connections()
-                    print(i, 'CHECK MEE')
-                    # await response.notify_single_device(registration_id=token, message_body='text')
-                    fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-            else:
-                if user_to_chats[int(user)] == int(self.chat_id):
-                    close_old_connections()
-                    #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
-                    await self.channel_layer.group_send(
-                        self.chat_room,
-
-                        {
-                            "type": "chat_message",
-                            #"text": json.dumps(data),
-                            "text": front_text,
-                            "ava": str(ava),
-                        })
-                    #await self.channel_layer.group_add(self.chat_room, self.channel_name)
-                else:
-                    close_old_connections()
-                    token = await self.get_user_token(int(user))
-
-                    for i in token:
-                        close_old_connections()
-                        print(i,'CHECK MEE')
+                    print(i,'CHECK MEE')
                     #await response.notify_single_device(registration_id=token, message_body='text')
-                        fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                    fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 
-            close_old_connections()
+        close_old_connections()
 
     async def chat_message(self,event):
         print('text', event)

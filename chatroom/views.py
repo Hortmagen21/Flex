@@ -187,7 +187,7 @@ def upload_messages(request):
         for msg in mess:
             avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
             try:
-                sender = list(User.objects.get(id=msg.user_id))
+                sender = User.objects.get(id=msg.user_id)
                 post = PostBase.objects.get(id=int(avatars[-1].id_post))
             except ObjectDoesNotExist:
                 return HttpResponseNotFound()
@@ -203,8 +203,7 @@ def upload_messages(request):
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
-#@csrf_protect
-@csrf_exempt
+@csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def create_group_chat(request):
     if request.method == "POST":
