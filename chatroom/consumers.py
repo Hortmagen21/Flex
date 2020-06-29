@@ -80,6 +80,7 @@ class ChatConsumer(AsyncConsumer):
             except KeyError:
                 close_old_connections()
                 token = await self.get_user_token(int(user))
+                print(token, 'TOKENS')
                 for i in token:
                     close_old_connections()
                     print(i, 'CHECK MEE')
