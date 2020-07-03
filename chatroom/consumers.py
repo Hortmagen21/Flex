@@ -86,6 +86,7 @@ class ChatConsumer(AsyncConsumer):
                 # await response.notify_single_device(registration_id=token, message_body='text')
                 fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
         else:
+            print('IAM HERE')
             if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
                 close_old_connections()
                 #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
