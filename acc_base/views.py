@@ -15,6 +15,7 @@ from django.template import loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'

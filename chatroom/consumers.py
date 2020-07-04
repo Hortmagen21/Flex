@@ -95,8 +95,11 @@ class ChatConsumer(AsyncConsumer):
                     {
                         "type": "chat_message",
                         #"text": json.dumps(data),
-                        "text": front_text,
-                        "ava": str(ava),
+                        "text":{
+                            "front": front_text,
+                            "ava": str(ava),
+                            "msg_id": int(msg_obj.message_id),
+                        }
                     })
                 #await self.channel_layer.group_add(self.chat_room, self.channel_name)
             else:
@@ -117,7 +120,6 @@ class ChatConsumer(AsyncConsumer):
         await self.send({
             "type": "websocket.send",
             "text": event['text'],
-            "ava": event['ava'],
         })
 
     async def websocket_disconnect(self, event):
