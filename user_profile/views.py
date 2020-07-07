@@ -328,6 +328,8 @@ def view_subscribes(request):
                 ava_post = (PostBase.objects.get(id=int(follower_ava.id_post))).img
             except IndexError:
                 ava_post = 'None'
+            except ObjectDoesNotExist:
+                ava_post = 'None'#should change
             finally:
                 response.append({'id': follower.follower, 'username': followed_user.username, 'ava_src': ava_post})
         return JsonResponse(response)
