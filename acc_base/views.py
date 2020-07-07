@@ -15,7 +15,7 @@ from django.template import loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
+from fcm_django.api.rest_framework import FCMDevice
 
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
@@ -66,8 +66,11 @@ def registration(request):
             print('I created user!!!!!!!')
             user.save()
             #WHAT DO WHEN EXIST USER WANT CREATE NEW ADDITIONAL ACC???
-            token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
+
+            token = FCMDevice(registration_id=unique_token, type="android",device_id=int(user.id))
             token.save()
+            #token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
+            #token.save()
 
             return JsonResponse({'user_id': int(user.id)})
 
@@ -93,9 +96,10 @@ def login(request):
             request.session['username'] = username
             user.save()
 
-            token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
+            #token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
+            #token.save()
+            token = FCMDevice(registration_id=unique_token, type="android", device_id=int(user.id))
             token.save()
-
             http_resp = HttpResponse(user.id)
             # csrf_token = django.middleware.csrf.get_token(request)
             # http_resp.__setitem__(header='X-CSRF-TOKEN', value=csrf_token)

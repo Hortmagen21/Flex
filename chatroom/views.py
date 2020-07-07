@@ -197,8 +197,8 @@ def upload_messages(request):
                 ava_src = "None"
             else:
                 ava_src = post.img
-            response.append({'user_id': msg.user_id, 'text': msg.message, 'time': int(msg.date), 'user_name': sender.username, 'user_avatar': ava_src})
-        return JsonResponse({'msg_information':response})
+            response.append({'msg_id': msg.message_id, 'user_id': msg.user_id, 'text': msg.message, 'time': int(msg.date), 'user_name': sender.username, 'user_avatar': ava_src})
+        return JsonResponse({'msg_information': response})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 

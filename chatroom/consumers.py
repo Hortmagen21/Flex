@@ -14,6 +14,7 @@ from asgiref.sync import async_to_sync
 from asgiref.sync import sync_to_async
 from fcm_django.models import AbstractFCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
+from fcm_django.api.rest_framework import FCMDevice
 
 API_KEY = "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 
@@ -57,7 +58,7 @@ class ChatConsumer(AsyncConsumer):
     async def websocket_receive(self,event):
         front_text = event.get('text', None)
         close_old_connections()
-        #receivers_ids = await self.dump_user_ids(int(self.chat_id))
+        receivers_ids = await self.dump_user_ids(int(self.chat_id))
         close_old_connections()
         ava = await self.get_ava(int(self.scope['cookies']['id']))
         if front_text is not None:
@@ -70,49 +71,49 @@ class ChatConsumer(AsyncConsumer):
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
             #close_old_connections()
 
+        for user in receivers_ids:#delete
 
-
-        #for user in receivers_ids:#delete
-
-        try:
-            user_to_chats[int(self.scope['cookies']['id'])]
-        except KeyError:
-            close_old_connections()
-            token = await self.get_user_token(int(self.scope['cookies']['id']))
-            print(token, 'TOKENS')
-            for i in token:
+            try:
+                user_to_chats[user]#int(self.scope['cookies']['id'])]
+            except KeyError:
                 close_old_connections()
-                print(i, 'CHECK MEE')
-                # await response.notify_single_device(registration_id=token, message_body='text')
-                fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-        else:
-            print('IAM HERE')
-            if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
-                close_old_connections()
-                #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
-                await self.channel_layer.group_send(
-                    self.chat_room,
-                    {
-                        "type": "chat_message",
-                        #"text": json.dumps(data),
-                        "text":{
-                            "front": front_text,
-                            "ava": str(ava),
-                            "msg_id": int(msg_obj.message_id),
-                        }
-                    })
-                #await self.channel_layer.group_add(self.chat_room, self.channel_name)
-            else:
-                close_old_connections()
-                token = await self.get_user_token(int(self.scope['cookies']['id']))
-
-                for i in token:
+                device = FCMDevice.objects.filter(device_id=user)
+                #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
+                #print(token, 'TOKENS')
+                for i in device:#token:
                     close_old_connections()
-                    print(i,'CHECK MEE')
-                    #await response.notify_single_device(registration_id=token, message_body='text')
-                    fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                    print(i, 'CHECK MEE')
+                    i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                    #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+            else:
+                print('IAM HERE')
+                if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
+                    close_old_connections()
+                    #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
+                    await self.channel_layer.group_send(
+                        self.chat_room,
+                        {
+                            "type": "chat_message",
+                            #"text": json.dumps(data),
+                            "text":{
+                                "front": front_text,
+                                "ava": str(ava),
+                                "msg_id": int(msg_obj.message_id),
+                            }
+                        })
+                    break
+                    #await self.channel_layer.group_add(self.chat_room, self.channel_name)
+                else:
+                    close_old_connections()
+                    #token = await self.get_user_token(int(self.scope['cookies']['id']))
+                    device = FCMDevice.objects.filter(device_id=user)
+                    for i in device:#token:
+                        close_old_connections()
+                        print(i,'CHECK MEE')
+                        i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                        #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 
-        close_old_connections()
+            close_old_connections()
 
     async def chat_message(self, event):
         print('text', event)
