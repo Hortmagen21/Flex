@@ -180,9 +180,9 @@ def view_chat_room(request):
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def upload_messages(request):
     if request.method == "POST":
-        chat_id = int(request.POST.get(['id'][0], ""))
+        chat_id = int(request.POST.get(['chat_id'][0], ""))
         last_id = int(request.POST.get(['id'][0], 0))
-        mess = list(Message.objects.filter(chat_id=chat_id,message_id__gt=last_id))[:30]
+        mess = list(Message.objects.filter(chat_id=chat_id, message_id__gt=last_id))[:30]
         response = []
         for msg in mess:
             avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
