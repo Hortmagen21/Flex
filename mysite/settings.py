@@ -186,7 +186,7 @@ EMAIL_PORT =465#587
 EMAIL_HOST_USER = 'hortmagennn@gmail.com'#'flexsender@yahoo.com'
 EMAIL_HOST_PASSWORD = 'rexwex21'
 EMAIL_USE_TLS = True#False#True
-EMAIL_USE_SSL = True#False
+EMAIL_USE_SSL = False#False
 
 
 
