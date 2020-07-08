@@ -324,7 +324,7 @@ def view_subscribes(request):
         for follower in followers:
             followed_user = User.objects.get(id=int(follower.follower))
             try:
-                follower_ava = list(UserAvatar.objects.filter(id=int(follower.follower)))[-1]
+                follower_ava = list(UserAvatar.objects.filter(id_user=int(follower.follower)))[-1]
                 ava_post = (PostBase.objects.get(id=int(follower_ava.id_post))).img
             except IndexError:
                 ava_post = 'None'
@@ -332,7 +332,7 @@ def view_subscribes(request):
                 ava_post = 'None'#should change
             finally:
                 response.append({'id': follower.follower, 'username': followed_user.username, 'ava_src': ava_post})
-        return JsonResponse(response)
+        return JsonResponse({"response": response})
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
