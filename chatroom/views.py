@@ -90,7 +90,7 @@ def create_chat(request):
                         date.append({"text": msg.message, "time": msg.date, 'sender_id': int(msg.user_id)})
 
                 else:
-                    creating_chat = Chat(chat_admin=user_id, chat_members=2)
+                    creating_chat = Chat(chat_admin=user_id, chat_members=2, is_group=False)
                     creating_chat.save()
                     connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
                     connection_me.save()
@@ -110,6 +110,7 @@ def create_chat(request):
 def view_chat_room(request):
     if request.method == "POST":
         user_id = int(request.session['_auth_user_id'])
+        is_Group = (request.POST.get(''))
         user_chats = list(ChatMembers.objects.filter(user_id=user_id))
         time_to_id = {}
         chaters = {}
@@ -135,7 +136,7 @@ def view_chat_room(request):
                 except MultipleObjectsReturned:
                     return HttpResponseBadRequest()
                 else:
-                    if int(chat_settings.chat_members) == 2:
+                    if not bool(chat_settings.is_group):#int(chat_settings.chat_members) == 2:
                         try:
                             receiver_id = ChatMembers.objects.filter(chat_id=int(chat.chat_id)).exclude(user_id=user_id).get()
                         except ObjectDoesNotExist:
@@ -215,7 +216,7 @@ def create_group_chat(request):
         print(members_id,'MEMBERS')
         if group_name and members_id and members_count and len(members_id) == members_count:
             # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max'])
-            group_chat = Chat(chat_name=group_name, chat_ava=ava_src, chat_admin=user_id, chat_members=members_count)
+            group_chat = Chat(chat_name=group_name, chat_ava=ava_src, chat_admin=user_id, chat_members=members_count, is_group=True)
             group_chat.save()
             for member_id in members_id:
                 chat_conn = ChatMembers(chat_id=int(group_chat.chat_id), user_id=int(member_id))
