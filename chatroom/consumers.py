@@ -71,7 +71,7 @@ class ChatConsumer(AsyncConsumer):
                     'ava': str(ava),
                     }
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
-            #close_old_connections()
+            close_old_connections()
 
         for user in receivers_ids:#delete
 
@@ -99,12 +99,12 @@ class ChatConsumer(AsyncConsumer):
                         {
                             "type": "chat_message",
                             # "text": json.dumps(data),
-                            "text": front_text,
-                            #{
-                                #"front": front_text,
-                                #"ava": str(ava),
-                                #"msg_id": int(msg_obj.message_id),
-                            #}
+                            "text":
+                            {
+                                "front": front_text,
+                                "ava": str(ava),
+                                "msg_id": int(msg_obj.message_id),
+                            },
                         })
                     break
                     #await self.channel_layer.group_add(self.chat_room, self.channel_name)
