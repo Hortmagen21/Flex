@@ -15,6 +15,7 @@ from asgiref.sync import sync_to_async
 from fcm_django.models import AbstractFCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
 from fcm_django.api.rest_framework import FCMDevice
+from django.db.utils import OperationalError
 
 API_KEY = "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 
@@ -42,7 +43,7 @@ class ChatConsumer(AsyncConsumer):
             self.me = me
             self.chat_id = int(chat_id)
             print(self.scope["headers"],'HEADDERS')
-            chat_room=f"chat_{chat_id}"
+            chat_room = f"chat_{chat_id}"
             self.chat_room = chat_room
             await self.send({
                 "type": "websocket.send",
@@ -62,6 +63,7 @@ class ChatConsumer(AsyncConsumer):
         close_old_connections()
         ava = await self.get_ava(int(self.scope['cookies']['id']))
         if front_text is not None:
+            close_old_connections()
             print(front_text,'FRONT_TEXT')
             dict_data = json.loads(front_text)
             data = {'text': dict_data['text'],
@@ -74,6 +76,7 @@ class ChatConsumer(AsyncConsumer):
         for user in receivers_ids:#delete
 
             try:
+                close_old_connections()
                 user_to_chats[user]#int(self.scope['cookies']['id'])]
             except KeyError:
                 close_old_connections()
@@ -86,6 +89,7 @@ class ChatConsumer(AsyncConsumer):
                     i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                     #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
             else:
+                close_old_connections()
                 print('IAM HERE')
                 if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
                     close_old_connections()
