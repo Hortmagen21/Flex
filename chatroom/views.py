@@ -272,8 +272,11 @@ def create_chat_ws(receiver_name, user_name):
         if chat_exist:
             cursor.callproc('chat_id', [user_id, receiver_id, ])
             chat_response = int(cursor.fetchall()[0][0])
+            cursor.close()
+            conn.close()
         else:
-
+            cursor.close()
+            conn.close()
             creating_chat = Chat(chat_admin=user_id, chat_members=2)
             creating_chat.save()
             connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
@@ -281,8 +284,6 @@ def create_chat_ws(receiver_name, user_name):
             connection_receiver = ChatMembers(chat_id=creating_chat.chat_id, user_id=receiver_id)
             connection_receiver.save()
             chat_response = int(creating_chat.chat_id)
-        cursor.close()
-        conn.close()
         return chat_response
 
 
