@@ -98,12 +98,13 @@ class ChatConsumer(AsyncConsumer):
                         self.chat_room,
                         {
                             "type": "chat_message",
-                            #"text": json.dumps(data),
-                            "text":{
-                                "front": front_text,
-                                "ava": str(ava),
-                                "msg_id": int(msg_obj.message_id),
-                            }
+                            # "text": json.dumps(data),
+                            "text": front_text,
+                            #{
+                                #"front": front_text,
+                                #"ava": str(ava),
+                                #"msg_id": int(msg_obj.message_id),
+                            #}
                         })
                     break
                     #await self.channel_layer.group_add(self.chat_room, self.channel_name)
