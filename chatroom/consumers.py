@@ -36,7 +36,8 @@ class ChatConsumer(AsyncConsumer):
             if self.scope['user'].is_anonymous:
                 await self.close()
             else:
-                chat_id = 2#await self.get_tread(str(self.scope['user']), other_user)#treat_obj == chat_id
+                close_old_connections()
+                chat_id = await self.get_tread(str(self.scope['user']), other_user)#treat_obj == chat_id
                 close_old_connections()
         finally:
             me = str(self.scope['user'])
@@ -62,25 +63,22 @@ class ChatConsumer(AsyncConsumer):
         receivers_ids = await self.dump_user_ids(int(self.chat_id))
         close_old_connections()
         ava = await self.get_ava(int(self.scope['cookies']['id']))
+        close_old_connections()
         if front_text is not None:
-            close_old_connections()
             print(front_text,'FRONT_TEXT')
             dict_data = json.loads(front_text)
-            data = {'text': dict_data['text'],
-                    'time': dict_data['time'],
-                    'ava': str(ava),
-                    }
+            close_old_connections()
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
             close_old_connections()
 
         for user in receivers_ids:#delete
-
             try:
                 close_old_connections()
                 user_to_chats[user]#int(self.scope['cookies']['id'])]
             except KeyError:
                 close_old_connections()
-                device = FCMDevice.objects.filter(device_id=user)
+                device = await FCMDevice.objects.filter(device_id=user)
+                close_old_connections()
                 #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
                 #print(token, 'TOKENS')
                 for i in device:#token:
@@ -106,12 +104,13 @@ class ChatConsumer(AsyncConsumer):
                                 "msg_id": int(msg_obj.message_id),
                             },
                         })
-                    break
+                    # TIME FIX ->break
                     #await self.channel_layer.group_add(self.chat_room, self.channel_name)
                 else:
                     close_old_connections()
                     #token = await self.get_user_token(int(self.scope['cookies']['id']))
-                    device = FCMDevice.objects.filter(device_id=user)
+                    device = await FCMDevice.objects.filter(device_id=user)
+                    close_old_connections()
                     for i in device:#token:
                         close_old_connections()
                         print(i, 'CHECK MEE')
