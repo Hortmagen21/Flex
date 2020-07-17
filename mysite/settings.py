@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import django
 import django_heroku
+import dj_database_url
 
 
 
@@ -79,6 +80,8 @@ CELERY_BROKER_URL = os.getenv('REDIS_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
 
 ASGI_APPLICATION = 'mysite.routing.application'
+
+db_from_env = dj_database_url.config()
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
