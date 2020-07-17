@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chatroom/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatroom/consumers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mysite/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/asgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysite/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/celery.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2286">
-              <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
+            <state relative-caret-position="70">
+              <caret line="38" column="27" selection-start-line="38" selection-start-column="27" selection-end-line="38" selection-end-column="27" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -34,7 +32,7 @@
         <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="216">
-              <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+              <caret line="14" column="33" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="33" />
               <folding>
                 <element signature="e#222#231#0" expanded="true" />
               </folding>
@@ -108,7 +106,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7209">
+            <state relative-caret-position="400">
               <caret line="285" column="54" selection-start-line="285" selection-start-column="54" selection-end-line="285" selection-end-column="54" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
@@ -223,9 +221,9 @@
         <option value="$PROJECT_DIR$/chatroom/views.py" />
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$USER_HOME$/Flex/venv/Lib/site-packages/channels/consumer.py" />
-        <option value="$PROJECT_DIR$/chatroom/consumers.py" />
         <option value="$PROJECT_DIR$/mysite/celery.py" />
         <option value="$PROJECT_DIR$/mysite/asgi.py" />
+        <option value="$PROJECT_DIR$/chatroom/consumers.py" />
       </list>
     </option>
   </component>
@@ -700,16 +698,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/chatroom/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7209">
-          <caret line="285" column="54" selection-start-line="285" selection-start-column="54" selection-end-line="285" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -737,17 +725,27 @@
     <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
-          <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+          <caret line="14" column="33" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="33" />
           <folding>
             <element signature="e#222#231#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/chatroom/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="285" column="54" selection-start-line="285" selection-start-column="54" selection-end-line="285" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2286">
-          <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
+        <state relative-caret-position="70">
+          <caret line="38" column="27" selection-start-line="38" selection-start-column="27" selection-end-line="38" selection-end-column="27" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>

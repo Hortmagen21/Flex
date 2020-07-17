@@ -36,7 +36,7 @@ class ChatConsumer(AsyncConsumer):
             if self.scope['user'].is_anonymous:
                 await self.close()
             else:
-                chat_id = await self.get_tread(str(self.scope['user']), other_user)#treat_obj == chat_id
+                chat_id = 2#await self.get_tread(str(self.scope['user']), other_user)#treat_obj == chat_id
                 close_old_connections()
         finally:
             me = str(self.scope['user'])
