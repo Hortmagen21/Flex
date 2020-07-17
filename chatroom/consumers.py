@@ -114,7 +114,7 @@ class ChatConsumer(AsyncConsumer):
                     device = FCMDevice.objects.filter(device_id=user)
                     for i in device:#token:
                         close_old_connections()
-                        print(i,'CHECK MEE')
+                        print(i, 'CHECK MEE')
                         i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                         #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 

@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chatroom/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatroom/consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/asgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/celery.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="130" column="44" selection-start-line="130" selection-start-column="44" selection-end-line="130" selection-end-column="44" />
+            <state relative-caret-position="2286">
+              <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -28,28 +31,34 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/channels/consumer.py">
+        <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="38" column="38" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
+            <state relative-caret-position="216">
+              <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+              <folding>
+                <element signature="e#222#231#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/django/db/utils.py">
+        <entry file="file://$PROJECT_DIR$/mysite/celery.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="162">
-              <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+              <caret line="6" column="23" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-27830573/builtins.py">
+        <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/celery/app/base.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
-              <caret line="896" column="6" selection-start-line="896" selection-start-column="6" selection-end-line="896" selection-end-column="6" />
+            <state relative-caret-position="888">
+              <caret line="229" column="8" selection-start-line="229" selection-start-column="8" selection-end-line="229" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -57,7 +66,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
+            <state relative-caret-position="432">
               <caret line="29" column="57" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
               <folding>
                 <element signature="e#0#57#0" expanded="true" />
@@ -78,7 +87,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mysite/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4486">
+            <state relative-caret-position="4995">
               <caret line="187" column="15" selection-start-line="187" selection-start-column="15" selection-end-line="187" selection-end-column="15" />
               <folding>
                 <element signature="e#306#315#0" expanded="true" />
@@ -99,7 +108,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1539">
+            <state relative-caret-position="7209">
               <caret line="285" column="54" selection-start-line="285" selection-start-column="54" selection-end-line="285" selection-end-column="54" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
@@ -193,12 +202,10 @@
         <option value="$PROJECT_DIR$/mysite/urls.py" />
         <option value="$PROJECT_DIR$/mysite/routing.py" />
         <option value="$PROJECT_DIR$/mysite/__init__.py" />
-        <option value="$PROJECT_DIR$/mysite/celery.py" />
         <option value="$PROJECT_DIR$/user_profile/models.py" />
         <option value="$PROJECT_DIR$/chatroom/migrations/0001_initial.py" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/home/views.py" />
-        <option value="$PROJECT_DIR$/mysite/asgi.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/acc_base/models.py" />
         <option value="$PROJECT_DIR$/venv/Lib/site-packages/django/contrib/sessions/backends/base.py" />
@@ -217,6 +224,8 @@
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$USER_HOME$/Flex/venv/Lib/site-packages/channels/consumer.py" />
         <option value="$PROJECT_DIR$/chatroom/consumers.py" />
+        <option value="$PROJECT_DIR$/mysite/celery.py" />
+        <option value="$PROJECT_DIR$/mysite/asgi.py" />
       </list>
     </option>
   </component>
@@ -358,7 +367,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.12214765" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.12483221" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50098234" side_tool="true" weight="0.20939597" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -369,8 +378,8 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.8805369" visible="true" weight="0.28895184" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.119463086" side_tool="true" visible="true" weight="0.28895184" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.8791946" visible="true" weight="0.28895184" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.12080537" side_tool="true" visible="true" weight="0.28895184" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49932885" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -380,9 +389,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/chatroom/admin.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -419,32 +425,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mysite/celery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="4" column="55" selection-start-line="4" selection-start-column="55" selection-end-line="4" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/home/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="34" column="283" selection-start-line="34" selection-start-column="276" selection-end-line="34" selection-end-column="283" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
-          <folding>
-            <element signature="e#222#231#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -659,24 +645,10 @@
     <entry file="file://$PROJECT_DIR$/mysite/wsgi.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/fcm_django/models.py">
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/channels/consumer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3969">
-          <caret line="155" column="6" selection-start-line="155" selection-start-column="6" selection-end-line="155" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chatroom/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="15" column="61" selection-start-line="15" selection-start-column="61" selection-end-line="15" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-27830573/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="896" column="6" selection-start-line="896" selection-start-column="6" selection-end-line="896" selection-end-column="6" />
+        <state relative-caret-position="810">
+          <caret line="38" column="38" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
         </state>
       </provider>
     </entry>
@@ -687,9 +659,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-27830573/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24192">
+          <caret line="896" column="6" selection-start-line="896" selection-start-column="6" selection-end-line="896" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
+        <state relative-caret-position="432">
           <caret line="29" column="57" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
           <folding>
             <element signature="e#0#57#0" expanded="true" />
@@ -697,9 +676,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/fcm_django/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3969">
+          <caret line="155" column="6" selection-start-line="155" selection-start-column="6" selection-end-line="155" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mysite/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4486">
+        <state relative-caret-position="4995">
           <caret line="187" column="15" selection-start-line="187" selection-start-column="15" selection-end-line="187" selection-end-column="15" />
           <folding>
             <element signature="e#306#315#0" expanded="true" />
@@ -716,7 +702,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1539">
+        <state relative-caret-position="7209">
           <caret line="285" column="54" selection-start-line="285" selection-start-column="54" selection-end-line="285" selection-end-column="54" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
@@ -724,17 +710,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/channels/consumer.py">
+    <entry file="file://$PROJECT_DIR$/chatroom/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="38" column="38" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
+        <state relative-caret-position="405">
+          <caret line="15" column="61" selection-start-line="15" selection-start-column="61" selection-end-line="15" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Flex/venv/Lib/site-packages/celery/app/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="888">
+          <caret line="229" column="8" selection-start-line="229" selection-start-column="8" selection-end-line="229" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/celery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="6" column="23" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+          <folding>
+            <element signature="e#222#231#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="130" column="44" selection-start-line="130" selection-start-column="44" selection-end-line="130" selection-end-column="44" />
+        <state relative-caret-position="2286">
+          <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>

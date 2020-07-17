@@ -4,6 +4,6 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
 
-app = Celery('project')
+app = Celery('manage.py')#'project'
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
