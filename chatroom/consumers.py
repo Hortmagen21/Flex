@@ -77,7 +77,7 @@ class ChatConsumer(AsyncConsumer):
                 user_to_chats[user]#int(self.scope['cookies']['id'])]
             except KeyError:
                 close_old_connections()
-                device = await FCMDevice.objects.filter(device_id=user)
+                device = FCMDevice.objects.filter(device_id=user)
                 close_old_connections()
                 #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
                 #print(token, 'TOKENS')
@@ -109,7 +109,7 @@ class ChatConsumer(AsyncConsumer):
                 else:
                     close_old_connections()
                     #token = await self.get_user_token(int(self.scope['cookies']['id']))
-                    device = await FCMDevice.objects.filter(device_id=user)
+                    device = FCMDevice.objects.filter(device_id=user)
                     close_old_connections()
                     for i in device:#token:
                         close_old_connections()

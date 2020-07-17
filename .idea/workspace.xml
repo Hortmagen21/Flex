@@ -82,8 +82,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mysite/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="693">
-              <caret line="187" column="15" selection-start-line="187" selection-start-column="15" selection-end-line="187" selection-end-column="15" />
+            <state relative-caret-position="215">
+              <caret line="83" column="38" lean-forward="true" selection-start-line="83" selection-end-line="83" selection-end-column="38" />
               <folding>
                 <element signature="e#306#315#0" expanded="true" />
               </folding>
@@ -212,7 +212,6 @@
         <option value="$PROJECT_DIR$/chatroom/urls.py" />
         <option value="$PROJECT_DIR$/chatroom/routing.py" />
         <option value="$PROJECT_DIR$/acc_base/views.py" />
-        <option value="$PROJECT_DIR$/mysite/settings.py" />
         <option value="$PROJECT_DIR$/user_profile/views.py" />
         <option value="$PROJECT_DIR$/chatroom/models.py" />
         <option value="$PROJECT_DIR$/Procfile" />
@@ -221,6 +220,7 @@
         <option value="$PROJECT_DIR$/chatroom/views.py" />
         <option value="$PROJECT_DIR$/mysite/asgi.py" />
         <option value="$PROJECT_DIR$/chatroom/consumers.py" />
+        <option value="$PROJECT_DIR$/mysite/settings.py" />
       </list>
     </option>
   </component>
@@ -360,9 +360,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.12483221" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.12483221" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50098234" side_tool="true" weight="0.20939597" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -373,7 +372,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.8791946" visible="true" weight="0.28895184" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.8791946" visible="true" weight="0.28895184" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.12080537" side_tool="true" visible="true" weight="0.28895184" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49932885" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -741,8 +740,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mysite/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="693">
-          <caret line="187" column="15" selection-start-line="187" selection-start-column="15" selection-end-line="187" selection-end-column="15" />
+        <state relative-caret-position="215">
+          <caret line="83" column="38" lean-forward="true" selection-start-line="83" selection-end-line="83" selection-end-column="38" />
           <folding>
             <element signature="e#306#315#0" expanded="true" />
           </folding>
