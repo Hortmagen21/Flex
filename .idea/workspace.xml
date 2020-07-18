@@ -18,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="117" column="35" selection-start-line="117" selection-start-column="35" selection-end-line="117" selection-end-column="35" />
+            <state relative-caret-position="168">
+              <caret line="119" column="176" selection-start-line="119" selection-start-column="176" selection-end-line="119" selection-end-column="176" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -743,8 +743,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="117" column="35" selection-start-line="117" selection-start-column="35" selection-end-line="117" selection-end-column="35" />
+        <state relative-caret-position="168">
+          <caret line="119" column="176" selection-start-line="119" selection-start-column="176" selection-end-line="119" selection-end-column="176" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
