@@ -32,6 +32,7 @@ class ChatConsumer(AsyncConsumer):
         try:
             chat_id = self.scope['cookies']['chat_id']
         except KeyError:
+            print('KEYERROR')
             other_user = str(self.scope['url_route']['kwargs']['username'])
             if self.scope['user'].is_anonymous:
                 await self.close()
@@ -40,6 +41,7 @@ class ChatConsumer(AsyncConsumer):
                 chat_id = await self.get_tread(str(self.scope['user']), other_user)#treat_obj == chat_id
                 close_old_connections()
         finally:
+            print('FINALLY')
             me = str(self.scope['user'])
             self.me = me
             self.chat_id = int(chat_id)
