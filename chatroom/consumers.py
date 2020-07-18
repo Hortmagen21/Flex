@@ -76,7 +76,6 @@ class ChatConsumer(AsyncConsumer):
                 close_old_connections()
                 user_to_chats[user]#int(self.scope['cookies']['id'])]
             except KeyError:
-                pass
                 close_old_connections()
                 print('IM WORKING1')
                 device = FCMDevice.objects.filter(device_id=user)
