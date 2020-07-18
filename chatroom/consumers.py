@@ -76,8 +76,11 @@ class ChatConsumer(AsyncConsumer):
                 close_old_connections()
                 user_to_chats[user]#int(self.scope['cookies']['id'])]
             except KeyError:
+                pass
                 close_old_connections()
+                print('IM WORKING1')
                 device = FCMDevice.objects.filter(device_id=user)
+                print('IM WORKING2')
                 close_old_connections()
                 #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
                 #print(token, 'TOKENS')
@@ -107,9 +110,12 @@ class ChatConsumer(AsyncConsumer):
                     # TIME FIX ->break
                     #await self.channel_layer.group_add(self.chat_room, self.channel_name)
                 else:
+
                     close_old_connections()
                     #token = await self.get_user_token(int(self.scope['cookies']['id']))
+                    print('IM WORKING1')
                     device = FCMDevice.objects.filter(device_id=user)
+                    print('IM WORKING2')
                     close_old_connections()
                     for i in device:#token:
                         close_old_connections()

@@ -81,11 +81,11 @@ CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
 
 ASGI_APPLICATION = 'mysite.routing.application'
 
-db_from_env = dj_database_url.config()
+db_from_env = dj_database_url.config() #TEESSTT
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
