@@ -80,7 +80,7 @@ class ChatConsumer(AsyncConsumer):
             except KeyError:
                 close_old_connections()
                 print('IM WORKING1')
-                device = FCMDevice.objects.filter(device_id=user)
+                device = sync_to_async(FCMDevice.objects.filter(device_id=user))
                 print('IM WORKING2')
                 close_old_connections()
                 #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
@@ -88,7 +88,7 @@ class ChatConsumer(AsyncConsumer):
                 for i in device:#token:
                     close_old_connections()
                     print(i, 'CHECK MEE')
-                    sync_to_async(i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20]))
+                    i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                     #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
             else:
                 close_old_connections()
@@ -115,13 +115,13 @@ class ChatConsumer(AsyncConsumer):
                     close_old_connections()
                     #token = await self.get_user_token(int(self.scope['cookies']['id']))
                     print('IM WORKING1')
-                    device = FCMDevice.objects.filter(device_id=user)
+                    device = sync_to_async(FCMDevice.objects.filter(device_id=user))
                     print('IM WORKING2')
                     close_old_connections()
                     for i in device:#token:
                         close_old_connections()
                         print(i, 'CHECK MEE')
-                        sync_to_async(i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20]))
+                        i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                         #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 
             close_old_connections()
