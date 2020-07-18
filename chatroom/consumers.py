@@ -81,7 +81,7 @@ class ChatConsumer(AsyncConsumer):
                 close_old_connections()
                 print('IM WORKING1')
                 device = sync_to_async(FCMDevice.objects.filter(device_id=user))
-                print('IM WORKING2')
+                print(device,'device')
                 close_old_connections()
                 #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
                 #print(token, 'TOKENS')
