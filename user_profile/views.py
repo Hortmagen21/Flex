@@ -13,7 +13,7 @@ import mimetypes
 from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
 from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
-
+from fcm_django.api.rest_framework import FCMDevice
 
 import datetime
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
@@ -335,6 +335,15 @@ def view_subscribes(request):
         return JsonResponse({"response": response})
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def test_fcm(request):
+    if request.method == 'GET':
+        user = int(request.session['_auth_user_id'])
+        device=FCMDevice.objects.filter(device_id=user)
+        device.send_message(data={"msg_id": 170, "ava": str('nONE')}, body='TEST')
+        return HttpResponse("ok")
 
 def isSubscribe(my_id, user_id):
     try:

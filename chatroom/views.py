@@ -55,7 +55,8 @@ def create_chat(request):
                     print('CON CREATED')
                     cursor = conn.cursor()
                     print('CURSOR CREATED')
-                    cursor.callproc('is_chat', [user_id, id_receiver, ])
+                    args = (user_id, id_receiver)
+                    cursor.callproc('is_chat', args)
                     print('CALLPROC')
                     chat_exist = cursor.fetchall()[0][0]
                     print(chat_exist,' FETCHALL')
@@ -88,7 +89,8 @@ def create_chat(request):
 
                 if chat_exist:
                     print('chat_exist')
-                    cursor.callproc('chat_id', [user_id, id_receiver, ])
+                    args = (user_id, id_receiver)
+                    cursor.callproc('chat_id', args)
                     print('CHAT_ID PROCC')
                     chat_response = int(cursor.fetchall()[0][0])
                     print(chat_response,' FETCHALL')
@@ -257,7 +259,8 @@ def create_chat_ws(receiver_name, user_name):
         print('CONNECTED TO BD')
         cursor = conn.cursor()
         print('CURSOR CONNECTED')
-        cursor.callproc('is_chat', [user_id, receiver_id, ])
+        args = (user_id, receiver_id)
+        cursor.callproc('is_chat', args)
         print('CALLPROC IS_CHAT2')
         chat_exist = cursor.fetchall()[0][0]
         print(chat_exist,' FETCHALL2')
@@ -286,7 +289,8 @@ def create_chat_ws(receiver_name, user_name):
                             break"""
 
         if chat_exist:
-            cursor.callproc('chat_id', [user_id, receiver_id, ])
+            args = (user_id, receiver_id)
+            cursor.callproc('chat_id', args)
             print('CALLPROC chat_id2')
             chat_response = int(cursor.fetchall()[0][0])
             print('fetchall2')
