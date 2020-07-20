@@ -17,6 +17,7 @@ from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.http import JsonResponse
 import psycopg2
+import aiopg
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -252,8 +253,14 @@ def create_chat_ws(receiver_name, user_name):
     else:
         receiver_id = int(receiver.id)
         user_id = int(user.id)
-
-        conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
+        dsn = 'dbname=d7f6m0it9u59pk user=iffjnrmpbopayf password=20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946 host=ec2-54-83-1-101.compute-1.amazonaws.com'
+        async with aiopg.create_pool(dsn) as pool:
+            async with pool.acquire() as conn:
+                async with conn.cursor() as cur:
+                    args = (user_id, receiver_id)
+                    cur.callproc('is_chat', args)
+                    chat_exist = cur.fetchall()[0][0]
+        '''conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
                                 password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946',
                                 host='ec2-54-83-1-101.compute-1.amazonaws.com')
         print('CONNECTED TO BD')
@@ -263,7 +270,9 @@ def create_chat_ws(receiver_name, user_name):
         cursor.callproc('is_chat', args)
         print('CALLPROC IS_CHAT2')
         chat_exist = cursor.fetchall()[0][0]
-        print(chat_exist,' FETCHALL2')
+        print(chat_exist,' FETCHALL2')'''
+
+
         """try:
             chat_list = list(ChatMembers.objects.filter(user_id=user_id))
         except ObjectDoesNotExist:
@@ -290,16 +299,16 @@ def create_chat_ws(receiver_name, user_name):
 
         if chat_exist:
             args = (user_id, receiver_id)
-            cursor.callproc('chat_id', args)
+            cur.callproc('chat_id', args)
             print('CALLPROC chat_id2')
-            chat_response = int(cursor.fetchall()[0][0])
+            chat_response = int(cur.fetchall()[0][0])
             print('fetchall2')
-            cursor.close()
-            conn.close()
+            #cursor.close()
+            #conn.close()
             print('ALL CLOSED')
         else:
-            cursor.close()
-            conn.close()
+            #cursor.close()
+            #conn.close()
             print('ALL CLOSED2')
             creating_chat = Chat(chat_admin=user_id, chat_members=2)
             creating_chat.save()
