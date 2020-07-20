@@ -254,12 +254,12 @@ def create_chat_ws(receiver_name, user_name):
         receiver_id = int(receiver.id)
         user_id = int(user.id)
         dsn = 'dbname=d7f6m0it9u59pk user=iffjnrmpbopayf password=20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946 host=ec2-54-83-1-101.compute-1.amazonaws.com'
-        async with aiopg.create_pool(dsn) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor() as cur:
-                    args = (user_id, receiver_id)
-                    cur.callproc('is_chat', args)
-                    chat_exist = cur.fetchall()[0][0]
+        pool = aiopg.create_pool(dsn)
+        conn = pool.acquire()
+        cur = conn.cursor()
+        args = (user_id, receiver_id)
+        cur.callproc('is_chat', args)
+        chat_exist = cur.fetchall()[0][0]
         '''conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
                                 password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946',
                                 host='ec2-54-83-1-101.compute-1.amazonaws.com')
