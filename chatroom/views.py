@@ -258,7 +258,7 @@ def create_chat_ws(receiver_name, user_name):
         conn = pool.acquire()
         cur = conn.cursor()
         args = (user_id, receiver_id)
-        cur.callproc('is_chat', args)
+        await cur.callproc('is_chat', args)
         chat_exist = cur.fetchall()[0][0]
         '''conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
                                 password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946',
@@ -299,7 +299,7 @@ def create_chat_ws(receiver_name, user_name):
 
         if chat_exist:
             args = (user_id, receiver_id)
-            cur.callproc('chat_id', args)
+            await cur.callproc('chat_id', args)
             print('CALLPROC chat_id2')
             chat_response = int(cur.fetchall()[0][0])
             print('fetchall2')
