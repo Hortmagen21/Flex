@@ -49,12 +49,16 @@ def create_chat(request):
                 except MultipleObjectsReturned:
                     return HttpResponseBadRequest()
                 else:
+
                     conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
                                             password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946', host='ec2-54-83-1-101.compute-1.amazonaws.com')
+                    print('CON CREATED')
                     cursor = conn.cursor()
+                    print('CURSOR CREATED')
                     cursor.callproc('is_chat', [user_id, id_receiver, ])
+                    print('CALLPROC')
                     chat_exist = cursor.fetchall()[0][0]
-                    #print(cursor.fetchall()[0][0],'FETCHALL')
+                    print(chat_exist,' FETCHALL')
                     """try:
                         chat_list = list(ChatMembers.objects.filter(user_id=user_id))
                     except ObjectDoesNotExist:
@@ -83,13 +87,21 @@ def create_chat(request):
                 date = []
 
                 if chat_exist:
+                    print('chat_exist')
                     cursor.callproc('chat_id', [user_id, id_receiver, ])
+                    print('CHAT_ID PROCC')
                     chat_response = int(cursor.fetchall()[0][0])
+                    print(chat_response,' FETCHALL')
+                    cursor.close()
+                    conn.close()
+                    print('CONN CLOSE AND CURSOR')
                     mess = list(Message.objects.filter(chat_id=chat_response))[:10]
                     for msg in mess:
                         date.append({"text": msg.message, "time": msg.date, 'sender_id': int(msg.user_id)})
 
                 else:
+                    cursor.close()
+                    conn.close()
                     creating_chat = Chat(chat_admin=user_id, chat_members=2, is_group=False)
                     creating_chat.save()
                     connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
@@ -98,8 +110,7 @@ def create_chat(request):
                     connection_receiver.save()
                     chat_response = int(creating_chat.chat_id)
 
-            cursor.close()
-            conn.close()
+
             return JsonResponse({'isNew': not chat_exist, 'chat_id':  chat_response, 'receiver_ava': ava, 'receiver_name': receiver_name.username, 'receiver_online': 'none', 'messages': date, 'sender_id': user_id})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -239,12 +250,17 @@ def create_chat_ws(receiver_name, user_name):
     else:
         receiver_id = int(receiver.id)
         user_id = int(user.id)
+
         conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
                                 password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946',
                                 host='ec2-54-83-1-101.compute-1.amazonaws.com')
+        print('CONNECTED TO BD')
         cursor = conn.cursor()
+        print('CURSOR CONNECTED')
         cursor.callproc('is_chat', [user_id, receiver_id, ])
+        print('CALLPROC IS_CHAT2')
         chat_exist = cursor.fetchall()[0][0]
+        print(chat_exist,' FETCHALL2')
         """try:
             chat_list = list(ChatMembers.objects.filter(user_id=user_id))
         except ObjectDoesNotExist:
@@ -271,12 +287,16 @@ def create_chat_ws(receiver_name, user_name):
 
         if chat_exist:
             cursor.callproc('chat_id', [user_id, receiver_id, ])
+            print('CALLPROC chat_id2')
             chat_response = int(cursor.fetchall()[0][0])
+            print('fetchall2')
             cursor.close()
             conn.close()
+            print('ALL CLOSED')
         else:
             cursor.close()
             conn.close()
+            print('ALL CLOSED2')
             creating_chat = Chat(chat_admin=user_id, chat_members=2)
             creating_chat.save()
             connection_me = ChatMembers(chat_id=creating_chat.chat_id, user_id=user_id)
