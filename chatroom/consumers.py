@@ -41,6 +41,12 @@ class ChatConsumer(AsyncConsumer):
                 close_old_connections()
                 chat_id = await self.get_tread(str(self.scope['user']), other_user)#treat_obj == chat_id
                 close_old_connections()
+        else:
+            #timly fix
+            other_user = str(self.scope['url_route']['kwargs']['username'])
+            close_old_connections()
+            chat_id = await self.get_tread(str(self.scope['user']), other_user)  # treat_obj == chat_id
+            close_old_connections()
         finally:
             print('FINALLY')
             me = str(self.scope['user'])
