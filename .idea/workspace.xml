@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/chatroom/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatroom/consumers.py" afterDir="false" />
-    </list>
+    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +16,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="89" column="17" selection-start-line="89" selection-start-column="17" selection-end-line="89" selection-end-column="17" />
+            <state relative-caret-position="306">
+              <caret line="86" column="144" lean-forward="true" selection-start-line="86" selection-start-column="144" selection-end-line="86" selection-end-column="144" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -748,8 +746,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="89" column="17" selection-start-line="89" selection-start-column="17" selection-end-line="89" selection-end-column="17" />
+        <state relative-caret-position="306">
+          <caret line="86" column="144" lean-forward="true" selection-start-line="86" selection-start-column="144" selection-end-line="86" selection-end-column="144" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
