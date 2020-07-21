@@ -18,6 +18,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.http import JsonResponse
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from fcm_django.api.rest_framework import FCMDevice
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -338,6 +339,8 @@ def get_receiver_avatar(user_id):
     except IndexError:
         ava = "None"  # null
     return ava
+def get_fcm_device(user):
+    return FCMDevice.objects.filter(device_id=user)
 
 
 
