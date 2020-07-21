@@ -84,10 +84,10 @@ class ChatConsumer(AsyncConsumer):
             except KeyError:
                 close_old_connections()
                 print('IM WORKING1')
-                device = async_to_sync(await self.get_fcm_tokens(user))
-                print(device,'device')
+                async_to_sync((await self.get_fcm_tokens(user)).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20]))
+                #print(device,'device')
                 close_old_connections()
-                device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                #device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 
                 #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
                 #print(token, 'TOKENS')
