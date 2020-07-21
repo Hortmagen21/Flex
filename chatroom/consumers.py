@@ -94,7 +94,7 @@ class ChatConsumer(AsyncConsumer):
                     close_old_connections()
                     print(i, 'CHECK MEE')
                     ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                    fcm_send_message(registration_id=i, data=json.dumps({"msg_id": int(msg_obj.message_id), "ava": str(ava)}), body=dict_data['text'][:20])
+                    fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
             else:
                 close_old_connections()
                 print('IAM HERE')
@@ -120,17 +120,14 @@ class ChatConsumer(AsyncConsumer):
                     close_old_connections()
                     #token = await self.get_user_token(int(self.scope['cookies']['id']))
                     print('IM WORKING2')
-                    device = await self.get_fcm_tokens(user)
-                    #device = await self.get_fcm_tokens(user)
-                    print(device,'device')
-                    close_old_connections()
-                    device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                    ##for i in device:#token:
-                        ##close_old_connections()
-                        ##print(i, 'CHECK MEE')
+                    token = await self.get_user_token(user)  # int(self.scope['cookies']['id']))
+                    # print(token, 'TOKENS')
+                    for i in token:
+                        close_old_connections()
+                        print(i, 'CHECK MEE')
                         ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                        #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-
+                        fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)},
+                                         body=dict_data['text'][:20])
             close_old_connections()
 
     async def chat_message(self, event):
