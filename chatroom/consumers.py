@@ -84,7 +84,7 @@ class ChatConsumer(AsyncConsumer):
             except KeyError:
                 close_old_connections()
                 print('IM WORKING1')
-                device = await self.get_fcm_tokens(user)
+                device = async_to_sync(await self.get_fcm_tokens(user))
                 print(device,'device')
                 close_old_connections()
                 device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
