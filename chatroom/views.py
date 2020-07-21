@@ -50,7 +50,7 @@ def create_chat(request):
                 except MultipleObjectsReturned:
                     return HttpResponseBadRequest()
                 else:
-
+                    print('BEFORE CONNECT')
                     conn = psycopg2.connect(dbname='d7f6m0it9u59pk', user='iffjnrmpbopayf',
                                             password='20d31f747b4397c839a05d6d70d2decd02b23a689d86773a84d8dcfa23428946', host='ec2-54-83-1-101.compute-1.amazonaws.com')
                     print('CON CREATED')
