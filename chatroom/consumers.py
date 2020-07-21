@@ -6,7 +6,7 @@ from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
 from .models import Message,Chat
-from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens,get_receiver_avatar, get_fcm_device
+from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens,get_receiver_avatar
 from django.contrib.auth.models import User
 from channels.auth import login
 from django.db import close_old_connections
@@ -120,8 +120,8 @@ class ChatConsumer(AsyncConsumer):
 
                     close_old_connections()
                     #token = await self.get_user_token(int(self.scope['cookies']['id']))
-                    print('IM WORKING1')
-                    device = database_sync_to_async(FCMDevice.objects.filter(device_id=user))
+                    print('IM WORKING2')
+                    device = await self.get_fcm_tokens(user)
                     #device = await self.get_fcm_tokens(user)
                     print(device,'device')
                     close_old_connections()
@@ -176,8 +176,8 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def get_fcm_tokens(self,user):
-        return get_fcm_device(user)
-        #return FCMDevice.objects.filter(device_id=user)
+        #return get_fcm_device(user)
+        return FCMDevice.objects.filter(device_id=user)
 
 
 

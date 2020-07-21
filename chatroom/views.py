@@ -339,8 +339,9 @@ def get_receiver_avatar(user_id):
     except IndexError:
         ava = "None"  # null
     return ava
-def get_fcm_device(user):
-    return FCMDevice.objects.filter(device_id=user)
+
+#def get_fcm_device(user):
+    #return FCMDevice.objects.filter(device_id=user)
 
 
 
