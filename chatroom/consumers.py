@@ -84,7 +84,7 @@ class ChatConsumer(AsyncConsumer):
             except KeyError:
                 close_old_connections()
                 print('IM WORKING1')
-                FCMDevice.objects.filter(device_id=user).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                database_sync_to_async(FCMDevice.objects.filter(device_id=user)).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                 #print(device,'device')
                 close_old_connections()
                 #device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
