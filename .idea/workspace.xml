@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/chatroom/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatroom/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chatroom/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatroom/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +16,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="169" column="20" selection-start-line="169" selection-start-column="20" selection-end-line="169" selection-end-column="20" />
+            <state relative-caret-position="195">
+              <caret line="29" column="38" lean-forward="true" selection-start-line="29" selection-start-column="38" selection-end-line="29" selection-end-column="38" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -52,7 +49,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="141">
@@ -85,11 +82,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="33">
-              <caret line="327" column="45" selection-start-line="327" selection-start-column="45" selection-end-line="327" selection-end-column="45" />
+            <state relative-caret-position="222">
+              <caret line="184" column="45" lean-forward="true" selection-start-line="184" selection-start-column="45" selection-end-line="184" selection-end-column="45" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -154,8 +151,8 @@
       <find>DATABASES</find>
       <find>view_inf</find>
       <find>psyc</find>
-      <find>psycopg</find>
       <find>chat_id</find>
+      <find>psycopg</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -359,7 +356,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.13154362" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -687,16 +683,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mysite/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="33">
@@ -740,8 +726,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="169" column="20" selection-start-line="169" selection-start-column="20" selection-end-line="169" selection-end-column="20" />
+        <state relative-caret-position="195">
+          <caret line="29" column="38" lean-forward="true" selection-start-line="29" selection-start-column="38" selection-end-line="29" selection-end-column="38" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
@@ -750,10 +736,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33">
-          <caret line="327" column="45" selection-start-line="327" selection-start-column="45" selection-end-line="327" selection-end-column="45" />
+        <state relative-caret-position="222">
+          <caret line="184" column="45" lean-forward="true" selection-start-line="184" selection-start-column="45" selection-end-line="184" selection-end-column="45" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
           </folding>
         </state>
       </provider>
