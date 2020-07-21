@@ -324,10 +324,11 @@ def get_receivers_ids(chat_id):
 
 
 def get_user_special_tokens(user_id):
-    user = UniqueTokenUser.objects.filter(user_id=user_id)#try
+
+    user = FCMDevice.objects.filter(device_id=user_id)#try
     tokens = []
     for token in user:
-        tokens.append(token.token)
+        tokens.append(token.registration_id)
     return tokens
 
 

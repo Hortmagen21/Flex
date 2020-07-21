@@ -84,18 +84,17 @@ class ChatConsumer(AsyncConsumer):
             except KeyError:
                 close_old_connections()
                 print('IM WORKING1')
-                database_sync_to_async(FCMDevice.objects.filter(device_id=user)).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                #database_sync_to_async(FCMDevice.objects.filter(device_id=user)).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                 #print(device,'device')
-                close_old_connections()
                 #device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 
-                #token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
+                token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
                 #print(token, 'TOKENS')
-                ##for i in device:#token:
-                    ##close_old_connections()
-                    ##print(i, 'CHECK MEE')
+                for i in token:
+                    close_old_connections()
+                    print(i, 'CHECK MEE')
                     ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                    #fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                    fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
             else:
                 close_old_connections()
                 print('IAM HERE')
