@@ -30,6 +30,7 @@ class ChatConsumer(AsyncConsumer):
             "type": "websocket.accept"
         })
         try:
+            print('CHATER_ID')
             chat_id = self.scope['cookies']['chat_id']
         except KeyError:
             print('KEYERROR')

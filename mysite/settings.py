@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'user_profile.apps.UserProfileConfig',
     'channels',
     "fcm_django",
+    "psycopg2",
 
     #'mysite.polls.apps.PollsConfig',
     #'mysite.polls',
@@ -81,7 +82,7 @@ CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
 
 ASGI_APPLICATION = 'mysite.routing.application'
 
-db_from_env = dj_database_url.config() #TEESSTT
+#db_from_env = dj_database_url.config() #TEESSTT
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
