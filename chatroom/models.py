@@ -38,7 +38,6 @@ class Message(models.Model):
     date = models.IntegerField()
 
     class Meta:
-        managed = False
         ordering = ('-date',)
         db_table = 'message'
 
