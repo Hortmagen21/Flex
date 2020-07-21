@@ -14,7 +14,8 @@ class Chat(models.Model):
     chat_ava = models.CharField(max_length=100, blank=True, null=True)
     chat_admin = models.IntegerField()
     chat_members = models.IntegerField(blank=True, null=True)
-    is_group = models.BooleanField()
+    is_group = models.BooleanField(blank=True, null=True)
+
     class Meta:
         db_table = 'chat'
 

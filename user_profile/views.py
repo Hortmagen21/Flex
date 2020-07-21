@@ -220,11 +220,11 @@ def view_information_user(request):
             user_name = User.objects.get(id=int(user_id)).username
             post = PostBase.objects.get(id=int(avatars[-1].id_post))
         except ObjectDoesNotExist:
-            object_does_not_exist=True
+            object_does_not_exist = True
         except MultipleObjectsReturned:
             multiple_objects = True
         except IndexError:
-            ava_src="none"
+            ava_src = "none"
         else:
             ava_src = post.img
         finally:
