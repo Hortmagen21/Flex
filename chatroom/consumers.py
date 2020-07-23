@@ -100,18 +100,17 @@ class ChatConsumer(AsyncConsumer):
                 print('IAM HERE')
                 if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
                     close_old_connections()
+                    my_data_dict = {"front": front_text,
+                                "ava": str(ava),
+                                "msg_id": int(msg_obj.message_id),
+                                    }
                     #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
                     await self.channel_layer.group_send(
                         self.chat_room,
                         {
                             "type": "chat_message",
                             # "text": json.dumps(data),
-                            "text":
-                            {
-                                "front": front_text,
-                                "ava": str(ava),
-                                "msg_id": int(msg_obj.message_id),
-                            },
+                            "text": json.dumps(my_data_dict),
                         })
                     # TIME FIX ->break
                     #await self.channel_layer.group_add(self.chat_room, self.channel_name)
@@ -135,12 +134,7 @@ class ChatConsumer(AsyncConsumer):
         # send messages
         await self.send({
             "type": "websocket.send",
-            "text": {
-                "text": event['text']["front"],
-                "msg_id": event['text']["msg_id"],
-                "ava": event['text']["ava"],
-
-                     }
+            "text": event['text'],
         })
 
     async def websocket_disconnect(self, event):
