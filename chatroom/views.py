@@ -243,6 +243,21 @@ def create_group_chat(request):
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def get_chat_members(request):
+    if request.method == "POST":
+        chat_id = request.POST.get(['chat_id'][0],False)
+        members = ChatMembers.objects.filter(chat_id=chat_id)
+        members_id = []
+        for member in members:
+            members_id.append(int(member.user_id))
+        return JsonResponse({"chat_members": members_id})
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+
 def create_chat_ws(receiver_name, user_name):
     try:
         receiver = User.objects.get(username=receiver_name)
