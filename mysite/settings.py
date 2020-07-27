@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import django
 import django_heroku
+from google.oauth2 import service_account
 import dj_database_url
 
 
@@ -34,6 +35,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    "C:\Users\Max\Desktop\Flex-8f4b5d443879"
+)#TEST
 INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.admin',
@@ -50,6 +54,7 @@ INSTALLED_APPS = [
     'channels',
     "fcm_django",
     "psycopg2",
+    "django-storages",
 
     #'mysite.polls.apps.PollsConfig',
     #'mysite.polls',
@@ -62,7 +67,8 @@ FCM_DJANGO_SETTINGS = {
     "DELETE_INACTIVE_DEVICES": True,
 }
 
-
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage' #TEST
+GS_BUCKET_NAME = 'Flex'#TEST
 
 CACHES = {
     "default": {
