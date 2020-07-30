@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import django
 import django_heroku
-
+from google.oauth2 import service_account
+import dj_database_url
 
 
 
@@ -51,9 +52,6 @@ INSTALLED_APPS = [
     'channels',
     "fcm_django",
     "psycopg2",
-
-    #'mysite.polls.apps.PollsConfig',
-    #'mysite.polls',
 ]
 FCM_DJANGO_SETTINGS = {
     "FCM_SERVER_KEY": "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn",

@@ -19,6 +19,8 @@ urlpatterns = [
     path('view_information_user',views.view_information_user),
     path('view_subscribes',views.view_subscribes),#rewrite SQL
     path('test_fcm',views.test_fcm),
+    path('username_list', views.username_list),#rewrite SQL
+
 
 
 ]
