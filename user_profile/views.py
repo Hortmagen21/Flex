@@ -14,7 +14,6 @@ from django.utils.datastructures import MultiValueDictKeyError
 from PIL import Image
 from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from fcm_django.api.rest_framework import FCMDevice
-
 import datetime
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
@@ -96,7 +95,7 @@ def add_post(request):
             with open(url, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
-            im = Image.open(url)
+            im = Image.default_storage.open(url)
             out = im.resize((384, 384))
             out.save(url_mini)
             response = JsonResponse({'src': core_url+url, 'src_mini': core_url+url_mini})

@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="48eee690-b79c-4a50-b400-0d29841c6ac7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/mysite/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_profile/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +21,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mysite/settings.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="1755">
               <caret line="65" selection-start-line="65" selection-end-line="65" />
+=======
+            <state relative-caret-position="265">
+              <caret line="70" column="22" selection-start-line="70" selection-start-column="22" selection-end-line="70" selection-end-column="22" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
               <folding>
                 <element signature="e#306#315#0" expanded="true" />
               </folding>
@@ -27,11 +35,19 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/user_profile/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="400">
               <caret line="97" column="29" selection-start-line="97" selection-start-column="29" selection-end-line="97" selection-end-column="29" />
+=======
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/user_profile/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="373">
+              <caret line="109" column="69" selection-start-line="109" selection-start-column="61" selection-end-line="109" selection-end-column="69" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -40,18 +56,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/chatroom/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="297">
               <caret line="35" column="29" lean-forward="true" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
+=======
+        <entry file="file://$PROJECT_DIR$/mysite/celery.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/chatroom/urls.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="216">
@@ -59,15 +85,31 @@
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
+=======
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="28" column="25" lean-forward="true" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="729">
               <caret line="27" column="25" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="25" />
+=======
+        <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="14" column="26" selection-start-line="14" selection-end-line="14" selection-end-column="26" />
+              <folding>
+                <element signature="e#222#231#0" expanded="true" />
+              </folding>
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
             </state>
           </provider>
         </entry>
@@ -75,8 +117,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatroom/views.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="481">
               <caret line="192" lean-forward="true" selection-start-line="192" selection-end-line="192" />
+=======
+            <state relative-caret-position="400">
+              <caret line="201" column="13" selection-start-line="201" selection-start-column="13" selection-end-line="201" selection-end-column="13" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -84,11 +131,19 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chatroom/routing.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="216">
               <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+=======
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/chatroom/routing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="189">
+              <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
             </state>
           </provider>
         </entry>
@@ -214,15 +269,18 @@
         <option value="$PROJECT_DIR$/mysite/celery.py" />
         <option value="$PROJECT_DIR$/mysite/asgi.py" />
         <option value="$PROJECT_DIR$/user_profile/urls.py" />
-        <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/mysite/settings.py" />
-        <option value="$PROJECT_DIR$/user_profile/views.py" />
         <option value="$PROJECT_DIR$/chatroom/models.py" />
         <option value="$PROJECT_DIR$/chatroom/urls.py" />
         <option value="$PROJECT_DIR$/runtime.txt" />
         <option value="$PROJECT_DIR$/chatroom/views.py" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/chatroom/routing.py" />
         <option value="$PROJECT_DIR$/chatroom/consumers.py" />
+=======
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/mysite/settings.py" />
+        <option value="$PROJECT_DIR$/user_profile/views.py" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
       </list>
     </option>
   </component>
@@ -368,6 +426,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+<<<<<<< HEAD
+=======
+    <editor active="true" />
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4990177" visible="true" weight="0.15570469" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -590,6 +652,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
@@ -610,6 +673,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
     <entry file="file://$PROJECT_DIR$/user_profile/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -652,6 +717,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/user_profile/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="400">
@@ -662,6 +728,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
     <entry file="file://$PROJECT_DIR$/tv_shows/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="27">
@@ -672,6 +740,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/mysite/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1755">
@@ -689,6 +758,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
     <entry file="file://$PROJECT_DIR$/runtime.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -759,8 +830,60 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chatroom/routing.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="216">
           <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+=======
+        <state relative-caret-position="189">
+          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/celery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/asgi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="14" column="26" selection-start-line="14" selection-end-line="14" selection-end-column="26" />
+          <folding>
+            <element signature="e#222#231#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="28" column="25" lean-forward="true" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="70" column="22" selection-start-line="70" selection-start-column="22" selection-end-line="70" selection-end-column="22" />
+          <folding>
+            <element signature="e#306#315#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/user_profile/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="109" column="69" selection-start-line="109" selection-start-column="61" selection-end-line="109" selection-end-column="69" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+>>>>>>> 4e1877bb487f03d2a6531170456fb9d476de9db8
         </state>
       </provider>
     </entry>
