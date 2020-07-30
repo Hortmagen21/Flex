@@ -34,7 +34,8 @@ class ChatConsumer(AsyncConsumer):
             chat_id = self.scope['cookies']['chat_id']
         except KeyError:
             print('KEYERROR')
-            other_user = str(self.scope['url_route']['kwargs']['username'])
+            #other_user = str(self.scope['url_route']['kwargs']['username'])
+            other_user = self.scope['cookies']['username']
             if self.scope['user'].is_anonymous:
                 await self.close()
             else:
