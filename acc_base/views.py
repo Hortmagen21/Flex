@@ -18,6 +18,7 @@ from django.http import JsonResponse
 from fcm_django.api.rest_framework import FCMDevice
 
 
+
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
 @csrf_exempt
@@ -120,6 +121,9 @@ def login(request):
 def logout(request):
     if request.method == 'GET':
         auth.logout(request)
+        unique_token = request.POST.get(['token'][0], False)
+        fcm_code = FCMDevice.objects.filter(registration_id=unique_token)
+        fcm_code.delete()
         print('I logged out!!!')
         return HttpResponse('acc is logout')
     else:

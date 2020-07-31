@@ -352,7 +352,7 @@ def view_subscribes(request):
 def test_fcm(request):
     if request.method == 'GET':
         user = int(request.session['_auth_user_id'])
-        device=FCMDevice.objects.filter(device_id=user)
+        device = FCMDevice.objects.filter(device_id=user)
         device.send_message(data={"msg_id": 170, "ava": str('nONE')}, body='TEST')
         return HttpResponse("ok")
 
