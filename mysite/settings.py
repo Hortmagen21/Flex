@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import django
 import django_heroku
-from google.oauth2 import service_account
 import dj_database_url
 
 
