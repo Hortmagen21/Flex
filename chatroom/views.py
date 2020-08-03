@@ -20,6 +20,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from fcm_django.api.rest_framework import FCMDevice
 from channels.consumer import AsyncConsumer
+from channels_presence.models import Room
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -331,15 +332,22 @@ def create_chat_ws(receiver_name, user_name):
         return chat_response
 
 
-'''@csrf_protect
+@csrf_protect
 @login_required(login_url=core_url+'acc_base/login_redirection')
 def add_to_group_chat(request):
     if request.method == 'POST':
         chat_id = request.POST.get(["chat_id"][0], '')
+        username = request.POST.get(["username"][0], '')
         user_id = int(request.session['_auth_user_id'])
         if is_user_in_chat(chat_id,user_id):
             chat_room = f'chat_{chat_id}'
-            AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
+            Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
+            new_member = ChatMembers(user_id=user_id, chat_id=chat_id)
+            new_member.save()
+            chat = Chat.objects.filter(chat_id=chat_id)
+            chat.chat_members += 1
+            chat.save()
+            #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
         else:
             return HttpResponse(status=403)
     else:
@@ -354,13 +362,13 @@ def remove_from_group_chat(request):
         user_id = int(request.session['_auth_user_id'])
         if is_user_in_chat(chat_id,user_id):
             chat_room = f'chat_{chat_id}'
-            AsyncConsumer.channel_layer.group_discard(chat_room, AsyncConsumer.channel_name)
+            Room.objects.remove(chat_room,AsyncConsumer.channel_name)
         else:
             return HttpResponse(status=403)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
-'''
+
 def is_user_in_chat(chat_id, user_id):
     chat_members = ChatMembers.objects.filter(user_id=user_id)
     for member in chat_members:

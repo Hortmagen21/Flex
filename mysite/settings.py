@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import django
 import django_heroku
+from datetime import timedelta
 import dj_database_url
 
 
@@ -83,6 +84,16 @@ ASGI_APPLICATION = 'mysite.routing.application'
 
 #db_from_env = dj_database_url.config() #TEESSTT
 
+CELERYBEAT_SCHEDULE = {
+    'prune-presence': {
+        'task': 'channels_presence.tasks.prune_presences',
+        'schedule': timedelta(seconds=60)
+    },
+    'prune-rooms': {
+        'task': 'channels_presence.tasks.prune_rooms',
+        'schedule': timedelta(seconds=600)
+    }
+}
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.security.SecurityMiddleware',
