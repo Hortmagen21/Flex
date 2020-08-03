@@ -42,10 +42,10 @@ def follow(request):
 @login_required(login_url=core_url+'acc_base/login_redirection')
 def username_list(request):
     if request.method == 'GET':
-        id_list = request.GET.get('id_list', ' ')
+        id_list = request.GET.get('id_list', ' ').split()
         user_list = []
         for id in id_list:
-            user = User.objects.get(id=id)
+            user = User.objects.get(id=int(id))
             user_list.append(user.username)
         return JsonResponse({"user_list": user_list})
     else:
