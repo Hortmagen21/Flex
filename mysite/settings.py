@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'chatroom.apps.ChatroomConfig',
     'user_profile.apps.UserProfileConfig',
     'channels',
+    "channels_presence",
     "fcm_django",
     "psycopg2",
 ]
