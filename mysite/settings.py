@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'chatroom.apps.ChatroomConfig',
     'user_profile.apps.UserProfileConfig',
     'channels',
-    "channels_presence",
+    #"channels_presence",
     "fcm_django",
     "psycopg2",
 ]
@@ -84,7 +84,7 @@ ASGI_APPLICATION = 'mysite.routing.application'
 
 #db_from_env = dj_database_url.config() #TEESSTT
 
-CELERYBEAT_SCHEDULE = {
+'''CELERYBEAT_SCHEDULE = {
     'prune-presence': {
         'task': 'channels_presence.tasks.prune_presences',
         'schedule': timedelta(seconds=60)
@@ -93,7 +93,7 @@ CELERYBEAT_SCHEDULE = {
         'task': 'channels_presence.tasks.prune_rooms',
         'schedule': timedelta(seconds=600)
     }
-}
+}'''
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.security.SecurityMiddleware',

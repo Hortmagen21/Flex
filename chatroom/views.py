@@ -19,8 +19,9 @@ from django.http import JsonResponse
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from fcm_django.api.rest_framework import FCMDevice
+from fcm_django.fcm import fcm_send_message,FCMNotification
 from channels.consumer import AsyncConsumer
-from channels_presence.models import Room
+#from channels_presence.models import Room
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -337,16 +338,20 @@ def create_chat_ws(receiver_name, user_name):
 def add_to_group_chat(request):
     if request.method == 'POST':
         chat_id = request.POST.get(["chat_id"][0], '')
+        add_user_id = request.POST.get(["user_id"][0], '')
         username = request.POST.get(["username"][0], '')
         user_id = int(request.session['_auth_user_id'])
         if is_user_in_chat(chat_id,user_id):
-            chat_room = f'chat_{chat_id}'
-            Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
-            new_member = ChatMembers(user_id=user_id, chat_id=chat_id)
+            #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
+            new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
             new_member.save()
             chat = Chat.objects.filter(chat_id=chat_id)
             chat.chat_members += 1
             chat.save()
+            add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
+            for token in add_user_tokens:
+                fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
+                             body=f'User {username} has been added')
             #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
         else:
             return HttpResponse(status=403)
@@ -362,7 +367,7 @@ def remove_from_group_chat(request):
         user_id = int(request.session['_auth_user_id'])
         if is_user_in_chat(chat_id,user_id):
             chat_room = f'chat_{chat_id}'
-            Room.objects.remove(chat_room,AsyncConsumer.channel_name)
+            #Room.objects.remove(chat_room,AsyncConsumer.channel_name)
         else:
             return HttpResponse(status=403)
     else:

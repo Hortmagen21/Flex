@@ -15,10 +15,10 @@ from asgiref.sync import sync_to_async
 from fcm_django.models import AbstractFCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
 from fcm_django.api.rest_framework import FCMDevice
-from channels_presence.models import Room
+#from channels_presence.models import Room
 from django.db.utils import OperationalError
-from channels_presence.decorators import remove_presence
-from channels_presence.models import Presence
+#from channels_presence.decorators import remove_presence
+#from channels_presence.models import Presence
 
 API_KEY = "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 
@@ -56,7 +56,7 @@ class ChatConsumer(AsyncConsumer):
             print(self.scope["headers"],'HEADDERS')
             chat_room = f"chat_{chat_id}"
             self.chat_room = chat_room
-            Room.objects.add(chat_room, self.channel_name, self.scope["user"])
+            #Room.objects.add(chat_room, self.channel_name, self.scope["user"])
             await self.send({
                 "type": "websocket.send",
                 "text": str(chat_id),
@@ -79,8 +79,8 @@ class ChatConsumer(AsyncConsumer):
             print(front_text,'FRONT_TEXT')
             dict_data = json.loads(front_text)
             close_old_connections()
-            if dict_data['text'] == '"heartbeat"':
-                Presence.objects.touch(self.channel_name)
+            #if dict_data['text'] == '"heartbeat"':
+                #Presence.objects.touch(self.channel_name)
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
             close_old_connections()
 
@@ -144,7 +144,7 @@ class ChatConsumer(AsyncConsumer):
             "text": event['text'],
         })
 
-    @remove_presence
+    #@remove_presence
     async def websocket_disconnect(self, event):
         del user_to_chats[int(self.scope['cookies']['id'])]
         print('disconnected', event)
