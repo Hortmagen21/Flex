@@ -364,9 +364,13 @@ def add_to_group_chat(request):
 def remove_from_group_chat(request):
     if request.method == 'POST':
         chat_id = request.POST.get(["chat_id"][0], '')
+        add_user_id = request.POST.get(["user_id"][0], '')
         user_id = int(request.session['_auth_user_id'])
         if is_user_in_chat(chat_id,user_id):
-            chat_room = f'chat_{chat_id}'
+            chat = Chat.objects.filter(chat_id=chat_id)
+            chat.chat_members -= 1
+            chat.save()
+            ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id).delete()
             #Room.objects.remove(chat_room,AsyncConsumer.channel_name)
         else:
             return HttpResponse(status=403)

@@ -8,7 +8,7 @@ urlpatterns = [
     path('create_group_chat', views.create_group_chat),#rewrite SQL
     path('get_chat_members', views.get_chat_members),
     path('add_to_group_chat', views.add_to_group_chat),
-    #path('remove_from_group_chat', views.remove_from_group_chat),
+    path('remove_from_group_chat', views.remove_from_group_chat),
 
 
 ]
