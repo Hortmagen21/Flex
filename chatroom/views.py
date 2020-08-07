@@ -366,7 +366,7 @@ def add_to_group_chat(request):
 def remove_from_group_chat(request):
     if request.method == 'POST':
         chat_id = request.POST.get(["chat_id"][0], '')
-        add_users_id = request.POST.get(["user_id"][0], '').split()
+        add_users_id = request.POST.get(["users_id"][0], '').split()
         user_id = int(request.session['_auth_user_id'])
         for add_user_id in add_users_id:
             if is_user_in_chat(chat_id, user_id):
