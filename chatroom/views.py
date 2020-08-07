@@ -338,23 +338,25 @@ def create_chat_ws(receiver_name, user_name):
 def add_to_group_chat(request):
     if request.method == 'POST':
         chat_id = request.POST.get(["chat_id"][0], '')
-        add_user_id = request.POST.get(["user_id"][0], '')
-        username = request.POST.get(["username"][0], '')
+        add_users_id = request.POST.get(["users_id"][0], '').split()
         user_id = int(request.session['_auth_user_id'])
-        if is_user_in_chat(chat_id,user_id):
-            #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
-            new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
-            new_member.save()
-            chat = Chat.objects.filter(chat_id=chat_id)
-            chat.chat_members += 1
-            chat.save()
-            add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
-            for token in add_user_tokens:
-                fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
+        for add_user_id in add_users_id:
+            if is_user_in_chat(chat_id, user_id):
+                #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
+                user_obj = User.objects.get(id=add_user_id)
+                username = user_obj.username
+                new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
+                new_member.save()
+                chat = Chat.objects.filter(chat_id=chat_id)
+                chat.chat_members += 1
+                chat.save()
+                add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
+                for token in add_user_tokens:
+                    fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
                              body=f'User {username} has been added')
             #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
-        else:
-            return HttpResponse(status=403)
+            else:
+                return HttpResponse(status=403)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -364,16 +366,17 @@ def add_to_group_chat(request):
 def remove_from_group_chat(request):
     if request.method == 'POST':
         chat_id = request.POST.get(["chat_id"][0], '')
-        add_user_id = request.POST.get(["user_id"][0], '')
+        add_users_id = request.POST.get(["user_id"][0], '').split()
         user_id = int(request.session['_auth_user_id'])
-        if is_user_in_chat(chat_id,user_id):
-            chat = Chat.objects.filter(chat_id=chat_id)
-            chat.chat_members -= 1
-            chat.save()
-            ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id).delete()
+        for add_user_id in add_users_id:
+            if is_user_in_chat(chat_id, user_id):
+                chat = Chat.objects.filter(chat_id=chat_id)
+                chat.chat_members -= 1
+                chat.save()
+                ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id).delete()
             #Room.objects.remove(chat_room,AsyncConsumer.channel_name)
-        else:
-            return HttpResponse(status=403)
+            else:
+                return HttpResponse(status=403)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
