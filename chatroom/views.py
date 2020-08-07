@@ -17,6 +17,7 @@ from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.http import JsonResponse
 import psycopg2
+from django.db import IntegrityError
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from fcm_django.api.rest_framework import FCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
@@ -341,28 +342,35 @@ def add_to_group_chat(request):
         add_users_id = request.POST.get(["users_id"][0], '').split()
         user_id = int(request.session['_auth_user_id'])
         json_error_list = {}
+        is_member = False
         for add_user_id in add_users_id:
+            print(add_user_id,'IDD')
             if not is_user_in_chat(chat_id, user_id):
                 json_error_list[add_user_id] = 403
                 continue
             try:
-                ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
+                test_query = ChatMembers.objects.get(user_id=add_user_id, chat_id=chat_id)
             except ObjectDoesNotExist:
+                is_member = False
+            except IntegrityError:
+                is_member = False
+            else:
+                is_member = True
                 json_error_list[add_user_id] = 409
-                continue
             finally:
-                #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
-                user_obj = User.objects.get(id=add_user_id)
-                username = user_obj.username
-                new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
-                new_member.save()
-                chat = Chat.objects.get(chat_id=chat_id)
-                chat.chat_members += 1
-                chat.save()
-                add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
-                for token in add_user_tokens:
-                    fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
-                    body=f'User {username} has been added')
+                if not is_member:
+                    #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
+                    user_obj = User.objects.get(id=add_user_id)
+                    username = user_obj.username
+                    new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
+                    new_member.save()
+                    chat = Chat.objects.get(chat_id=chat_id)
+                    chat.chat_members += 1
+                    chat.save()
+                    add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
+                    for token in add_user_tokens:
+                        fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
+                        body=f'User {username} has been added')
         return JsonResponse({'error_list': json_error_list})
             #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
 
@@ -378,6 +386,7 @@ def remove_from_group_chat(request):
         add_users_id = request.POST.get(["users_id"][0], '').split()
         user_id = int(request.session['_auth_user_id'])
         json_error_list = {}
+        is_exist = True
         for add_user_id in add_users_id:
             if not is_user_in_chat(chat_id, user_id):
                 json_error_list[add_user_id] = 403
@@ -387,11 +396,12 @@ def remove_from_group_chat(request):
                 delete_query.delete()
                 chat = Chat.objects.get(chat_id=chat_id)
             except ObjectDoesNotExist:
-                json_error_list[add_user_id] = 409
-                continue
+                json_error_list[add_user_id] = 404
+                is_exist = False
             finally:
-                chat.chat_members -= 1
-                chat.save()
+                if is_exist:
+                    chat.chat_members -= 1
+                    chat.save()
         return JsonResponse({'error_list': json_error_list})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
