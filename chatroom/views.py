@@ -413,16 +413,18 @@ def follower_list_for_adding(request):
     if request.method == 'GET':
         chat_id = int(request.GET.get('chat_id', ''))
         user_id = int(request.session['_auth_user_id'])
+        last_user_id = int(request.GET.get('last_id', 0))
         try:
             chat_members = list(ChatMembers.objects.filter(chat_id=chat_id))
-            user_followers = list(UserFollower.objects.filter(id=user_id))
+            user_followers = list((UserFollower.objects.filter(id=user_id)).filter(id__gt=last_user_id))
         except ObjectDoesNotExist:
             return HttpResponse(status=404)
         else:
+            user_followers.sort()
             for follower in user_followers:
                 if chat_members.count(int(follower)) == 1:
                     user_followers.remove(follower)
-            return JsonResponse({"potential_members":user_followers})
+            return JsonResponse({"potential_members":user_followers[:10]})
 
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)

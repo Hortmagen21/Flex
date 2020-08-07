@@ -43,11 +43,20 @@ def follow(request):
 def username_list(request):
     if request.method == 'GET':
         id_list = request.GET.get('id_list', ' ').split()
-        user_list = []
+        response_list = []
         for id in id_list:
             user = User.objects.get(id=int(id))
-            user_list.append(user.username)
-        return JsonResponse({"user_list": user_list})
+            try:
+                ava = list(UserAvatar.objects.filter(id_user=id))[-1]
+                ava_post = PostBase.objects.get(id=ava.id_post)
+            except ObjectDoesNotExist:
+                return HttpResponse(status=404)
+            except MultipleObjectsReturned:
+                return HttpResponse(status=400)
+            else:
+                ava_src = ava_post.img_mini
+                response_list.append({"username": user.username, "ava_src": ava_src})
+        return JsonResponse({"username_list": response_list})
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
