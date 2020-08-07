@@ -9,12 +9,13 @@ from django.db import models
 
 
 class UserFollower(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.IntegerField()
     follower = models.IntegerField()
+    dj_primary = models.AutoField(primary_key=True)
 
     class Meta:
-        db_table = 'user_follower'
         unique_together = (('id', 'follower'),)
+        db_table = 'user_follower'
 
 
 class PostBase(models.Model):
