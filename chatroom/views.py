@@ -340,29 +340,32 @@ def add_to_group_chat(request):
         chat_id = request.POST.get(["chat_id"][0], '')
         add_users_id = request.POST.get(["users_id"][0], '').split()
         user_id = int(request.session['_auth_user_id'])
+        json_error_list = {}
         for add_user_id in add_users_id:
-            if is_user_in_chat(chat_id, user_id):
-                try:
-                    ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
-                except ObjectDoesNotExist:
-                    return HttpResponse(status=409)
-                else:
+            if not is_user_in_chat(chat_id, user_id):
+                json_error_list[add_user_id] = 403
+                continue
+            try:
+                ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
+            except ObjectDoesNotExist:
+                json_error_list[add_user_id] = 409
+                continue
+            finally:
                 #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
-                    user_obj = User.objects.get(id=add_user_id)
-                    username = user_obj.username
-                    new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
-                    new_member.save()
-                    chat = Chat.objects.filter(chat_id=chat_id)
-                    chat.chat_members += 1
-                    chat.save()
-                    add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
-                    for token in add_user_tokens:
-                        fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
-                             body=f'User {username} has been added')
-                    return HttpResponse(status=200)
+                user_obj = User.objects.get(id=add_user_id)
+                username = user_obj.username
+                new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
+                new_member.save()
+                chat = Chat.objects.get(chat_id=chat_id)
+                chat.chat_members += 1
+                chat.save()
+                add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
+                for token in add_user_tokens:
+                    fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
+                    body=f'User {username} has been added')
+        return JsonResponse({'error_list': json_error_list})
             #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
-            else:
-                return HttpResponse(status=403)
+
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -374,20 +377,22 @@ def remove_from_group_chat(request):
         chat_id = request.POST.get(["chat_id"][0], '')
         add_users_id = request.POST.get(["users_id"][0], '').split()
         user_id = int(request.session['_auth_user_id'])
+        json_error_list = {}
         for add_user_id in add_users_id:
-            if is_user_in_chat(chat_id, user_id):
-                try:
-                    delete_query = ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
-                    delete_query.delete()
-                    chat = Chat.objects.get(chat_id=chat_id)
-                except ObjectDoesNotExist:
-                    return HttpResponse(status=405)
-                else:
-                    chat.chat_members -= 1
-                    chat.save()
-                    return HttpResponse(status=200)
-            else:
-                return HttpResponse(status=403)
+            if not is_user_in_chat(chat_id, user_id):
+                json_error_list[add_user_id] = 403
+                continue
+            try:
+                delete_query = ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
+                delete_query.delete()
+                chat = Chat.objects.get(chat_id=chat_id)
+            except ObjectDoesNotExist:
+                json_error_list[add_user_id] = 409
+                continue
+            finally:
+                chat.chat_members -= 1
+                chat.save()
+        return JsonResponse({'error_list': json_error_list})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
