@@ -121,7 +121,7 @@ def login(request):
 def logout(request):
     if request.method == 'GET':
         auth.logout(request)
-        unique_token = request.POST.get(['token'][0], False)
+        unique_token = request.GET.get(['token'][0], False)
         fcm_code = FCMDevice.objects.filter(registration_id=unique_token)
         fcm_code.delete()
         print('I logged out!!!')

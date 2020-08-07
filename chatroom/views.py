@@ -22,6 +22,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from fcm_django.api.rest_framework import FCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
 from channels.consumer import AsyncConsumer
+from user_profile.models import UserFollower
 #from channels_presence.models import Room
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
@@ -369,8 +370,7 @@ def add_to_group_chat(request):
                     chat.save()
                     add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
                     for token in add_user_tokens:
-                        fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
-                        body=f'User {username} has been added')
+                        fcm_send_message(registration_id=token, data={"is_new": True, "text": f'User {username} has been added'}, body=f'User {username} has been added')
         return JsonResponse({'error_list': json_error_list})
             #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
 
@@ -405,6 +405,27 @@ def remove_from_group_chat(request):
         return JsonResponse({'error_list': json_error_list})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url+'acc_base/login_redirection')
+def follower_list_for_adding(request):
+    if request.method == 'GET':
+        chat_id = int(request.GET.get('chat_id', ''))
+        user_id = int(request.session['_auth_user_id'])
+        try:
+            chat_members = list(ChatMembers.objects.filter(chat_id=chat_id))
+            user_followers = list(UserFollower.objects.filter(id=user_id))
+        except ObjectDoesNotExist:
+            return HttpResponse(status=404)
+        else:
+            for follower in user_followers:
+                if chat_members.count(int(follower)) == 1:
+                    user_followers.remove(follower)
+            return JsonResponse({"potential_members":user_followers})
+
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
 def is_user_in_chat(chat_id, user_id):
