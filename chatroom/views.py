@@ -342,18 +342,24 @@ def add_to_group_chat(request):
         user_id = int(request.session['_auth_user_id'])
         for add_user_id in add_users_id:
             if is_user_in_chat(chat_id, user_id):
+                try:
+                    ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
+                except ObjectDoesNotExist:
+                    return HttpResponse(status=409)
+                else:
                 #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
-                user_obj = User.objects.get(id=add_user_id)
-                username = user_obj.username
-                new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
-                new_member.save()
-                chat = Chat.objects.filter(chat_id=chat_id)
-                chat.chat_members += 1
-                chat.save()
-                add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
-                for token in add_user_tokens:
-                    fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
+                    user_obj = User.objects.get(id=add_user_id)
+                    username = user_obj.username
+                    new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
+                    new_member.save()
+                    chat = Chat.objects.filter(chat_id=chat_id)
+                    chat.chat_members += 1
+                    chat.save()
+                    add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
+                    for token in add_user_tokens:
+                        fcm_send_message(registration_id=token, data={"is_new":True, "text": f'User {username} has been added'},
                              body=f'User {username} has been added')
+                    return HttpResponse(status=200)
             #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
             else:
                 return HttpResponse(status=403)
@@ -370,11 +376,16 @@ def remove_from_group_chat(request):
         user_id = int(request.session['_auth_user_id'])
         for add_user_id in add_users_id:
             if is_user_in_chat(chat_id, user_id):
-                chat = Chat.objects.filter(chat_id=chat_id)
-                chat.chat_members -= 1
-                chat.save()
-                ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id).delete()
-            #Room.objects.remove(chat_room,AsyncConsumer.channel_name)
+                try:
+                    delete_query = ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
+                    delete_query.delete()
+                    chat = Chat.objects.get(chat_id=chat_id)
+                except ObjectDoesNotExist:
+                    return HttpResponse(status=405)
+                else:
+                    chat.chat_members -= 1
+                    chat.save()
+                    return HttpResponse(status=200)
             else:
                 return HttpResponse(status=403)
     else:
@@ -384,7 +395,7 @@ def remove_from_group_chat(request):
 def is_user_in_chat(chat_id, user_id):
     chat_members = ChatMembers.objects.filter(user_id=user_id)
     for member in chat_members:
-        if member.chat_id == chat_id:
+        if int(member.chat_id) == int(chat_id):
             return True
     return False
 
