@@ -32,6 +32,7 @@ def resend_email(request):
         url_confirm = core_url+'acc_base/registration/ended?token={}'.format(token)
         send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
                       , 'hortmagennn@gmail.com', [email], fail_silently=False, )
+        return HttpResponse(status=200)
 @csrf_exempt
 def registration(request):
     if request.method == 'POST':
