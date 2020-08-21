@@ -6,11 +6,13 @@ attrs==19.3.0
 autobahn==20.4.3
 Automat==20.2.0
 billiard==3.6.3.0
+boto3
 celery==4.4.2
 cffi==1.14.0
 aiopg
 fcm-django
 django_channels_presence
+django-storages
 channels==2.4.0
 channels-redis==2.4.2
 constantly==15.1.0

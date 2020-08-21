@@ -17,6 +17,7 @@ import dj_database_url
 
 
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -53,6 +54,8 @@ INSTALLED_APPS = [
     #"channels_presence",
     "fcm_django",
     "psycopg2",
+    'storages',
+    'boto3',
 ]
 FCM_DJANGO_SETTINGS = {
     "FCM_SERVER_KEY": "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn",
@@ -161,6 +164,18 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
+
+#AWS_ACCESS_KEY_ID = os.environ
+
+#AWS_SECRET_ACCESS_KEY =
+
+#AWS_STORAGE_BUCKET_NAME = 'flex-fox-21'
+
+AWS_S3_FILE_OVERWRITE = False
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_DEFAULT_ACL = None
 
 LANGUAGE_CODE = 'en-us'
 

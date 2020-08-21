@@ -83,6 +83,9 @@ def followers(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+from storages.backends.s3boto3 import S3Boto3Storage
+
+
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def add_post(request):
@@ -102,7 +105,49 @@ def add_post(request):
             description = request.POST.get(['description'][0], '')
             user_id = int(request.session['_auth_user_id'])
             time = datetime.datetime.today()
+            milliseconds = time.timestamp() * 1000
+            url = f'user_photo/{milliseconds}_{user_id}'
+            url_mini = f'user_photo/{milliseconds}_{user_id}_mini'
+            if isAvatar:
+                photo = PostBase(milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
+            else:
+                photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
+            photo.save()
+            amazon_storage = S3Boto3Storage()
+            if not amazon_storage.exists(url):
+                amazon_storage.save(url, img)
+                file_url = amazon_storage.url(url)
+                return JsonResponse({'src':file_url})
+            else:
+                file_name = img.name
+                return JsonResponse({
+                    'message': f"Error: file {file_name} already exist at {url} in bucket"
+                }, status=400)
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+'''@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def add_post(request):
+    if request.method == "POST":
+        try:
+            img = request.FILES['img']
+        except MultiValueDictKeyError:
+            try:
+                img = request.FILES['avatar']
+            except MultiValueDictKeyError:
+                HttpResponseBadRequest
+            else:
+                isAvatar = True
+        else:
+            isAvatar = False
+        finally:
+            description = request.POST.get(['description'][0], '')
+            user_id = int(request.session['_auth_user_id'])
+            time = datetime.datetime.today()
             milliseconds = time.timestamp()*1000
+
             url = f"user_profile/photos/{milliseconds}_{user_id}.jpg"
             url_mini = f"user_profile/photos/{milliseconds}_{user_id}_mini.jpg"
             if isAvatar:
@@ -123,7 +168,7 @@ def add_post(request):
         return response
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
-
+'''
 
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
