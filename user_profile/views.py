@@ -84,7 +84,8 @@ def followers(request):
 
 
 from storages.backends.s3boto3 import S3Boto3Storage
-
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import os
 
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
@@ -108,16 +109,23 @@ def add_post(request):
             milliseconds = time.timestamp() * 1000
             url = f'user_photo/{milliseconds}_{user_id}/'
             url_mini = f'user_photo/{milliseconds}_{user_id}/'
+            clear_url = os.path.join(
+                url,
+                img.name
+            )
             if isAvatar:
                 photo = PostBase(milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
             else:
                 photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
             photo.save()
             amazon_storage = S3Boto3Storage(bucket='flex-fox-21')
-            print(url,'URLL')
-            print(amazon_storage.exists(url),'TRUE??')
+
+
+            print(img, type(img), 'description')
             if not amazon_storage.exists(url):
-                amazon_storage.save(url, img)
+                #file = open(img,'wb+')
+
+                amazon_storage.save(clear_url, img)
                 file_url = amazon_storage.url(url)
                 return JsonResponse({'src': file_url, 'src_mini': file_url})
             else:
