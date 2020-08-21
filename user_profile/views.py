@@ -117,7 +117,7 @@ def add_post(request):
             if not amazon_storage.exists(url):
                 amazon_storage.save(url, img)
                 file_url = amazon_storage.url(url)
-                return JsonResponse({'src':file_url})
+                return JsonResponse({'src': file_url, 'src_mini': file_url})
             else:
                 file_name = img.name
                 return JsonResponse({
