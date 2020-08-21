@@ -106,14 +106,16 @@ def add_post(request):
             user_id = int(request.session['_auth_user_id'])
             time = datetime.datetime.today()
             milliseconds = time.timestamp() * 1000
-            url = f'user_photo/{milliseconds}_{user_id}'
-            url_mini = f'user_photo/{milliseconds}_{user_id}_mini'
+            url = f'user_photo/{milliseconds}_{user_id}/'
+            url_mini = f'user_photo/{milliseconds}_{user_id}/'
             if isAvatar:
                 photo = PostBase(milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
             else:
                 photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
             photo.save()
-            amazon_storage = S3Boto3Storage()
+            amazon_storage = S3Boto3Storage(bucket='flex-fox-21')
+            print(url,'URLL')
+            print(amazon_storage.exists(url),'TRUE??')
             if not amazon_storage.exists(url):
                 amazon_storage.save(url, img)
                 file_url = amazon_storage.url(url)
