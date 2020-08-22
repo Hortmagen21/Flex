@@ -123,10 +123,8 @@ def add_post(request):
 
             print(img, type(img), 'description')
             if not amazon_storage.exists(url):
-                #file = open(img,'wb+')
-
                 amazon_storage.save(clear_url, img)
-                file_url = amazon_storage.url(url)
+                file_url = amazon_storage.url(clear_url)
                 return JsonResponse({'src': file_url, 'src_mini': file_url})
             else:
                 file_name = img.name
@@ -205,7 +203,7 @@ def view_acc(request):
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
-@csrf_protect
+'''@csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def view_photo(request):
     if request.method == 'GET':
@@ -224,6 +222,7 @@ def view_photo(request):
         return response
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+'''
 
 
 @csrf_protect
