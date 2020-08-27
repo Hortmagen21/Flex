@@ -113,18 +113,18 @@ def add_post(request):
                 url,
                 img.name
             )
-            if isAvatar:
-                photo = PostBase(milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
-            else:
-                photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=core_url + url, description=description, img_mini=core_url + url_mini)
-            photo.save()
             amazon_storage = S3Boto3Storage(bucket='flex-fox-21')
-
-
             print(img, type(img), 'description')
             if not amazon_storage.exists(url):
                 amazon_storage.save(clear_url, img)
                 file_url = amazon_storage.url(clear_url)
+                if isAvatar:
+                    photo = PostBase(milliseconds=milliseconds, img=file_url, description=description,
+                                     img_mini=file_url)
+                else:
+                    photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=file_url,
+                                     description=description, img_mini=file_url)
+                photo.save()
                 return JsonResponse({'src': file_url, 'src_mini': file_url})
             else:
                 file_name = img.name
