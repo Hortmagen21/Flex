@@ -22,9 +22,10 @@ class PostBase(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.IntegerField(blank=True, null=True)
     milliseconds = models.BigIntegerField()
-    img = models.CharField(max_length=100)
-    description = models.CharField(max_length=100, blank=True, null=True)
-    img_mini = models.CharField(max_length=100, blank=True, null=True)
+    img = models.CharField(max_length=500)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    img_mini = models.CharField(max_length=500, blank=True, null=True)
+    img_name = models.CharField(max_length=500)
 
     class Meta:
         ordering = ('milliseconds',)

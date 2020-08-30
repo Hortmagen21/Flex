@@ -41,5 +41,13 @@ class Message(models.Model):
         ordering = ('-date',)
         db_table = 'message'
 
+class IgnoreMessages(models.Model):
+    id_user = models.IntegerField(primary_key=True)
+    id_message = models.IntegerField()
+
+    class Meta:
+        db_table = 'ignore_messages'
+        unique_together = (('id_user', 'id_message'),)
+
 
 

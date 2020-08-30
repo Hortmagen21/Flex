@@ -8,7 +8,7 @@ import asyncio
 from channels.db import database_sync_to_async
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
-from chatroom.models import Chat,ChatMembers,Message
+from chatroom.models import Chat,ChatMembers,Message,IgnoreMessages
 from user_profile.models import UserAvatar,PostBase
 from django.contrib.auth.models import User
 from django.db.models import Max
@@ -130,7 +130,6 @@ def create_chat(request):
 def view_chat_room(request):
     if request.method == "POST":
         user_id = int(request.session['_auth_user_id'])
-        is_Group = (request.POST.get(''))
         user_chats = list(ChatMembers.objects.filter(user_id=user_id))
         time_to_id = {}
         chaters = {}
@@ -203,7 +202,13 @@ def upload_messages(request):
     if request.method == "POST":
         chat_id = int(request.POST.get(['chat_id'][0], ""))
         last_id = int(request.POST.get(['id'][0], 0))
+        user_id = request.session['_auth_user_id_']
         mess = list(Message.objects.filter(chat_id=chat_id, message_id__gt=last_id))[:30]
+        ignored_msg = list(IgnoreMessages.objects.filter(id_user=user_id))
+        for dirty_msg in mess:#filtration
+            for ignore in ignored_msg:
+                if dirty_msg.message_id == ignore.id_message:
+                    mess.remove(dirty_msg)
         response = []
         for msg in mess:
             avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
@@ -430,6 +435,62 @@ def follower_list_for_adding(request):
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
+@csrf_protect
+@login_required(login_url=core_url+'acc_base/login_redirection')
+def delete_message_both(request):
+    if request.method == 'POST':
+        message_id = request.POST.get(['id_message'][0], False)
+        if message_id:
+            Message.objects.filter(message_id=message_id).delete()
+            return HttpResponse(status=200)
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url+'acc_base/login_redirection')
+def delete_message_me(request):
+    if request.method == 'POST':
+        message_id = request.POST.get(['id_message'][0], False)
+        user_id = request.session['_auth_user_id_']
+        if message_id:
+            ignore_msg = IgnoreMessages(id_user=user_id, id_message=message_id)
+            ignore_msg.save()
+            return HttpResponse(status=200)
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url+'acc_base/login_redirection')
+def delete_chat(request):
+    if request.method == 'POST':
+        chat_id = request.POST.get(['chat_id'][0], False)
+        is_group = request.POST.get(['is_group'][0], False)
+        user_id = int(request.session['_auth_user_id_'])
+        if chat_id:
+            try:
+                chat = Chat.objects.filter(chat_id=chat_id)
+            except ObjectDoesNotExist:
+                return HttpResponse(status=404)
+            else:
+                if (user_id == int(chat.chat_admin) and is_group) or not is_group:
+                    try:
+                        chat_members = list(ChatMembers.objects.filter(chat_id=chat_id))
+                    except ObjectDoesNotExist:
+                        return HttpResponse(status=404)
+                    else:
+                        messages = list(Message.objects.filter(chat_id=chat_id))
+                        for msg in messages:
+                            msg.delete()
+                        for member in chat_members:
+                            member.delete()
+                        chat.delete()
+                        return HttpResponse(status=200)
+                else:
+                    return HttpResponse(status=403)
+    else:
+        return HttpResponse("Pls ensure that you use GET method", status=405)
 def is_user_in_chat(chat_id, user_id):
     chat_members = ChatMembers.objects.filter(user_id=user_id)
     for member in chat_members:

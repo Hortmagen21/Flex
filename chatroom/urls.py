@@ -10,6 +10,9 @@ urlpatterns = [
     path('add_to_group_chat', views.add_to_group_chat),
     path('remove_from_group_chat', views.remove_from_group_chat),
     path('follower_list_for_adding', views.follower_list_for_adding),
+    path('delete_message_both', views.delete_message_both),
+    path('delete_message_me', views.delete_message_me),
+    path('delete_chat', views.delete_chat),
 
 
 ]

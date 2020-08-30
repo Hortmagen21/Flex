@@ -15,6 +15,8 @@ from PIL import Image
 from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from fcm_django.api.rest_framework import FCMDevice
 import datetime
+import boto3
+from urllib.parse import urlparse
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -106,24 +108,24 @@ def add_post(request):
             description = request.POST.get(['description'][0], '')
             user_id = int(request.session['_auth_user_id'])
             time = datetime.datetime.today()
-            milliseconds = time.timestamp() * 1000
+            milliseconds = int(time.timestamp() * 1000)
             url = f'user_photo/{milliseconds}_{user_id}/'
             url_mini = f'user_photo/{milliseconds}_{user_id}/'
             clear_url = os.path.join(
                 url,
                 img.name
             )
-            amazon_storage = S3Boto3Storage(bucket='flex-fox-21')
+            amazon_storage = S3Boto3Storage(bucket=os.environ['S3_BUCKET_NAME'])
             print(img, type(img), 'description')
             if not amazon_storage.exists(url):
                 amazon_storage.save(clear_url, img)
                 file_url = amazon_storage.url(clear_url)
                 if isAvatar:
                     photo = PostBase(milliseconds=milliseconds, img=file_url, description=description,
-                                     img_mini=file_url)
+                                     img_mini=file_url, img_name=img.name)
                 else:
                     photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=file_url,
-                                     description=description, img_mini=file_url)
+                                     description=description, img_mini=file_url, img_name=img.name)
                 photo.save()
                 return JsonResponse({'src': file_url, 'src_mini': file_url})
             else:
@@ -387,6 +389,45 @@ def dislike(request):
         return HttpResponse('deleted')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
+
+from boto3.session import Session
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def delete_post(request):
+    if request.method == 'POST':
+        post_id = request.POST.get(['post_id'][0], False)
+        is_avatar = request.POST.get(['is_avatar'][0], False)
+        user_id = int(request.session['_auth_user_id'])
+        try:
+            img = PostBase.objects.get(id=post_id, user_id=user_id)
+            if is_avatar:
+                avatar = UserAvatar.objects.get(id_post= post_id, id_user=user_id)
+        except ObjectDoesNotExist:
+            return HttpResponse(status=404)
+        else:
+            time = img.milliseconds
+            print(f'user_photo/{time}_{user_id}/'+img.img_name, 'URL')
+            session = Session(aws_access_key_id=os.environ['S3_KEY'],
+                              aws_secret_access_key=os.environ['S3_SECRET'])
+            s3_resource = session.resource('s3')
+            my_bucket = s3_resource.Bucket(os.environ['S3_BUCKET_NAME'])
+            response = my_bucket.delete_objects(
+                Delete={
+                    'Objects': [
+                        {
+                            'Key':f'user_photo/{time}_{user_id}/'+img.img_name# the_name of_your_file
+                        }
+                    ]
+                }
+            )
+            img.delete()
+            if is_avatar:
+                avatar.delete()
+            return HttpResponse(status=200)
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
 
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
