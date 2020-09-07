@@ -416,7 +416,7 @@ def delete_post(request):
                 Delete={
                     'Objects': [
                         {
-                            'Key':f'user_photo/{time}_{user_id}/'+img.img_name# the_name of_your_file
+                            'Key': f'user_photo/{time}_{user_id}/'+img.img_name# the_name of_your_file
                         }
                     ]
                 }
@@ -460,6 +460,7 @@ def test_fcm(request):
         device.send_message(data={"msg_id": 170, "ava": str('nONE')}, body='TEST')
         return HttpResponse("ok")
 
+
 def isSubscribe(my_id, user_id):
     try:
         follow = UserFollower.objects.get(id=user_id, follower=my_id)
@@ -476,3 +477,14 @@ def isLiked(id_post, id_user):
         return False
     else:
         return True
+
+
+def get_photo_url(time,user_id_post,img_name):
+    amazon_storage = S3Boto3Storage(bucket=os.environ['S3_BUCKET_NAME'])
+    url = f'user_photo/{time}_{user_id_post}/'
+    clear_url = os.path.join(
+        url,
+        img_name
+    )
+    file_url = amazon_storage.url(clear_url)
+    return file_url

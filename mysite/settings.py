@@ -165,10 +165,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-#AWS_ACCESS_KEY_ID = os.environ
-
-#AWS_SECRET_ACCESS_KEY =
-
 AWS_S3_FILE_OVERWRITE = False
 
 AWS_S3_REGION_NAME = 'us-east-2'
