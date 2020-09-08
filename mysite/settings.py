@@ -164,7 +164,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 AWS_S3_FILE_OVERWRITE = False
 
 AWS_S3_REGION_NAME = 'us-east-2'

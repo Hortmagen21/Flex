@@ -22,8 +22,9 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from fcm_django.api.rest_framework import FCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
 from channels.consumer import AsyncConsumer
-from user_profile.models import UserFollower
+from user_profile.models import UserFollower,AvaBase
 #from channels_presence.models import Room
+from user_profile.views import get_photo_url
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -40,14 +41,14 @@ def create_chat(request):
             user_id = int(request.session['_auth_user_id'])
             chat_exist = False
             try:
-                receiver_avatar = list(UserAvatar.objects.filter(id_user=int(id_receiver)))[-1]#new table
+                receiver_avatar = list(AvaBase.objects.filter(user_id=int(id_receiver)))[-1]#new table
             except IndexError:
                 ava = "None"#null
             except MultipleObjectsReturned:
                 return HttpResponseBadRequest()
             else:
-                img_ava = PostBase.objects.get(id=int(receiver_avatar.id_post))
-                ava = img_ava.img
+                #img_ava = PostBase.objects.get(id=int(receiver_avatar.id_post))
+                ava = get_photo_url(time=receiver_avatar.milliseconds, user_id_post=receiver_avatar.user_id, img_name=receiver_avatar.img_name)
             finally:
                 try:
                     receiver_name = User.objects.get(id=int(id_receiver))
@@ -163,9 +164,9 @@ def view_chat_room(request):
                         except MultipleObjectsReturned:
                             return HttpResponseBadRequest()
                         else:
-                            avatars = list(UserAvatar.objects.filter(id_user=int(receiver_id.user_id)))
+                            #avatars = list(UserAvatar.objects.filter(id_user=int(receiver_id.user_id)))
                             try:
-                                post = PostBase.objects.get(id=int(avatars[-1].id_post))
+                                post = list(AvaBase.objects.filter(user_id=int(receiver_id.user_id)))[-1]
                             except ObjectDoesNotExist:
                                 return HttpResponseNotFound()
                             except MultipleObjectsReturned:
@@ -173,7 +174,8 @@ def view_chat_room(request):
                             except IndexError:
                                 ava_src = "None"
                             else:
-                                ava_src = post.img
+                                ava_src = get_photo_url(time=post.milliseconds, user_id_post=int(receiver_id.user_id), img_name=post.img_name)
+                                #ava_src = post.img
                             finally:#it was added so it can be laged
                                 try:
                                     chat_name = User.objects.get(id=int(receiver_id.user_id)).username
@@ -183,7 +185,16 @@ def view_chat_room(request):
                                     return HttpResponseBadRequest()
                     else:
                         chat_name = chat_settings.chat_name
-                        ava_src = chat_settings.chat_ava
+                        #without try
+                        try:
+                            group_ava_post = list(AvaBase.objects.filter(chat_id=chat.chat_id))[-1]
+                        except ObjectDoesNotExist:
+                            ava_src = 'None'
+                        except IndexError:
+                            ava_src = 'None'
+                        else:
+                            ava_src = get_photo_url(group_ava_post.milliseconds, group_ava_post.user_id, group_ava_post.img_name)
+                        #ava_src = chat_settings.chat_ava
                     chaters[chat.chat_id] = {'chat_id': chat_settings.chat_id, 'chat_name': chat_name, 'chat_ava': ava_src, 'last_message': last_message, 'last_sender': last_sender_username, 'is_group': chat_settings.is_group}
                 i = i-1
         sorted_id = sorted(time_to_id.keys())
@@ -202,29 +213,34 @@ def upload_messages(request):
     if request.method == "POST":
         chat_id = int(request.POST.get(['chat_id'][0], ""))
         last_id = int(request.POST.get(['id'][0], 0))
-        user_id = request.session['_auth_user_id_']
-        mess = list(Message.objects.filter(chat_id=chat_id, message_id__gt=last_id))[:30]
-        ignored_msg = list(IgnoreMessages.objects.filter(id_user=user_id))
-        for dirty_msg in mess:#filtration
-            for ignore in ignored_msg:
-                if dirty_msg.message_id == ignore.id_message:
-                    mess.remove(dirty_msg)
-        response = []
-        for msg in mess:
-            avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
-            try:
-                sender = User.objects.get(id=msg.user_id)
-                post = PostBase.objects.get(id=int(avatars[-1].id_post))
-            except ObjectDoesNotExist:
-                return HttpResponseNotFound()
-            except MultipleObjectsReturned:
-                return HttpResponseBadRequest()
-            except IndexError:
-                ava_src = "None"
-            else:
-                ava_src = post.img
-            response.append({'msg_id': msg.message_id, 'user_id': msg.user_id, 'text': msg.message, 'time': int(msg.date), 'user_name': sender.username, 'user_avatar': ava_src})
-        return JsonResponse({'msg_information': response})
+        user_id = int(request.session['_auth_user_id'])
+        try:
+            isMember = ChatMembers.objects.get(chat_id=chat_id, user_id=user_id)
+        except ObjectDoesNotExist:
+            return HttpResponse(status=403)
+        else:
+            mess = list(Message.objects.filter(chat_id=chat_id, message_id__gt=last_id))[:30]
+            ignored_msg = list(IgnoreMessages.objects.filter(id_user=user_id))
+            for dirty_msg in mess:#filtration
+                for ignore in ignored_msg:
+                    if dirty_msg.message_id == ignore.id_message:
+                        mess.remove(dirty_msg)
+            response = []
+            for msg in mess:
+                #avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
+                try:
+                    sender = User.objects.get(id=msg.user_id)
+                    post = list(AvaBase.objects.filter(user_id=int(msg.user_id)))[-1]
+                except ObjectDoesNotExist:
+                    return HttpResponseNotFound()
+                except MultipleObjectsReturned:
+                    return HttpResponseBadRequest()
+                except IndexError:
+                    ava_src = "None"
+                else:
+                    ava_src = get_photo_url(time=post.milliseconds, user_id_post=int(post.user_id), img_name=post.img_name)
+                response.append({'msg_id': msg.message_id, 'user_id': msg.user_id, 'text': msg.message, 'time': int(msg.date), 'user_name': sender.username, 'user_avatar': ava_src})
+            return JsonResponse({'msg_information': response})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -237,10 +253,11 @@ def create_group_chat(request):
         members_count = int(request.POST.get(['members_count'][0], False))
         members_id = (request.POST.get(['members_id'][0], False)).split()
         ava_src = str(request.POST.get(['ava_src'][0], 'nothing'))
+        post_id = int(request.POST.get(['post_id'][0], False))
         user_id = int(request.session['_auth_user_id'])
         print(members_id,'MEMBERS')
         if group_name and members_id and members_count and len(members_id) == members_count:
-            # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max'])
+            # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max']
             group_chat = Chat(chat_name=group_name, chat_ava=ava_src, chat_admin=user_id, chat_members=members_count, is_group=True)
             group_chat.save()
             for member_id in members_id:
@@ -517,9 +534,9 @@ def get_user_special_tokens(user_id):
 
 def get_receiver_avatar(user_id):
     try:
-        receiver_avatar = list(UserAvatar.objects.filter(id_user=int(user_id)))[-1]
-        img_ava = PostBase.objects.get(id=int(receiver_avatar.id_post))
-        ava = img_ava.img
+        #receiver_avatar = list(UserAvatar.objects.filter(id_user=int(user_id)))[-1]
+        img_ava = list(AvaBase.objects.filter(user_id=int(user_id)))[-1]
+        ava =get_photo_url(time=img_ava.milliseconds, user_id_post=img_ava.user_id,img_name=img_ava.img_name)#img_ava.img
     except IndexError:
         ava = "None"  # null
     return ava

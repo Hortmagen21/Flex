@@ -50,4 +50,3 @@ class IgnoreMessages(models.Model):
         unique_together = (('id_user', 'id_message'),)
 
 
-

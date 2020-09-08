@@ -59,3 +59,15 @@ class UserAvatar(models.Model):
 
     class Meta:
         db_table = 'user_avatar'
+
+
+class AvaBase(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_id = models.IntegerField(blank=True, null=True)
+    milliseconds = models.BigIntegerField(blank=True, null=True)
+    img_name = models.CharField(max_length=400, blank=True, null=True)
+    chat_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'ava_base'
+

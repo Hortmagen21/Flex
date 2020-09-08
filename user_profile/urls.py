@@ -14,13 +14,14 @@ urlpatterns = [
     path('view_all_posts', views.view_all_posts),
     path('unsubscribe', views.unsubscribe),
     path('dislike', views.dislike),
-    path('avatar', views.ava),
+    #path('avatar', views.ava),
     path('view_all_comments', views.view_all_comments),
     path('view_information_user',views.view_information_user),
     path('view_subscribes',views.view_subscribes),#rewrite SQL
     path('test_fcm',views.test_fcm),
     path('username_list', views.username_list),#rewrite SQL
     path('delete_post', views.delete_post),
+    path('add_ava', views.add_ava),
 
 
 

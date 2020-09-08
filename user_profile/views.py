@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from user_profile.models import UserFollower, PostBase, Likes, Comments, UserAvatar
+from user_profile.models import UserFollower, PostBase, Likes, Comments, UserAvatar, AvaBase
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
@@ -49,14 +49,17 @@ def username_list(request):
         for id in id_list:
             user = User.objects.get(id=int(id))
             try:
-                ava = list(UserAvatar.objects.filter(id_user=id))[-1]
-                ava_post = PostBase.objects.get(id=ava.id_post)
+                ava = list(AvaBase.objects.filter(user_id=id))[-1]
             except ObjectDoesNotExist:
                 return HttpResponse(status=404)
             except MultipleObjectsReturned:
                 return HttpResponse(status=400)
+            except IndexError:
+                ava_src = 'None'
             else:
-                ava_src = ava_post.img_mini
+                #MINI
+                ava_src = get_photo_url(time=ava.milliseconds, user_id_post=ava.user_id, img_name=ava.img_name)#ava_post.img_mini
+            finally:
                 response_list.append({"username": user.username, "ava_src": ava_src})
         return JsonResponse({"username_list": response_list})
     else:
@@ -89,50 +92,71 @@ from storages.backends.s3boto3 import S3Boto3Storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import os
 
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def add_ava(request):
+    if request.method == "POST":
+        img = request.FILES['img']
+        chat_id = request.POST.get(['chat_id'][0], False)
+        user_id = int(request.session['_auth_user_id'])
+        time = datetime.datetime.today()
+        milliseconds = int(time.timestamp() * 1000)
+        url = f'user_photo/{milliseconds}_{user_id}/'
+        url_mini = f'user_photo/{milliseconds}_{user_id}/'
+        clear_url = os.path.join(
+            url,
+            img.name
+        )
+        amazon_storage = S3Boto3Storage(bucket='flex-fox-21')
+        print(img, type(img), 'description')
+        if not amazon_storage.exists(url):
+            amazon_storage.save(clear_url, img)
+            file_url = amazon_storage.url(clear_url)
+            if chat_id:
+                photo = AvaBase(user_id=user_id, milliseconds=milliseconds,img_name=img.name, chat_id=chat_id)
+            else:
+                photo = AvaBase(user_id=user_id, milliseconds=milliseconds, img_name=img.name)
+            photo.save()
+            return JsonResponse({'src': file_url, 'src_mini': file_url, 'post_id': photo.id})
+        else:
+            file_name = img.name
+            return JsonResponse({
+                'message': f"Error: file {file_name} already exist at {url} in bucket"
+            }, status=400)
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def add_post(request):
     if request.method == "POST":
-        try:
-            img = request.FILES['img']
-        except MultiValueDictKeyError:
-            try:
-                img = request.FILES['avatar']
-            except MultiValueDictKeyError:
-                HttpResponseBadRequest
-            else:
-                isAvatar = True
-        else:
-            isAvatar = False
-        finally:
-            description = request.POST.get(['description'][0], '')
-            user_id = int(request.session['_auth_user_id'])
-            time = datetime.datetime.today()
-            milliseconds = int(time.timestamp() * 1000)
-            url = f'user_photo/{milliseconds}_{user_id}/'
-            url_mini = f'user_photo/{milliseconds}_{user_id}/'
-            clear_url = os.path.join(
-                url,
-                img.name
-            )
-            amazon_storage = S3Boto3Storage(bucket=os.environ['S3_BUCKET_NAME'])
-            print(img, type(img), 'description')
-            if not amazon_storage.exists(url):
-                amazon_storage.save(clear_url, img)
-                file_url = amazon_storage.url(clear_url)
-                if isAvatar:
-                    photo = PostBase(milliseconds=milliseconds, img=file_url, description=description,
-                                     img_mini=file_url, img_name=img.name)
-                else:
-                    photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=file_url,
+        img = request.FILES['img']
+        description = request.POST.get(['description'][0], '')
+        user_id = int(request.session['_auth_user_id'])
+        time = datetime.datetime.today()
+        milliseconds = int(time.timestamp() * 1000)
+        url = f'user_photo/{milliseconds}_{user_id}/'
+        url_mini = f'user_photo/{milliseconds}_{user_id}/'
+        clear_url = os.path.join(
+            url,
+            img.name
+        )
+        amazon_storage = S3Boto3Storage(bucket=os.environ['S3_BUCKET_NAME'])
+        print(img, type(img), 'description')
+        if not amazon_storage.exists(url):
+            amazon_storage.save(clear_url, img)
+            file_url = amazon_storage.url(clear_url)
+            photo = PostBase(user_id=user_id, milliseconds=milliseconds, img=file_url,
                                      description=description, img_mini=file_url, img_name=img.name)
-                photo.save()
-                return JsonResponse({'src': file_url, 'src_mini': file_url})
-            else:
-                file_name = img.name
-                return JsonResponse({
-                    'message': f"Error: file {file_name} already exist at {url} in bucket"
-                }, status=400)
+            photo.save()
+            return JsonResponse({'src': file_url, 'src_mini': file_url, 'post_id':photo.id})
+        else:
+            file_name = img.name
+            return JsonResponse({
+                'message': f"Error: file {file_name} already exist at {url} in bucket"
+            }, status=400)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -185,7 +209,7 @@ def add_post(request):
 def view_acc(request):
     if request.method == 'POST':
         user_id = request.POST.get(['id'][0], int(request.session['_auth_user_id']))
-        avatars = list(UserAvatar.objects.filter(id_user=user_id))
+        avatars = list(AvaBase.objects.filter(user_id=user_id))
         posts_row = list(PostBase.objects.filter(user_id=user_id))
         try:
             user_name = User.objects.get(id=int(user_id)).username
@@ -194,13 +218,13 @@ def view_acc(request):
         except MultipleObjectsReturned:
             return HttpResponseBadRequest()
         posts = []
-        avatars = []
+        avatar_array = []
         for post in posts_row:
             posts.append({'src': post.img, 'src_mini': post.img_mini, 'date': post.milliseconds, 'description': post.description,
                           'post_id': post.id})
         for avatar in avatars:
-            avatars.append({'id_post': avatar.id_post})
-        return JsonResponse({'isMyUser': user_id, 'user_name': user_name, 'posts': posts, 'ava': avatars, 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))}, content_type='application/json')
+            avatar_array.append({'id_post': avatar.id})
+        return JsonResponse({'isMyUser': user_id, 'user_name': user_name, 'posts': posts, 'ava': avatar_array, 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))}, content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -287,27 +311,24 @@ def view_post(request):#not using
 def view_information_user(request):
     if request.method == 'GET':
         user_id = request.GET.get('id', int(request.session['_auth_user_id']))
-        avatars = list(UserAvatar.objects.filter(id_user=int(user_id)))
+        #avatars = list(UserAvatar.objects.filter(id_user=int(user_id)))
         user_followed = list(UserFollower.objects.filter(follower=int(user_id)))
         user_follower = list(UserFollower.objects.filter(id=int(user_id)))
         object_does_not_exist = False
-        multiple_objects = False
+
+        user_name = User.objects.get(id=int(user_id)).username
         try:
-            user_name = User.objects.get(id=int(user_id)).username
-            post = PostBase.objects.get(id=int(avatars[-1].id_post))
+            post = list(AvaBase.objects.filter(user_id=user_id))[-1]
         except ObjectDoesNotExist:
             object_does_not_exist = True
-        except MultipleObjectsReturned:
-            multiple_objects = True
+            ava_src = 'none'
         except IndexError:
-            ava_src = "none"
+            ava_src = 'none'
         else:
-            ava_src = post.img
+            ava_src = get_photo_url(time=post.milliseconds,user_id_post=post.user_id, img_name=post.img_name)
         finally:
             if object_does_not_exist:
                 return HttpResponseNotFound()
-            if multiple_objects:
-                return HttpResponseBadRequest()
             return JsonResponse({'user_name': user_name, 'ava_src': ava_src, "followed": len(user_followed), "i_follower":len(user_follower), 'isSubscribed': isSubscribe(int(request.session['_auth_user_id']), int(user_id))})
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
@@ -400,9 +421,10 @@ def delete_post(request):
         is_avatar = request.POST.get(['is_avatar'][0], False)
         user_id = int(request.session['_auth_user_id'])
         try:
-            img = PostBase.objects.get(id=post_id, user_id=user_id)
             if is_avatar:
-                avatar = UserAvatar.objects.get(id_post= post_id, id_user=user_id)
+                img = AvaBase.objects.get(id=post_id, user_id=user_id)
+            else:
+                img = PostBase.objects.get(id=post_id, user_id=user_id)
         except ObjectDoesNotExist:
             return HttpResponse(status=404)
         else:
@@ -422,8 +444,6 @@ def delete_post(request):
                 }
             )
             img.delete()
-            if is_avatar:
-                avatar.delete()
             return HttpResponse(status=200)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -439,8 +459,8 @@ def view_subscribes(request):
         for follower in followers:
             followed_user = User.objects.get(id=int(follower.follower))
             try:
-                follower_ava = list(UserAvatar.objects.filter(id_user=int(follower.follower)))[-1]
-                ava_post = (PostBase.objects.get(id=int(follower_ava.id_post))).img
+                follower_ava = list(AvaBase.objects.filter(user_id=int(follower.follower)))[-1]
+                ava_post = get_photo_url(follower_ava.milliseconds,follower_ava.user_id, follower_ava.img_name)
             except IndexError:
                 ava_post = 'None'
             except ObjectDoesNotExist:
@@ -479,8 +499,8 @@ def isLiked(id_post, id_user):
         return True
 
 
-def get_photo_url(time,user_id_post,img_name):
-    amazon_storage = S3Boto3Storage(bucket=os.environ['S3_BUCKET_NAME'])
+def get_photo_url(time, user_id_post, img_name):
+    amazon_storage = S3Boto3Storage(bucket='flex-fox-21')
     url = f'user_photo/{time}_{user_id_post}/'
     clear_url = os.path.join(
         url,
