@@ -59,7 +59,7 @@ class ChatConsumer(AsyncConsumer):
             print(self.scope["headers"],'HEADDERS')
             chat_room = f"chat_{chat_id}"
             self.chat_room = chat_room
-            Room.objects.add(chat_room, self.channel_name, self.scope["user"])
+            database_sync_to_async(Room.objects.add(chat_room, self.channel_name, self.scope["user"]))
             #Room.objects.add(chat_room, self.channel_name, self.scope["user"])
             await self.send({
                 "type": "websocket.send",
@@ -74,13 +74,13 @@ class ChatConsumer(AsyncConsumer):
 
     async def websocket_receive(self,event):
         if event.type == 'heartbeat:':
-            Presence.objects.touch(self.channel_name)
+            database_sync_to_async(Presence.objects.touch(self.channel_name))
         if event.type == 'add_user':
             close_old_connections()
             front_text = event.get('text', None)
             dict_data = json.loads(front_text)
-            add_to_group_chat(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
-                                   add_users_id=dict_data['users_id'])
+            database_sync_to_async(add_to_group_chat(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+                                   add_users_id=dict_data['users_id']))
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
             my_data_dict = {'text': f'{username} has added {kicked_users_id}'}
@@ -95,8 +95,8 @@ class ChatConsumer(AsyncConsumer):
             close_old_connections()
             front_text = event.get('text', None)
             dict_data = json.loads(front_text)
-            remove_from_group_chat(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
-                                   remove_users_id=dict_data['users_id'])
+            database_sync_to_async(remove_from_group_chat(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+                                   remove_users_id=dict_data['users_id']))
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
             my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
@@ -186,7 +186,7 @@ class ChatConsumer(AsyncConsumer):
     #@remove_presence
     async def websocket_disconnect(self, event):
         del user_to_chats[int(self.scope['cookies']['id'])]
-        Room.objects.remove(self.chat_room, self.channel_name)
+        database_sync_to_async(Room.objects.remove(self.chat_room, self.channel_name))
         print('disconnected', event)
 
     @database_sync_to_async
