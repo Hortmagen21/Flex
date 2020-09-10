@@ -220,7 +220,8 @@ def view_acc(request):
         posts = []
         avatar_array = []
         for post in posts_row:
-            posts.append({'src': post.img, 'src_mini': post.img_mini, 'date': post.milliseconds, 'description': post.description,
+            src_img = get_photo_url(time=post.milliseconds, user_id_post=post.user_id, img_name=post.img_name)
+            posts.append({'src': src_img, 'src_mini': src_img, 'date': post.milliseconds, 'description': post.description,
                           'post_id': post.id})
         for avatar in avatars:
             avatar_array.append({'id_post': avatar.id})
