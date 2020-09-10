@@ -343,7 +343,8 @@ def view_all_posts(request):
         posts_row = list(PostBase.objects.filter(user_id=user_id))
         posts = []
         for post in posts_row:
-            posts.append({'src': post.img, 'date': post.milliseconds, 'description': post.description,
+            src_img = get_photo_url(time=post.milliseconds, user_id_post=post.user_id, img_name=post.img_name)
+            posts.append({'src': src_img, 'date': post.milliseconds, 'description': post.description,
                           'post_id': post.id, 'likes': len(list(Likes.objects.filter(id_post=int(post.id)))),
                           'comments': len(list(Comments.objects.filter(id_post=int(post.id)))),
                           'isLiked': isLiked(int(post.id), int(request.session['_auth_user_id']))})
