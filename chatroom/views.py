@@ -357,76 +357,61 @@ def create_chat_ws(receiver_name, user_name):
         return chat_response
 
 
-@csrf_protect
-@login_required(login_url=core_url+'acc_base/login_redirection')
-def add_to_group_chat(request):
-    if request.method == 'POST':
-        chat_id = request.POST.get(["chat_id"][0], '')
-        add_users_id = request.POST.get(["users_id"][0], '').split()
-        user_id = int(request.session['_auth_user_id'])
-        json_error_list = {}
-        is_member = False
-        for add_user_id in add_users_id:
-            print(add_user_id,'IDD')
-            if not is_user_in_chat(chat_id, user_id):
-                json_error_list[add_user_id] = 403
-                continue
-            try:
-                test_query = ChatMembers.objects.get(user_id=add_user_id, chat_id=chat_id)
-            except ObjectDoesNotExist:
-                is_member = False
-            except IntegrityError:
-                is_member = False
-            else:
-                is_member = True
-                json_error_list[add_user_id] = 409
-            finally:
-                if not is_member:
-                    #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
-                    user_obj = User.objects.get(id=add_user_id)
-                    username = user_obj.username
-                    new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
-                    new_member.save()
-                    chat = Chat.objects.get(chat_id=chat_id)
-                    chat.chat_members += 1
-                    chat.save()
-                    add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
-                    for token in add_user_tokens:
-                        fcm_send_message(registration_id=token, data={"is_new": True, "text": f'User {username} has been added'}, body=f'User {username} has been added')
-        return JsonResponse({'error_list': json_error_list})
-            #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
-
-    else:
-        return HttpResponse("Pls ensure that you use POST method", status=405)
-
-
-@csrf_protect
-@login_required(login_url=core_url+'acc_base/login_redirection')
-def remove_from_group_chat(request):
-    if request.method == 'POST':
-        chat_id = request.POST.get(["chat_id"][0], '')
-        add_users_id = request.POST.get(["users_id"][0], '').split()
-        user_id = int(request.session['_auth_user_id'])
-        json_error_list = {}
-        is_exist = True
-        for add_user_id in add_users_id:
-            if not is_user_in_chat(chat_id, user_id):
-                json_error_list[add_user_id] = 403
-                continue
-            try:
-                delete_query = ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
-                delete_query.delete()
+def add_to_group_chat(chat_id, add_users_id, user_id):
+    add_users_id = add_users_id.split()
+    json_error_list = {}
+    is_member = False
+    for add_user_id in add_users_id:
+        print(add_user_id, 'IDD')
+        if not is_user_in_chat(chat_id, user_id):
+            json_error_list[add_user_id] = 403
+            continue
+        try:
+            test_query = ChatMembers.objects.get(user_id=add_user_id, chat_id=chat_id)
+        except ObjectDoesNotExist:
+            is_member = False
+        except IntegrityError:
+            is_member = False
+        else:
+            is_member = True
+            json_error_list[add_user_id] = 409
+        finally:
+            if not is_member:
+                #Room.objects.add(chat_room, AsyncConsumer.channel_name, user=username)
+                user_obj = User.objects.get(id=add_user_id)
+                username = user_obj.username
+                new_member = ChatMembers(user_id=add_user_id, chat_id=chat_id)
+                new_member.save()
                 chat = Chat.objects.get(chat_id=chat_id)
-            except ObjectDoesNotExist:
-                json_error_list[add_user_id] = 404
-                is_exist = False
-            finally:
-                if is_exist:
-                    chat.chat_members -= 1
-                    chat.save()
-        return JsonResponse({'error_list': json_error_list})
-    else:
-        return HttpResponse("Pls ensure that you use POST method", status=405)
+                chat.chat_members += 1
+                chat.save()
+                add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
+                for token in add_user_tokens:
+                    fcm_send_message(registration_id=token, data={"is_new": True, "text": f'User {username} has been added'}, body=f'User {username} has been added')
+    return JsonResponse({'error_list': json_error_list})
+    #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
+
+
+def remove_from_group_chat(chat_id, remove_users_id, user_id):
+    remove_users_id = remove_users_id.split()
+    json_error_list = {}
+    is_exist = True
+    for add_user_id in remove_users_id:
+        if not is_user_in_chat(chat_id, user_id):
+            json_error_list[add_user_id] = 403
+            continue
+        try:
+            delete_query = ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
+            delete_query.delete()
+            chat = Chat.objects.get(chat_id=chat_id)
+        except ObjectDoesNotExist:
+            json_error_list[add_user_id] = 404
+            is_exist = False
+        finally:
+            if is_exist:
+                chat.chat_members -= 1
+                chat.save()
+    return JsonResponse({'error_list': json_error_list})
 
 
 @csrf_protect

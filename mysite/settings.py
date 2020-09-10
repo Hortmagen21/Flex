@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'chatroom.apps.ChatroomConfig',
     'user_profile.apps.UserProfileConfig',
+    "channels_presence",
     'channels',
     #"channels_presence",
     "fcm_django",
@@ -160,7 +161,16 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+"""new"""
+CELERYBEAT_SCHEDULE = {
+    'prune-presence': {
+        'task': 'channels_presence.tasks.prune_presences',
+        'schedule': timedelta(seconds=60)},
+    'prune-rooms': {
+         'task': 'channels_presence.tasks.prune_rooms',
+         'schedule': timedelta(seconds=600)
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

@@ -19,6 +19,9 @@ from fcm_django.api.rest_framework import FCMDevice
 from django.db.utils import OperationalError
 #from channels_presence.decorators import remove_presence
 #from channels_presence.models import Presence
+from chatroom.views import remove_from_group_chat, add_to_group_chat
+from channels_presence.models import Room, Presence
+#from channels.auth
 
 API_KEY = "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 
@@ -56,6 +59,7 @@ class ChatConsumer(AsyncConsumer):
             print(self.scope["headers"],'HEADDERS')
             chat_room = f"chat_{chat_id}"
             self.chat_room = chat_room
+            Room.objects.add(chat_room, self.channel_name, self.scope["user"])
             #Room.objects.add(chat_room, self.channel_name, self.scope["user"])
             await self.send({
                 "type": "websocket.send",
@@ -69,72 +73,107 @@ class ChatConsumer(AsyncConsumer):
             )
 
     async def websocket_receive(self,event):
-        front_text = event.get('text', None)
-        close_old_connections()
-        receivers_ids = await self.dump_user_ids(int(self.chat_id))
-        close_old_connections()
-        ava = await self.get_ava(int(self.scope['cookies']['id']))
-        close_old_connections()
-        if front_text is not None:
-            print(front_text,'FRONT_TEXT')
+        if event.type == 'heartbeat:':
+            Presence.objects.touch(self.channel_name)
+        if event.type == 'add_user':
+            close_old_connections()
+            front_text = event.get('text', None)
             dict_data = json.loads(front_text)
+            add_to_group_chat(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+                                   add_users_id=dict_data['users_id'])
+            username = self.scope['user']
+            kicked_users_id = dict_data['users_id']
+            my_data_dict = {'text': f'{username} has added {kicked_users_id}'}
+            await self.channel_layer.group_send(
+                self.chat_room,
+                {
+                    "type": "chat_message",
+                    # "text": json.dumps(data),
+                    "text": json.dumps(my_data_dict),
+                })
+        if event.type == 'delete_user':
             close_old_connections()
-            #if dict_data['text'] == '"heartbeat"':
-                #Presence.objects.touch(self.channel_name)
-            msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
+            front_text = event.get('text', None)
+            dict_data = json.loads(front_text)
+            remove_from_group_chat(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+                                   remove_users_id=dict_data['users_id'])
+            username = self.scope['user']
+            kicked_users_id = dict_data['users_id']
+            my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
+            await self.channel_layer.group_send(
+                self.chat_room,
+                {
+                    "type": "chat_message",
+                    # "text": json.dumps(data),
+                    "text": json.dumps(my_data_dict),
+                })
+        if event.type == 'message':
+            front_text = event.get('text', None)
             close_old_connections()
-
-        for user in receivers_ids:#delete
-            try:
+            receivers_ids = await self.dump_user_ids(int(self.chat_id))
+            close_old_connections()
+            ava = await self.get_ava(int(self.scope['cookies']['id']))
+            close_old_connections()
+            if front_text is not None:
+                print(front_text, 'FRONT_TEXT')
+                dict_data = json.loads(front_text)
                 close_old_connections()
-                user_to_chats[user]#int(self.scope['cookies']['id'])]
-            except KeyError:
+                #if dict_data['text'] == '"heartbeat"':
+                    #Presence.objects.touch(self.channel_name)
+                msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
                 close_old_connections()
-                print('IM WORKING1')
-                #database_sync_to_async(FCMDevice.objects.filter(device_id=user)).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                #print(device,'device')
-                #device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 
-                token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
-                #print(token, 'TOKENS')
-                for i in token:
+            for user in receivers_ids:#delete
+                try:
                     close_old_connections()
-                    print(i, 'CHECK MEE')
-                    ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                    fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=str(dict_data['text'][:20]))
-            else:
-                close_old_connections()
-                print('IAM HERE')
-                if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
+                    user_to_chats[user]#int(self.scope['cookies']['id'])]
+                except KeyError:
                     close_old_connections()
-                    my_data_dict = {"front": front_text,
-                                "ava": str(ava),
-                                "msg_id": int(msg_obj.message_id),
-                                    }
-                    #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
-                    await self.channel_layer.group_send(
-                        self.chat_room,
-                        {
-                            "type": "chat_message",
-                            # "text": json.dumps(data),
-                            "text": json.dumps(my_data_dict),
-                        })
-                    # TIME FIX ->break
-                    #await self.channel_layer.group_add(self.chat_room, self.channel_name)
-                else:
+                    print('IM WORKING1')
+                    #database_sync_to_async(FCMDevice.objects.filter(device_id=user)).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                    #print(device,'device')
+                    #device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
 
-                    close_old_connections()
-                    #token = await self.get_user_token(int(self.scope['cookies']['id']))
-                    print('IM WORKING2')
-                    token = await self.get_user_token(user)  # int(self.scope['cookies']['id']))
-                    # print(token, 'TOKENS')
+                    token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
+                    #print(token, 'TOKENS')
                     for i in token:
                         close_old_connections()
                         print(i, 'CHECK MEE')
                         ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                        fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)},
-                                         body=str(dict_data['text'][:20]))
-            close_old_connections()
+                        fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=str(dict_data['text'][:20]))
+                else:
+                    close_old_connections()
+                    print('IAM HERE')
+                    if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
+                        close_old_connections()
+                        my_data_dict = {"front": front_text,
+                                    "ava": str(ava),
+                                    "msg_id": int(msg_obj.message_id),
+                                    }
+                        #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
+                        await self.channel_layer.group_send(
+                            self.chat_room,
+                            {
+                                "type": "chat_message",
+                                # "text": json.dumps(data),
+                                "text": json.dumps(my_data_dict),
+                            })
+                        # TIME FIX ->break
+                        #await self.channel_layer.group_add(self.chat_room, self.channel_name)
+                    else:
+
+                        close_old_connections()
+                        #token = await self.get_user_token(int(self.scope['cookies']['id']))
+                        print('IM WORKING2')
+                        token = await self.get_user_token(user)  # int(self.scope['cookies']['id']))
+                        # print(token, 'TOKENS')
+                        for i in token:
+                            close_old_connections()
+                            print(i, 'CHECK MEE')
+                            ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
+                            fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)},
+                                             body=str(dict_data['text'][:20]))
+                close_old_connections()
 
     async def chat_message(self, event):
         print('text', event)
@@ -147,6 +186,7 @@ class ChatConsumer(AsyncConsumer):
     #@remove_presence
     async def websocket_disconnect(self, event):
         del user_to_chats[int(self.scope['cookies']['id'])]
+        Room.objects.remove(self.chat_room, self.channel_name)
         print('disconnected', event)
 
     @database_sync_to_async
