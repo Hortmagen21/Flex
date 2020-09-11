@@ -82,7 +82,7 @@ class ChatConsumer(AsyncConsumer):
             print('heartbeat')
             await Presence.objects.touch(self.channel_name)
             print('END heartbeat')
-        if request_type == 'add_user':
+        if request_type == 'add_users':
             print('add_user')
             close_old_connections()
             await self.add_to_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
@@ -99,7 +99,7 @@ class ChatConsumer(AsyncConsumer):
                     "text": json.dumps(my_data_dict),
                 })
             print('END add_user')
-        if request_type == 'delete_user':
+        if request_type == 'delete_users':
             print('delete_user')
             close_old_connections()
             await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
