@@ -239,6 +239,6 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def room_add(self, chat_room):
-        return Room.objects.add(chat_room, self.channel_name, int(self.scope['cookies']['id']))
+        return Room.objects.add(chat_room, self.channel_name, User.objects.get(id=int(self.scope['cookies']['id'])))
 
 
