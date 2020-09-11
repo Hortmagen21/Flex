@@ -104,7 +104,7 @@ class ChatConsumer(AsyncConsumer):
             close_old_connections()
             error_list = await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    remove_users_id=dict_data['users_id'])
-            room = await Room.objects.get(channel_name=self.chat_room)
+            room = await self.get_room_by_channel_name()
             room_id = int(room.room_id)
             for user_id in dict_data['users_id']:
                 if error_list[user_id] == '404':
@@ -112,8 +112,8 @@ class ChatConsumer(AsyncConsumer):
                 if error_list[user_id] == '403':
                     pass
                 else:
-                    prescense = await list(Presence.objects.filter(room_id=room_id, user_id=user_id))[-1]
-                    await Room.objects.remove(self.chat_room, prescense.channel_name)
+                    prescense = await self.get_presence_list(room_id, user_id)
+                    await self.remove_presence_room(prescense.channel_name)
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
             #my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
@@ -251,4 +251,15 @@ class ChatConsumer(AsyncConsumer):
     def room_add(self, chat_room):
         return Room.objects.add(chat_room, self.channel_name, User.objects.get(id=int(self.scope['cookies']['id'])))
 
+    @database_sync_to_async
+    def get_room_by_channel_name(self,):
+        return Room.objects.get(channel_name=self.chat_room)
 
+    @database_sync_to_async
+    def get_presence_list(self, room_id, user_id):
+        return list(Presence.objects.filter(room_id=room_id, user_id=user_id))[-1]
+
+    @database_sync_to_async
+    def remove_presence_room(self, channel_name):
+        Room.objects.remove(self.chat_room, channel_name)
+        return True
