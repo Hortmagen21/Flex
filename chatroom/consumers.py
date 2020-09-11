@@ -243,7 +243,7 @@ class ChatConsumer(AsyncConsumer):
                                    add_users_id=add_users_id)
 
     @database_sync_to_async
-    def remove_from_group(self,chat_id, user_id, remove_users_id):
+    def remove_from_group(self, chat_id, user_id, remove_users_id):
         return remove_from_group_chat(chat_id=chat_id, user_id=user_id,
                                    remove_users_id=remove_users_id)
 

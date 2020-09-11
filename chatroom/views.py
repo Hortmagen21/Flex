@@ -394,18 +394,20 @@ def add_to_group_chat(chat_id, add_users_id, user_id):
 
 def remove_from_group_chat(chat_id, remove_users_id, user_id):
     remove_users_id = remove_users_id.split()
+    print(remove_users_id,'DIIIIICTTTTT')
     json_error_list = {}
     is_exist = True
-    for add_user_id in remove_users_id:
+    for remove_user_id in remove_users_id:
+        print(remove_user_id, 'WHOOO')
         if not is_user_in_chat(chat_id, user_id):
-            json_error_list[add_user_id] = 403
+            json_error_list[remove_user_id] = 403
             continue
         try:
-            delete_query = ChatMembers.objects.filter(user_id=add_user_id, chat_id=chat_id)
+            delete_query = ChatMembers.objects.filter(user_id=remove_user_id, chat_id=chat_id)
             delete_query.delete()
             chat = Chat.objects.get(chat_id=chat_id)
         except ObjectDoesNotExist:
-            json_error_list[add_user_id] = 404
+            json_error_list[remove_user_id] = 404
             is_exist = False
         finally:
             if is_exist:
