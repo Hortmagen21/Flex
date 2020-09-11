@@ -106,10 +106,10 @@ class ChatConsumer(AsyncConsumer):
                                    remove_users_id=dict_data['users_id'])
             room = await self.get_room_by_channel_name()
             room_id = int(room.id)
-            for user_id in dict_data['users_id']:
-                if error_list[user_id] == '404':
+            for user_id in dict_data['users_id'].split():
+                if error_list[int(user_id)] == '404':
                     pass
-                if error_list[user_id] == '403':
+                if error_list[int(user_id)] == '403':
                     pass
                 else:
                     prescense = await self.get_presence_list(room_id, user_id)
