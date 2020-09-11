@@ -105,7 +105,7 @@ class ChatConsumer(AsyncConsumer):
             error_list = await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    remove_users_id=dict_data['users_id'])
             room = await self.get_room_by_channel_name()
-            room_id = int(room.room_id)
+            room_id = int(room.id)
             for user_id in dict_data['users_id']:
                 if error_list[user_id] == '404':
                     pass
