@@ -59,7 +59,7 @@ class ChatConsumer(AsyncConsumer):
             print(self.scope["headers"],'HEADDERS')
             chat_room = f"chat_{chat_id}"
             self.chat_room = chat_room
-            await self.room_add(chat_room, self.channel_name, self.scope["user"])
+            await self.room_add(chat_room)
             # await Room.objects.add(chat_room, self.channel_name, self.scope["user"])
             # Room.objects.add(chat_room, self.channel_name, self.scope["user"])
             await self.send({
@@ -83,7 +83,7 @@ class ChatConsumer(AsyncConsumer):
             close_old_connections()
             front_text = event.get('text', None)
             dict_data = json.loads(front_text)
-            await add_to_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+            await self.add_to_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    add_users_id=dict_data['users_id'])
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
@@ -101,7 +101,7 @@ class ChatConsumer(AsyncConsumer):
             close_old_connections()
             front_text = event.get('text', None)
             dict_data = json.loads(front_text)
-            await remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+            await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    remove_users_id=dict_data['users_id'])
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
@@ -238,7 +238,7 @@ class ChatConsumer(AsyncConsumer):
                                    add_users_id=add_users_id)
 
     @database_sync_to_async
-    def room_add(self,channel_name,username,chat_room):
-        return Room.objects.add(chat_room, channel_name, username)
+    def room_add(self, chat_room):
+        return Room.objects.add(chat_room, self.channel_name, int(self.scope['cookies']['id']))
 
 
