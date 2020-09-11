@@ -88,7 +88,8 @@ class ChatConsumer(AsyncConsumer):
                                    add_users_id=dict_data['users_id'])
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
-            my_data_dict = {'text': f'{username} has added {kicked_users_id}'}
+            #my_data_dict = {'text': f'{username} has added {kicked_users_id}'}
+            my_data_dict = {"front": front_text}
             await self.channel_layer.group_send(
                 self.chat_room,
                 {
@@ -106,7 +107,8 @@ class ChatConsumer(AsyncConsumer):
                                    remove_users_id=dict_data['users_id'])
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
-            my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
+            #my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
+            my_data_dict = {"front": front_text}
             await self.channel_layer.group_send(
                 self.chat_room,
                 {
