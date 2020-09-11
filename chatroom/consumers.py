@@ -74,7 +74,9 @@ class ChatConsumer(AsyncConsumer):
             )
 
     async def websocket_receive(self,event):
-        request_type = event.get('type', False)
+        front_text = event.get('text', False)
+        dict_data = json.loads(front_text)
+        request_type = dict_data['type']
         print(request_type,'TYYPE')
         if request_type == 'heartbeat:':
             print('heartbeat')
@@ -83,8 +85,6 @@ class ChatConsumer(AsyncConsumer):
         if request_type == 'add_user':
             print('add_user')
             close_old_connections()
-            front_text = event.get('text', None)
-            dict_data = json.loads(front_text)
             await self.add_to_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    add_users_id=dict_data['users_id'])
             username = self.scope['user']
@@ -102,8 +102,6 @@ class ChatConsumer(AsyncConsumer):
         if request_type == 'delete_user':
             print('delete_user')
             close_old_connections()
-            front_text = event.get('text', None)
-            dict_data = json.loads(front_text)
             await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    remove_users_id=dict_data['users_id'])
             username = self.scope['user']
@@ -120,7 +118,6 @@ class ChatConsumer(AsyncConsumer):
             print('END delete_user')
         if request_type == 'message':
             print('MESSAGE')
-            front_text = event.get('text', None)
             close_old_connections()
             receivers_ids = await self.dump_user_ids(int(self.chat_id))
             close_old_connections()
@@ -128,7 +125,6 @@ class ChatConsumer(AsyncConsumer):
             close_old_connections()
             if front_text is not None:
                 print(front_text, 'FRONT_TEXT')
-                dict_data = json.loads(front_text)
                 close_old_connections()
                 #if dict_data['text'] == '"heartbeat"':
                     #Presence.objects.touch(self.channel_name)
