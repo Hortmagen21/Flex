@@ -106,7 +106,9 @@ class ChatConsumer(AsyncConsumer):
                                    remove_users_id=dict_data['users_id'])
             room = await self.get_room_by_channel_name()
             room_id = int(room.id)
+            print(dict_data['users_id'].split(),'DICT_DATA')
             for user_id in dict_data['users_id'].split():
+                print(user_id,'USER IN DICT_DATA')
                 if error_list[int(user_id)] == '404':
                     pass
                 if error_list[int(user_id)] == '403':
