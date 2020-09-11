@@ -59,8 +59,9 @@ class ChatConsumer(AsyncConsumer):
             print(self.scope["headers"],'HEADDERS')
             chat_room = f"chat_{chat_id}"
             self.chat_room = chat_room
-            await Room.objects.add(chat_room, self.channel_name, self.scope["user"])
-            #Room.objects.add(chat_room, self.channel_name, self.scope["user"])
+            await self.room_add(chat_room, self.channel_name, self.scope["user"])
+            # await Room.objects.add(chat_room, self.channel_name, self.scope["user"])
+            # Room.objects.add(chat_room, self.channel_name, self.scope["user"])
             await self.send({
                 "type": "websocket.send",
                 "text": str(chat_id),
@@ -76,6 +77,7 @@ class ChatConsumer(AsyncConsumer):
         if event.type == 'heartbeat:':
             print('heartbeat')
             await Presence.objects.touch(self.channel_name)
+            print('END heartbeat')
         if event.type == 'add_user':
             print('add_user')
             close_old_connections()
@@ -93,6 +95,7 @@ class ChatConsumer(AsyncConsumer):
                     # "text": json.dumps(data),
                     "text": json.dumps(my_data_dict),
                 })
+            print('END add_user')
         if event.type == 'delete_user':
             print('delete_user')
             close_old_connections()
@@ -110,8 +113,9 @@ class ChatConsumer(AsyncConsumer):
                     # "text": json.dumps(data),
                     "text": json.dumps(my_data_dict),
                 })
+            print('END delete_user')
         if event.type == 'message':
-            print('message')
+            print('MESSAGE')
             front_text = event.get('text', None)
             close_old_connections()
             receivers_ids = await self.dump_user_ids(int(self.chat_id))
@@ -236,5 +240,9 @@ def remove_from_group(chat_id, user_id, add_users_id):
                                    add_users_id=add_users_id)
 
 
+
+@database_sync_to_async
+def room_add(channel_name,username,chat_room):
+    return Room.objects.add(chat_room, channel_name, username)
 
 
