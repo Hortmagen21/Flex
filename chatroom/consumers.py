@@ -75,6 +75,7 @@ class ChatConsumer(AsyncConsumer):
 
     async def websocket_receive(self,event):
         request_type = event.get('type', False)
+        print(request_type,'TYYPE')
         if request_type == 'heartbeat:':
             print('heartbeat')
             await Presence.objects.touch(self.channel_name)
