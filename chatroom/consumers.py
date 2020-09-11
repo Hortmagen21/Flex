@@ -227,22 +227,18 @@ class ChatConsumer(AsyncConsumer):
         #return get_fcm_device(user)
         return FCMDevice.objects.filter(device_id=user)
 
-
-@database_sync_to_async
-def add_to_group(chat_id, user_id, add_users_id):
-    return add_to_group_chat(chat_id=chat_id, user_id=user_id,
+    @database_sync_to_async
+    def add_to_group(self,chat_id, user_id, add_users_id):
+        return add_to_group_chat(chat_id=chat_id, user_id=user_id,
                                    add_users_id=add_users_id)
 
-
-@database_sync_to_async
-def remove_from_group(chat_id, user_id, add_users_id):
-    return remove_from_group_chat(chat_id=chat_id, user_id=user_id,
+    @database_sync_to_async
+    def remove_from_group(self,chat_id, user_id, add_users_id):
+        return remove_from_group_chat(chat_id=chat_id, user_id=user_id,
                                    add_users_id=add_users_id)
 
-
-
-@database_sync_to_async
-def room_add(channel_name,username,chat_room):
-    return Room.objects.add(chat_room, channel_name, username)
+    @database_sync_to_async
+    def room_add(self,channel_name,username,chat_room):
+        return Room.objects.add(chat_room, channel_name, username)
 
 
