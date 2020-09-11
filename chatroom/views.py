@@ -409,6 +409,7 @@ def remove_from_group_chat(chat_id, remove_users_id, user_id):
             is_exist = False
         finally:
             if is_exist:
+                chat = Chat.objects.get(chat_id=chat_id)
                 chat.chat_members -= 1
                 chat.save()
     return JsonResponse({'error_list': json_error_list})

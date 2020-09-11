@@ -102,8 +102,18 @@ class ChatConsumer(AsyncConsumer):
         if request_type == 'delete_users':
             print('delete_user')
             close_old_connections()
-            await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+            error_list = await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    remove_users_id=dict_data['users_id'])
+            room = await Room.objects.get(channel_name=self.chat_room)
+            room_id = int(room.room_id)
+            for user_id in dict_data['users_id']:
+                if error_list[user_id] == '404':
+                    pass
+                if error_list[user_id] == '403':
+                    pass
+                else:
+                    prescense = await list(Presence.objects.filter(room_id=room_id, user_id=user_id))[-1]
+                    await Room.objects.remove(self.chat_room, prescense.channel_name)
             username = self.scope['user']
             kicked_users_id = dict_data['users_id']
             #my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
