@@ -74,11 +74,12 @@ class ChatConsumer(AsyncConsumer):
             )
 
     async def websocket_receive(self,event):
-        if event.type == 'heartbeat:':
+        request_type = event.get('type', False)
+        if request_type == 'heartbeat:':
             print('heartbeat')
             await Presence.objects.touch(self.channel_name)
             print('END heartbeat')
-        if event.type == 'add_user':
+        if request_type == 'add_user':
             print('add_user')
             close_old_connections()
             front_text = event.get('text', None)
@@ -96,7 +97,7 @@ class ChatConsumer(AsyncConsumer):
                     "text": json.dumps(my_data_dict),
                 })
             print('END add_user')
-        if event.type == 'delete_user':
+        if request_type == 'delete_user':
             print('delete_user')
             close_old_connections()
             front_text = event.get('text', None)
@@ -114,7 +115,7 @@ class ChatConsumer(AsyncConsumer):
                     "text": json.dumps(my_data_dict),
                 })
             print('END delete_user')
-        if event.type == 'message':
+        if request_type == 'message':
             print('MESSAGE')
             front_text = event.get('text', None)
             close_old_connections()
