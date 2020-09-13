@@ -80,7 +80,7 @@ class ChatConsumer(AsyncConsumer):
         print(request_type,'TYYPE')
         if request_type == 'heartbeat':
             print('heartbeat')
-            await Presence.objects.touch(self.channel_name)
+            await self.presence_touch()
             print('END heartbeat')
         if request_type == 'add_users':
             print('add_user')
@@ -265,3 +265,7 @@ class ChatConsumer(AsyncConsumer):
     def remove_presence_room(self, channel_name):
         Room.objects.remove(self.chat_room, channel_name)
         return True
+
+    @database_sync_to_async
+    def presence_touch(self):
+        return Presence.objects.touch(self.channel_name)
