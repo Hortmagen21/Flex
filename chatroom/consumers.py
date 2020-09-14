@@ -112,8 +112,11 @@ class ChatConsumer(AsyncConsumer):
                 try:
                     error_list[int(user_id)]
                 except KeyError:
-                    prescense = await self.get_presence_list(room_id, user_id)
-                    await self.remove_presence_room(prescense.channel_name)
+                    try:
+                        prescense = await self.get_presence_list(room_id, user_id)
+                        await self.remove_presence_room(prescense[-1].channel_name)
+                    except IndexError:
+                        pass
                 else:
                     if error_list[int(user_id)] == '404':
                         pass
@@ -262,7 +265,7 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def get_presence_list(self, room_id, user_id):
-        return list(Presence.objects.filter(room_id=room_id, user_id=user_id))[-1]
+        return list(Presence.objects.filter(room_id=room_id, user_id=user_id))
 
     @database_sync_to_async
     def remove_presence_room(self, channel_name):
