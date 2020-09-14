@@ -388,7 +388,7 @@ def add_to_group_chat(chat_id, add_users_id, user_id):
                 add_user_tokens = FCMDevice.objects.filter(device_id=add_user_id)
                 for token in add_user_tokens:
                     fcm_send_message(registration_id=token, data={"is_new": True, "text": f'User {username} has been added'}, body=f'User {username} has been added')
-    return JsonResponse({'error_list': json_error_list})
+    return {'error_list': json_error_list}
     #AsyncConsumer.channel_layer.group_add(chat_room, AsyncConsumer.channel_name)
 
 
@@ -414,7 +414,7 @@ def remove_from_group_chat(chat_id, remove_users_id, user_id):
                 chat = Chat.objects.get(chat_id=chat_id)
                 chat.chat_members -= 1
                 chat.save()
-    return JsonResponse({'error_list': json_error_list})
+    return {'error_list': json_error_list}
 
 
 @csrf_protect

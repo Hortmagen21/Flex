@@ -240,7 +240,7 @@ class ChatConsumer(AsyncConsumer):
         return FCMDevice.objects.filter(device_id=user)
 
     @database_sync_to_async
-    def add_to_group(self,chat_id, user_id, add_users_id):
+    def add_to_group(self, chat_id, user_id, add_users_id):
         return add_to_group_chat(chat_id=chat_id, user_id=user_id,
                                    add_users_id=add_users_id)
 
