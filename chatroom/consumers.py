@@ -116,7 +116,7 @@ class ChatConsumer(AsyncConsumer):
                         prescense = await self.get_presence_list(room_id, user_id)
                         # await self.remove_presence_room(prescense[-1].channel_name)
                         async_to_sync(self.channel_layer.group_discard)(
-                            self.room_group_name,
+                            self.chat_room,
                             prescense[-1].channel_name
                         )
                     except IndexError:
