@@ -220,8 +220,12 @@ class ChatConsumer(AsyncConsumer):
     #@remove_presence
     async def websocket_disconnect(self, event):
         del user_to_chats[int(self.scope['cookies']['id'])]
-        await Room.objects.remove(self.chat_room, self.channel_name)
+        await self.room_remove(self.chat_room, self.channel_name)
         print('disconnected', event)
+
+    @database_sync_to_async
+    def room_remove(self):
+        return Room.objects.remove(self.chat_room, self.channel_name)
 
     @database_sync_to_async
     def get_tread(self, user, other_username):
