@@ -117,7 +117,7 @@ class ChatConsumer(AsyncConsumer):
                         await Room.objects.remove(self.chat_room, self.channel_name)
                         prescense = await self.get_presence_list(room_id, user_id)
                         # await self.remove_presence_room(prescense[-1].channel_name)
-                        async_to_sync(self.channel_layer.group_discard)(
+                        sync_to_async(self.channel_layer.group_discard)(
                             group=self.chat_room,
                             channel=prescense[-1].channel_name
                         )
