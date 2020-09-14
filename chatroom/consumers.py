@@ -113,9 +113,11 @@ class ChatConsumer(AsyncConsumer):
                     error_list[int(user_id)]
                 except KeyError:
                     try:
+                        del user_to_chats[int(self.scope['cookies']['id'])]
+                        await Room.objects.remove(self.chat_room, self.channel_name)
                         prescense = await self.get_presence_list(room_id, user_id)
                         # await self.remove_presence_room(prescense[-1].channel_name)
-                        async_to_sync(self.channel_layer.group_discard)(
+                        await self.channel_layer.group_discard(
                             self.chat_room,
                             prescense[-1].channel_name
                         )
