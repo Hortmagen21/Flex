@@ -28,7 +28,8 @@ def search_people(request):
             user_start_with_list.update({user.username: user.id})
         for user in user_row_contains:
             user_contains_list.update({user.username: user.id})
-        return JsonResponse({"user_start_with_list": user_start_with_list, "user_contains_list": user_contains_list}, content_type='application/json')
+        return JsonResponse({"user_start_with_list": user_start_with_list, "user_contains_list": user_contains_list},
+                            content_type='application/json')
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 

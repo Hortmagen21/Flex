@@ -102,11 +102,11 @@ class ChatConsumer(AsyncConsumer):
         if request_type == 'delete_users':
             print('delete_user')
             close_old_connections()
-            error_list = await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
-                                   remove_users_id=dict_data['users_id'])
+            error_list = (await self.remove_from_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
+                          remove_users_id=dict_data['users_id']))['error_list']
             room = await self.get_room_by_channel_name()
             room_id = int(room.id)
-            print(dict_data['users_id'].split(),'DICT_DATA')
+            print(dict_data['users_id'].split(), 'DICT_DATA')
             for user_id in dict_data['users_id'].split():
                 print(user_id,'USER IN DICT_DATA')
                 if error_list[int(user_id)] == '404':
