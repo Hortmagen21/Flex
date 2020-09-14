@@ -109,16 +109,19 @@ class ChatConsumer(AsyncConsumer):
             print(dict_data['users_id'].split(), 'DICT_DATA')
             for user_id in dict_data['users_id'].split():
                 print(user_id,'USER IN DICT_DATA')
-                if error_list[int(user_id)] == '404':
-                    pass
-                if error_list[int(user_id)] == '403':
-                    pass
-                else:
+                try:
+                    error_list[int(user_id)]
+                except KeyError:
                     prescense = await self.get_presence_list(room_id, user_id)
                     await self.remove_presence_room(prescense.channel_name)
-            username = self.scope['user']
-            kicked_users_id = dict_data['users_id']
-            #my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
+                else:
+                    if error_list[int(user_id)] == '404':
+                        pass
+                    if error_list[int(user_id)] == '403':
+                        pass
+            # username = self.scope['user']
+            # kicked_users_id = dict_data['users_id']
+            # my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
             my_data_dict = {"front": front_text}
             await self.channel_layer.group_send(
                 self.chat_room,
