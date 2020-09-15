@@ -217,8 +217,8 @@ django_heroku.settings(locals())
 #SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = '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'
-EMAIL_HOST_PASSWORD = 'flex-fox'#SENDGRID_API_KEY
+EMAIL_HOST_USER = 'flex-fox'
+EMAIL_HOST_PASSWORD ='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'#SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 '''
