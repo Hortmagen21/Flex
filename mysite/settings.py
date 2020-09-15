@@ -217,7 +217,7 @@ django_heroku.settings(locals())
 #SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'bTqASWudTu-yrz3Ku6pZRw'
+EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD ='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'#SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
