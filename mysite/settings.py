@@ -218,18 +218,10 @@ django_heroku.settings(locals())
 
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD ='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'#SENDGRID_API_KEY
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')#SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-'''
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'#'smtp.mail.yahoo.com'
-EMAIL_PORT =465#587
-EMAIL_HOST_USER = 'flexapplicationemail@gmail.com'#'hortmagennn@gmail.com'#
-EMAIL_HOST_PASSWORD = "flexSupportPassword"#'rexwex21'
-EMAIL_USE_TLS = False#False#True
-EMAIL_USE_SSL = True#False
-'''
+
 
 
 
