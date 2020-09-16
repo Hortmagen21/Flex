@@ -27,15 +27,20 @@ def follow(request):
         user_follow = request.GET.get('id', ' ')
         user_id = int(request.session['_auth_user_id'])
         try:
-            user = UserFollower(id=user_follow, follower=user_id)
-        except DatabaseError:
-            return HttpResponse('Duplicate follow', status=409)
-        else:
-            if user_follow != user_id:
-                user.save()
-                return HttpResponse('I follow')
+            user_test = UserFollower.objects.get(id=user_follow, follower=user_id)
+        except ObjectDoesNotExist:
+            try:
+                user = UserFollower(id=user_follow, follower=user_id)
+            except DatabaseError:
+                return HttpResponse('Duplicate follow', status=409)
             else:
-                return HttpResponse('I can not follow myself',status=403)
+                if user_follow != user_id:
+                    user.save()
+                    return HttpResponse('I follow')
+                else:
+                    return HttpResponse('I can not follow myself',status=403)
+        except MultipleObjectsReturned:
+            return HttpResponse('Duplicate follow', status=409)
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
@@ -511,6 +516,9 @@ def isSubscribe(my_id, user_id):
         follow = UserFollower.objects.get(id=user_id, follower=my_id)
     except ObjectDoesNotExist:
         return False
+    except MultipleObjectsReturned:
+        print('MULTIPLE FOLLOWS')
+        return True
     else:
         return True
 
