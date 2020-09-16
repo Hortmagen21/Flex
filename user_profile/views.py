@@ -384,6 +384,9 @@ def unsubscribe(request):
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
         except MultipleObjectsReturned:
+            multiple_follow = list(UserFollower.objects.filter(id=int(user_follow), follower=int(user_id)))
+            for follow in multiple_follow:
+                multiple_follow.delete()
             return HttpResponseBadRequest()
         else:
             connection.delete()
