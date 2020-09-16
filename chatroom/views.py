@@ -263,11 +263,11 @@ def create_group_chat(request):
             # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max']
             group_chat = Chat(chat_name=group_name, chat_admin=user_id, chat_members=members_count, is_group=True)
             group_chat.save()
-            add_ava_local(img=img, chat_id=group_chat.chat_id, user_id=user_id)
+            photo_info = add_ava_local(img=img, chat_id=group_chat.chat_id, user_id=user_id)
             for member_id in members_id:
                 chat_conn = ChatMembers(chat_id=int(group_chat.chat_id), user_id=int(member_id))
                 chat_conn.save()
-            return HttpResponse(int(group_chat.chat_id))
+            return JsonResponse({'group_chat_id': int(group_chat.chat_id), 'photo_src': photo_info['file_url']})
         else:
             return HttpResponse("NOT VALID DATA", status=415)
     else:
