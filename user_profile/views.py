@@ -41,6 +41,7 @@ def follow(request):
                     return HttpResponse('I can not follow myself',status=403)
         except MultipleObjectsReturned:
             return HttpResponse('Duplicate follow', status=409)
+        return HttpResponse(status=400)
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 

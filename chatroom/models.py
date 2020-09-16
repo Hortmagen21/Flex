@@ -53,7 +53,7 @@ class IgnoreMessages(models.Model):
 
 class MsgType(models.Model):
     id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=-1, blank=True, null=True)
+    type = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         db_table = 'msg_type'

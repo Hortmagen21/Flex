@@ -75,6 +75,7 @@ class ChatConsumer(AsyncConsumer):
 
     async def websocket_receive(self,event):
         front_text = event.get('text', False)
+        print('FROOONT',front_text)
         dict_data = json.loads(front_text)
         request_type = str(dict_data['type'])
         print(request_type,'TYYPE')
