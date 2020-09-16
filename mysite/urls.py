@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'home/', include('home.urls')),
     url(r'chatroom/', include('chatroom.urls')),
     #url(r'^admin/', admin.site.urls),
-    url(r'map/', include('map.urls')),
+    url(r'map/', include('maps.urls')),
 ]
