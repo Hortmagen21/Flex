@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.http import JsonResponse
@@ -100,6 +99,7 @@ def add_ava(request):
         img = request.FILES['img']
         chat_id = request.POST.get(['chat_id'][0], False)
         user_id = int(request.session['_auth_user_id'])
+        '''
         time = datetime.datetime.today()
         milliseconds = int(time.timestamp() * 1000)
         url = f'user_photo/{milliseconds}_{user_id}/'
@@ -123,7 +123,8 @@ def add_ava(request):
             file_name = img.name
             return JsonResponse({
                 'message': f"Error: file {file_name} already exist at {url} in bucket"
-            }, status=400)
+            }, status=400)'''
+        add_ava_local(img=img, chat_id=chat_id, user_id=user_id)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
@@ -481,6 +482,28 @@ def test_fcm(request):
         device = FCMDevice.objects.filter(device_id=user)
         device.send_message(data={"msg_id": 170, "ava": str('nONE')}, body='TEST')
         return HttpResponse("ok")
+
+
+def add_ava_local(img, chat_id, user_id):
+    time = datetime.datetime.today()
+    milliseconds = int(time.timestamp() * 1000)
+    url = f'user_photo/{milliseconds}_{user_id}/'
+    url_mini = f'user_photo/{milliseconds}_{user_id}/'
+    clear_url = os.path.join(
+        url,
+        img.name
+    )
+    amazon_storage = S3Boto3Storage(bucket='flex-fox-21')
+    print(img, type(img), 'description')
+    if not amazon_storage.exists(url):
+        amazon_storage.save(clear_url, img)
+        file_url = amazon_storage.url(clear_url)
+        if chat_id:
+            photo = AvaBase(user_id=user_id, milliseconds=milliseconds, img_name=img.name, chat_id=chat_id)
+        else:
+            photo = AvaBase(user_id=user_id, milliseconds=milliseconds, img_name=img.name)
+        photo.save()
+        return {'file_url': file_url, 'photo_id': photo.id}
 
 
 def isSubscribe(my_id, user_id):

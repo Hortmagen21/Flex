@@ -5,7 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
-from .models import Message,Chat
+from .models import Message,Chat,MsgType
 from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens,get_receiver_avatar
 from django.contrib.auth.models import User
 from channels.auth import login
@@ -87,9 +87,6 @@ class ChatConsumer(AsyncConsumer):
             close_old_connections()
             await self.add_to_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
                                    add_users_id=dict_data['users_id'])
-            username = self.scope['user']
-            kicked_users_id = dict_data['users_id']
-            #my_data_dict = {'text': f'{username} has added {kicked_users_id}'}
             my_data_dict = {"front": front_text}
             await self.channel_layer.group_send(
                 self.chat_room,
@@ -98,6 +95,9 @@ class ChatConsumer(AsyncConsumer):
                     # "text": json.dumps(data),
                     "text": json.dumps(my_data_dict),
                 })
+            msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
+                                          msg_type=request_type)
+            close_old_connections()
             print('END add_user')
         if request_type == 'delete_users':
             print('delete_user')
@@ -108,7 +108,7 @@ class ChatConsumer(AsyncConsumer):
             room_id = int(room.id)
             print(dict_data['users_id'].split(), 'DICT_DATA')
             for user_id in dict_data['users_id'].split():
-                print(user_id,'USER IN DICT_DATA')
+                print(user_id, 'USER IN DICT_DATA')
                 try:
                     error_list[int(user_id)]
                 except KeyError:
@@ -116,11 +116,15 @@ class ChatConsumer(AsyncConsumer):
                         del user_to_chats[int(self.scope['cookies']['id'])]
                         await Room.objects.remove(self.chat_room, self.channel_name)
                         prescense = await self.get_presence_list(room_id, user_id)
+                        await self.room_remove(channel_name=prescense[-1].channel_name)
                         # await self.remove_presence_room(prescense[-1].channel_name)
-                        sync_to_async(self.channel_layer.group_discard)(
+                        '''sync_to_async(self.channel_layer.group_discard)(
                             group=self.chat_room,
                             channel=prescense[-1].channel_name
-                        )
+                        )'''
+                        msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
+                                                      msg_type=request_type)
+                        close_old_connections()
                     except IndexError:
                         pass
                 else:
@@ -150,28 +154,19 @@ class ChatConsumer(AsyncConsumer):
             if front_text is not None:
                 print(front_text, 'FRONT_TEXT')
                 close_old_connections()
-                #if dict_data['text'] == '"heartbeat"':
-                    #Presence.objects.touch(self.channel_name)
-                msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']))
+                msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']),
+                                              msg_type=request_type)
                 close_old_connections()
-
             for user in receivers_ids:#delete
                 try:
                     close_old_connections()
                     user_to_chats[user]#int(self.scope['cookies']['id'])]
                 except KeyError:
-                    close_old_connections()
                     print('IM WORKING1')
-                    #database_sync_to_async(FCMDevice.objects.filter(device_id=user)).send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-                    #print(device,'device')
-                    #device.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
-
                     token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
-                    #print(token, 'TOKENS')
                     for i in token:
                         close_old_connections()
                         print(i, 'CHECK MEE')
-                        ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                         fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=str(dict_data['text'][:20]))
                 else:
                     close_old_connections()
@@ -220,21 +215,24 @@ class ChatConsumer(AsyncConsumer):
     #@remove_presence
     async def websocket_disconnect(self, event):
         del user_to_chats[int(self.scope['cookies']['id'])]
-        await self.room_remove(self.chat_room, self.channel_name)
+        await self.room_remove(channel_name=self.channel_name)
         print('disconnected', event)
 
     @database_sync_to_async
-    def room_remove(self):
-        return Room.objects.remove(self.chat_room, self.channel_name)
+    def room_remove(self, channel_name):
+        return Room.objects.remove(self.chat_room, channel_name)
 
     @database_sync_to_async
     def get_tread(self, user, other_username):
         return create_chat_ws(other_username, user)
 
     @database_sync_to_async
-    def save_msg(self, threat_obj, msg, time):
+    def save_msg(self, threat_obj, msg, time, msg_type):
         user_id = (User.objects.get(username=str(self.me))).id
-        return Message.objects.create(chat_id=threat_obj,user_id=int(user_id),message=msg,date=time)
+        message_obj = Message.objects.create(chat_id=threat_obj, user_id=int(user_id), message=msg, date=time)
+        msg_type_obj = MsgType(id=message_obj.message_id, msg_type=msg_type)
+        msg_type_obj.save()
+        return message_obj
         #new_message.save()
         #return create_chat_ws(other_username, user)
 

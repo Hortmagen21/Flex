@@ -8,7 +8,7 @@ import asyncio
 from channels.db import database_sync_to_async
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
-from chatroom.models import Chat,ChatMembers,Message,IgnoreMessages
+from chatroom.models import Chat,ChatMembers,Message,IgnoreMessages,MsgType
 from user_profile.models import UserAvatar,PostBase
 from django.contrib.auth.models import User
 from django.db.models import Max
@@ -24,7 +24,7 @@ from fcm_django.fcm import fcm_send_message,FCMNotification
 from channels.consumer import AsyncConsumer
 from user_profile.models import UserFollower,AvaBase
 #from channels_presence.models import Room
-from user_profile.views import get_photo_url
+from user_profile.views import get_photo_url,add_ava_local
 core_url = 'https://sleepy-ocean-25130.herokuapp.com/'
 test_url = 'http://127.0.0.1:8000/'
 
@@ -230,6 +230,7 @@ def upload_messages(request):
                 #avatars = list(UserAvatar.objects.filter(id_user=int(msg.user_id)))
                 try:
                     sender = User.objects.get(id=msg.user_id)
+                    msg_info = MsgType.objects.get(id=msg.message_id)
                     post = list(AvaBase.objects.filter(user_id=int(msg.user_id)))[-1]
                 except ObjectDoesNotExist:
                     return HttpResponseNotFound()
@@ -238,8 +239,11 @@ def upload_messages(request):
                 except IndexError:
                     ava_src = "None"
                 else:
-                    ava_src = get_photo_url(time=post.milliseconds, user_id_post=int(post.user_id), img_name=post.img_name)
-                response.append({'msg_id': msg.message_id, 'user_id': msg.user_id, 'text': msg.message, 'time': int(msg.date), 'user_name': sender.username, 'user_avatar': ava_src})
+                    ava_src = get_photo_url(time=post.milliseconds, user_id_post=int(post.user_id),
+                                            img_name=post.img_name)
+                response.append({'msg_id': msg.message_id, 'user_id': msg.user_id, 'text': msg.message,
+                                 'time': int(msg.date), 'user_name': sender.username, 'user_avatar': ava_src,
+                                 'msg_type':msg_info.msg_type})
             return JsonResponse({'msg_information': response})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -250,16 +254,16 @@ def upload_messages(request):
 def create_group_chat(request):
     if request.method == "POST":
         group_name = str(request.POST.get(['group_name'][0], False))
+        img = request.FILES['img']
         members_count = int(request.POST.get(['members_count'][0], False))
         members_id = (request.POST.get(['members_id'][0], False)).split()
-        ava_src = str(request.POST.get(['ava_src'][0], 'nothing'))
-        post_id = int(request.POST.get(['post_id'][0], False))
         user_id = int(request.session['_auth_user_id'])
-        print(members_id,'MEMBERS')
+        print(members_id, 'MEMBERS')
         if group_name and members_id and members_count and len(members_id) == members_count:
             # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max']
-            group_chat = Chat(chat_name=group_name, chat_ava=ava_src, chat_admin=user_id, chat_members=members_count, is_group=True)
+            group_chat = Chat(chat_name=group_name, chat_admin=user_id, chat_members=members_count, is_group=True)
             group_chat.save()
+            add_ava_local(img=img, chat_id=group_chat.chat_id, user_id=user_id)
             for member_id in members_id:
                 chat_conn = ChatMembers(chat_id=int(group_chat.chat_id), user_id=int(member_id))
                 chat_conn.save()

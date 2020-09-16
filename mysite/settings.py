@@ -34,9 +34,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
-
-
 INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.admin',
@@ -52,7 +49,6 @@ INSTALLED_APPS = [
     'user_profile.apps.UserProfileConfig',
     "channels_presence",
     'channels',
-    #"channels_presence",
     "fcm_django",
     "psycopg2",
     'storages',
@@ -66,8 +62,6 @@ FCM_DJANGO_SETTINGS = {
     "DELETE_INACTIVE_DEVICES": True,
 }
 
-
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -79,13 +73,10 @@ CACHES = {
         },
     }
 }
-#!CELERY_BROKER_URL = os.environ['REDIS_URL']
-#!CELERY_RESULT_BACKEND = os.environ['REDIS_URL']
+
 CELERY_BROKER_URL = os.getenv('REDIS_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
-
 ASGI_APPLICATION = 'mysite.routing.application'
-
 #db_from_env = dj_database_url.config() #TEESSTT
 
 '''CELERYBEAT_SCHEDULE = {
@@ -144,9 +135,6 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -172,8 +160,6 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
 AWS_S3_FILE_OVERWRITE = False
 
 AWS_S3_REGION_NAME = 'us-east-2'
@@ -192,10 +178,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
 
 CHANNEL_LAYERS = {
@@ -209,12 +191,7 @@ CHANNEL_LAYERS = {
 }
 django.setup()
 
-
-
-
-
 django_heroku.settings(locals())
-#SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
