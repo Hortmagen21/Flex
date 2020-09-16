@@ -178,7 +178,7 @@ def forgot_pass(request):#is_active_check !!!!
                 return HttpResponse('User with such email is not exist', status=404)
             else:
                 send_mail('Change Flex Password!', 'The SECRETE code number is {}'.format(token),
-                          'hortmagennn@gmail.com'
+                          'flexapplicationemail@gmail.com'
                           , [email], fail_silently=False)
                 try:
                     duplicate_token = TokenConfirm.objects.get(id=user.id)
