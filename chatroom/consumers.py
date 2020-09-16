@@ -231,7 +231,7 @@ class ChatConsumer(AsyncConsumer):
     def save_msg(self, threat_obj, msg, time, msg_type):
         user_id = (User.objects.get(username=str(self.me))).id
         message_obj = Message.objects.create(chat_id=threat_obj, user_id=int(user_id), message=msg, date=time)
-        msg_type_obj = MsgType(id=message_obj.message_id, msg_type=msg_type)
+        msg_type_obj = MsgType(id=message_obj.message_id, type=msg_type)
         msg_type_obj.save()
         return message_obj
         #new_message.save()
