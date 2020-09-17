@@ -303,7 +303,8 @@ class ChatConsumer(AsyncConsumer):
     def ban_user(self, users_id, msg_id, chat_id):
         user_list = users_id.split()
         for user in user_list:
-            BannedInChat(user=user, msg_id=msg_id, chat_id=chat_id)
+            user_banned_obj = BannedInChat(user=user, msg_id=msg_id, chat_id=chat_id)
+            user_banned_obj.save()
         return
 
     @database_sync_to_async
