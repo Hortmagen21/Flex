@@ -8,7 +8,7 @@ import asyncio
 from channels.db import database_sync_to_async
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
-from chatroom.models import Chat,ChatMembers,Message,IgnoreMessages,MsgType
+from chatroom.models import Chat,ChatMembers,Message,IgnoreMessages,MsgType,BannedInChat
 from user_profile.models import UserAvatar,PostBase
 from django.contrib.auth.models import User
 from django.db.models import Max
@@ -501,12 +501,15 @@ def delete_chat(request):
                     return HttpResponse(status=403)
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
+
+
 def is_user_in_chat(chat_id, user_id):
     chat_members = ChatMembers.objects.filter(user_id=user_id)
     for member in chat_members:
         if int(member.chat_id) == int(chat_id):
             return True
     return False
+
 
 def get_receivers_ids(chat_id):
     members = ChatMembers.objects.filter(chat_id=chat_id)
@@ -533,6 +536,15 @@ def get_receiver_avatar(user_id):
     except IndexError:
         ava = "None"  # null
     return ava
+
+
+def ban_check_user(user_id, chat_id):
+    try:
+        BannedInChat.objects.get(user=user_id, chat_id=chat_id)
+    except ObjectDoesNotExist:
+        return False
+    else:
+        return True
 
 
 

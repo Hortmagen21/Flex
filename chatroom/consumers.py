@@ -5,8 +5,8 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
-from .models import Message,Chat,MsgType
-from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens,get_receiver_avatar
+from .models import Message,Chat,MsgType,BannedInChat
+from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens,get_receiver_avatar, ban_check_user
 from django.contrib.auth.models import User
 from channels.auth import login
 from django.db import close_old_connections
@@ -26,8 +26,9 @@ from channels_presence.models import Room, Presence
 API_KEY = "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 
 user_to_chats = {}
-
 online_users = []
+user_ban_to_chat = {}
+users_banned = []
 
 
 class ChatConsumer(AsyncConsumer):
@@ -68,7 +69,6 @@ class ChatConsumer(AsyncConsumer):
             })
             user_to_chats[int(self.scope['cookies']['id'])] = int(chat_id)
             print(user_to_chats,'USERS_TO_CHAT')
-            print(self.channel_name, 'NAMMEEEE')
             await self.channel_layer.group_add(
                 chat_room,
                 self.channel_name
@@ -78,6 +78,9 @@ class ChatConsumer(AsyncConsumer):
         front_text = event.get('text', False)
         print('FROOONT',front_text)
         dict_data = json.loads(front_text)
+        is_ban = await self.ban_check(self.scope['cookies']['id'], self.scope['cookies']['chat_id'])
+        if is_ban:
+            self.close()
         request_type = str(dict_data['type'])
         print(request_type,'TYYPE')
         if request_type == 'heartbeat':
@@ -118,15 +121,17 @@ class ChatConsumer(AsyncConsumer):
                         del user_to_chats[int(self.scope['cookies']['id'])]
                         await Room.objects.remove(self.chat_room, self.channel_name)
                         prescense = await self.get_presence_list(room_id, user_id)
-                        #await self.room_remove(channel_name=prescense[-1].channel_name)
+                        # await self.room_remove(channel_name=prescense[-1].channel_name)
                         # await self.remove_presence_room(prescense[-1].channel_name)
+                        msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
+                                                      msg_type=request_type)
+                        close_old_connections()
+                        await self.ban_user(dict_data['users_id'], msg_obj.message_id, self.scope['cookies']['chat_id'])
+                        close_old_connections()
                         sync_to_async(self.channel_layer.group_discard)(
                             group=self.chat_room,
                             channel=prescense[-1].channel_name
                         )
-                        msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
-                                                      msg_type=request_type)
-                        close_old_connections()
                     except IndexError:
                         pass
                 else:
@@ -235,8 +240,6 @@ class ChatConsumer(AsyncConsumer):
         msg_type_obj = MsgType(id=message_obj.message_id, type=msg_type)
         msg_type_obj.save()
         return message_obj
-        #new_message.save()
-        #return create_chat_ws(other_username, user)
 
     @database_sync_to_async
     def dump_user_ids(self, chat_id):
@@ -258,12 +261,12 @@ class ChatConsumer(AsyncConsumer):
     @database_sync_to_async
     def add_to_group(self, chat_id, user_id, add_users_id):
         return add_to_group_chat(chat_id=chat_id, user_id=user_id,
-                                   add_users_id=add_users_id)
+                                 add_users_id=add_users_id)
 
     @database_sync_to_async
     def remove_from_group(self, chat_id, user_id, remove_users_id):
         return remove_from_group_chat(chat_id=chat_id, user_id=user_id,
-                                   remove_users_id=remove_users_id)
+                                      remove_users_id=remove_users_id)
 
     @database_sync_to_async
     def room_add(self, chat_room):
@@ -285,3 +288,17 @@ class ChatConsumer(AsyncConsumer):
     @database_sync_to_async
     def presence_touch(self):
         return Presence.objects.touch(self.channel_name)
+
+    @database_sync_to_async
+    def ban_user(self, users_id, msg_id, chat_id):
+        user_list = users_id.split()
+        for user in user_list:
+            BannedInChat(user=user, msg_id=msg_id, chat_id=chat_id)
+        return
+
+    @database_sync_to_async
+    def ban_check(self, user_id, chat_id):
+        return ban_check_user(user_id, chat_id)
+
+
+

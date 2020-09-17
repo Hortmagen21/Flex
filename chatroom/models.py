@@ -57,3 +57,14 @@ class MsgType(models.Model):
 
     class Meta:
         db_table = 'msg_type'
+
+
+class BannedInChat(models.Model):
+    user = models.IntegerField()
+    description = models.CharField(max_length=100, blank=True, null=True)
+    msg_id = models.IntegerField()
+    id = models.AutoField(primary_key=True)
+    chat_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'banned_in_chat'
