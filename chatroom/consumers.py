@@ -22,6 +22,7 @@ from django.db.utils import OperationalError
 from chatroom.views import remove_from_group_chat, add_to_group_chat
 from channels_presence.models import Room, Presence
 #from channels.auth
+from channels.exceptions import StopConsumer
 
 API_KEY = "AAAAVQJ_SoU:APA91bFWua6OATBhXUCZdTGiRWBg_af-3H4wrLmBBBC8dcPzzpacSg8HYbm3YUYTGiK9sLgU-Dm5-IxgSIxHOSMSNq7o-NQXW37QWX5gykQzNGr7USXfm1HpRZnAkcF4hvbFi0Dk9lEn"
 
@@ -80,7 +81,7 @@ class ChatConsumer(AsyncConsumer):
         dict_data = json.loads(front_text)
         is_ban = await self.ban_check(self.scope['cookies']['id'], self.scope['cookies']['chat_id'])
         if is_ban:
-            self.close()
+            raise StopConsumer
         request_type = str(dict_data['type'])
         print(request_type,'TYYPE')
         if request_type == 'heartbeat':
