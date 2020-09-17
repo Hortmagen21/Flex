@@ -121,22 +121,27 @@ class ChatConsumer(AsyncConsumer):
                     error_list[int(user_id)]
                 except KeyError:
                     try:
+                        presence = await self.get_presence_list(room_id, user_id)
+                        presence[-1].channel_name
+                    except IndexError:
+                        pass
+                    else:
+                        print('im here')
                         del user_to_chats[int(self.scope['cookies']['id'])]
-                        #await Room.objects.remove(self.chat_room, self.channel_name)
-                        prescense = await self.get_presence_list(room_id, user_id)
+                        # await Room.objects.remove(self.chat_room, self.channel_name)
                         # await self.room_remove(channel_name=prescense[-1].channel_name)
                         # await self.remove_presence_room(prescense[-1].channel_name)
                         msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
                                                       msg_type=request_type)
                         close_old_connections()
                         await self.ban_user(dict_data['users_id'], msg_obj.message_id, self.scope['cookies']['chat_id'])
+                        print('I BANNED HIM')
                         close_old_connections()
                         sync_to_async(self.channel_layer.group_discard)(
-                            group=self.chat_room,
-                            channel=prescense[-1].channel_name
-                        )
-                    except IndexError:
-                        pass
+                                group=self.chat_room,
+                                channel=presence[-1].channel_name
+                            )
+
                 else:
                     if error_list[int(user_id)] == '404':
                         pass
