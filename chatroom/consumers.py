@@ -119,7 +119,7 @@ class ChatConsumer(AsyncConsumer):
                 except KeyError:
                     try:
                         del user_to_chats[int(self.scope['cookies']['id'])]
-                        await Room.objects.remove(self.chat_room, self.channel_name)
+                        #await Room.objects.remove(self.chat_room, self.channel_name)
                         prescense = await self.get_presence_list(room_id, user_id)
                         # await self.room_remove(channel_name=prescense[-1].channel_name)
                         # await self.remove_presence_room(prescense[-1].channel_name)
@@ -128,10 +128,10 @@ class ChatConsumer(AsyncConsumer):
                         close_old_connections()
                         await self.ban_user(dict_data['users_id'], msg_obj.message_id, self.scope['cookies']['chat_id'])
                         close_old_connections()
-                        '''sync_to_async(self.channel_layer.group_discard)(
+                        sync_to_async(self.channel_layer.group_discard)(
                             group=self.chat_room,
                             channel=prescense[-1].channel_name
-                        )'''
+                        )
                     except IndexError:
                         pass
                 else:
