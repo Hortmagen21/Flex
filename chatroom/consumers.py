@@ -68,6 +68,7 @@ class ChatConsumer(AsyncConsumer):
             })
             user_to_chats[int(self.scope['cookies']['id'])] = int(chat_id)
             print(user_to_chats,'USERS_TO_CHAT')
+            print(self.channel_name, 'NAMMEEEE')
             await self.channel_layer.group_add(
                 chat_room,
                 self.channel_name
@@ -117,12 +118,12 @@ class ChatConsumer(AsyncConsumer):
                         del user_to_chats[int(self.scope['cookies']['id'])]
                         await Room.objects.remove(self.chat_room, self.channel_name)
                         prescense = await self.get_presence_list(room_id, user_id)
-                        await self.room_remove(channel_name=prescense[-1].channel_name)
+                        #await self.room_remove(channel_name=prescense[-1].channel_name)
                         # await self.remove_presence_room(prescense[-1].channel_name)
-                        '''sync_to_async(self.channel_layer.group_discard)(
+                        sync_to_async(self.channel_layer.group_discard)(
                             group=self.chat_room,
                             channel=prescense[-1].channel_name
-                        )'''
+                        )
                         msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
                                                       msg_type=request_type)
                         close_old_connections()
