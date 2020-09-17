@@ -77,7 +77,9 @@ class ChatConsumer(AsyncConsumer):
 
     async def websocket_receive(self,event):
         front_text = event.get('text', False)
+        type2 = event.get('type',False)
         print('FROOONT',front_text)
+        print('typeeeee', type2)
         dict_data = json.loads(front_text)
         is_ban = await self.ban_check(self.scope['cookies']['id'], self.scope['cookies']['chat_id'])
         if is_ban:

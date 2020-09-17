@@ -244,7 +244,7 @@ def upload_messages(request):
                                             img_name=post.img_name)
                 response.append({'msg_id': msg.message_id, 'user_id': msg.user_id, 'text': msg.message,
                                  'time': int(msg.date), 'user_name': sender.username, 'user_avatar': ava_src,
-                                 'msg_type': msg_info.type})
+                                 'type': msg_info.type})
             return JsonResponse({'msg_information': response})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
