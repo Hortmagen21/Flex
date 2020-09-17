@@ -547,6 +547,13 @@ def get_receiver_avatar(user_id):
     return ava
 
 
+def ban_user(users_id, msg_id, chat_id):
+    user_list = users_id.split()
+    for user in user_list:
+        user_banned_obj = BannedInChat.objects.create(user=user, description='', msg_id=msg_id, chat_id=chat_id)
+    return True
+
+
 def ban_check_user(user_id, chat_id):
     try:
         BannedInChat.objects.get(user=user_id, chat_id=chat_id)

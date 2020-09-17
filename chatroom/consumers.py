@@ -6,7 +6,8 @@ from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
 #from .models import Thread, ChatMessage
 from .models import Message,Chat,MsgType,BannedInChat
-from .views import create_chat_ws,get_receivers_ids,get_user_special_tokens,get_receiver_avatar, ban_check_user
+from .views import create_chat_ws, get_receivers_ids, get_user_special_tokens, get_receiver_avatar, ban_check_user,\
+    ban_user
 from django.contrib.auth.models import User
 from channels.auth import login
 from django.db import close_old_connections
@@ -301,10 +302,7 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def ban_user(self, users_id, msg_id, chat_id):
-        user_list = users_id.split()
-        for user in user_list:
-            user_banned_obj = BannedInChat.objects.create(user=user, msg_id=msg_id, chat_id=chat_id)
-        return True
+        return ban_user(user_id, msg_id, chat_id)
 
     @database_sync_to_async
     def ban_check(self, user_id, chat_id):
