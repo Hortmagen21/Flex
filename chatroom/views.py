@@ -548,6 +548,7 @@ def get_receiver_avatar(user_id):
 
 
 def ban_user(users_id, msg_id, chat_id):
+    print('IM DELETING')
     user_list = users_id.split()
     for user in user_list:
         user_banned_obj = BannedInChat.objects.create(user=user, description='', msg_id=msg_id, chat_id=chat_id)

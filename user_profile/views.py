@@ -323,8 +323,10 @@ def view_information_user(request):
         user_followed = list(UserFollower.objects.filter(follower=int(user_id)))
         user_follower = list(UserFollower.objects.filter(id=int(user_id)))
         object_does_not_exist = False
-
-        user_name = User.objects.get(id=int(user_id)).username
+        try:
+            user_name = User.objects.get(id=int(user_id)).username
+        except ObjectDoesNotExist:
+            return HttpResponse(status=404)
         try:
             post = list(AvaBase.objects.filter(user_id=user_id))[-1]
         except ObjectDoesNotExist:
