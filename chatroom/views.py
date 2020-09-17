@@ -271,6 +271,8 @@ def create_group_chat(request):
             group_chat.save()
             if is_ava:
                 photo_info = add_ava_local(img=img, chat_id=group_chat.chat_id, user_id=user_id)
+            else:
+                photo_info = {'file_url': 'nothing'}
             for member_id in members_id:
                 chat_conn = ChatMembers(chat_id=int(group_chat.chat_id), user_id=int(member_id))
                 chat_conn.save()
