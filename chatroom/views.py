@@ -551,7 +551,9 @@ def ban_user(users_id, msg_id, chat_id):
     print('IM DELETING')
     user_list = users_id.split()
     for user in user_list:
-        user_banned_obj = BannedInChat.objects.create(user=user, description='', msg_id=msg_id, chat_id=chat_id)
+        user_banned_obj = BannedInChat(user=user, description=' ', msg_id=msg_id, chat_id=chat_id)
+        user_banned_obj.save()
+        print(user_banned_obj.id, 'IDDDD')
     return True
 
 
