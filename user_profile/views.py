@@ -130,7 +130,9 @@ def add_ava(request):
             return JsonResponse({
                 'message': f"Error: file {file_name} already exist at {url} in bucket"
             }, status=400)'''
-        add_ava_local(img=img, chat_id=chat_id, user_id=user_id)
+        response = add_ava_local(img=img, chat_id=chat_id, user_id=user_id)
+        return JsonResponse({'src': response['file_url'], 'src_mini': response['file_url'],
+                             'post_id': response['photo_id']})
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
