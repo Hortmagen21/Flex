@@ -16,6 +16,7 @@ from acc_base.models import UniqueTokenUser
 from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.http import JsonResponse
+from django.utils.datastructures import MultiValueDictKeyError
 import psycopg2
 from django.db import IntegrityError
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -254,16 +255,22 @@ def upload_messages(request):
 def create_group_chat(request):
     if request.method == "POST":
         group_name = str(request.POST.get(['group_name'][0], False))
-        img = request.FILES['img']
         members_count = int(request.POST.get(['members_count'][0], False))
         members_id = (request.POST.get(['members_id'][0], False)).split()
         user_id = int(request.session['_auth_user_id'])
+        try:
+            img = request.FILES['img']
+        except MultiValueDictKeyError:
+            is_ava = False
+        else:
+            is_ava = True
         print(members_id, 'MEMBERS')
         if group_name and members_id and members_count and len(members_id) == members_count:
             # max_priority = int((Chat.objects.all().aggregate(Max('priority')))['priority__max']
             group_chat = Chat(chat_name=group_name, chat_admin=user_id, chat_members=members_count, is_group=True)
             group_chat.save()
-            photo_info = add_ava_local(img=img, chat_id=group_chat.chat_id, user_id=user_id)
+            if is_ava:
+                photo_info = add_ava_local(img=img, chat_id=group_chat.chat_id, user_id=user_id)
             for member_id in members_id:
                 chat_conn = ChatMembers(chat_id=int(group_chat.chat_id), user_id=int(member_id))
                 chat_conn.save()
