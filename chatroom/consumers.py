@@ -302,7 +302,7 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def ban_user(self, users_id, msg_id, chat_id):
-        return ban_user(user_id, msg_id, chat_id)
+        return ban_user(users_id, msg_id, chat_id)
 
     @database_sync_to_async
     def ban_check(self, user_id, chat_id):
