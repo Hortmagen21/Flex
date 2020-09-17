@@ -81,7 +81,9 @@ class ChatConsumer(AsyncConsumer):
         dict_data = json.loads(front_text)
         is_ban = await self.ban_check(self.scope['cookies']['id'], self.scope['cookies']['chat_id'])
         if is_ban:
+            print('BAAAAN')
             raise StopConsumer
+        print('or not BAAAAN')
         request_type = str(dict_data['type'])
         print(request_type,'TYYPE')
         if request_type == 'heartbeat':
