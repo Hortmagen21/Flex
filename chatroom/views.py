@@ -308,7 +308,8 @@ def create_group_invite(request):
         if ChatMembers.objects.filter(chat_id=chat_id, user_id=user_id).exists():
             row = GroupInvitations(chat_id=chat_id, token=token)
             row.save()
-            link = f'flex://group_invite?chat_id={chat_id}&token={token}'
+            #link = f'flex://group_invite?chat_id={chat_id}&token={token}'
+            link = f'https://sleepy-ocean-25130.herokuapp.com/check_group_invite?chat_id={chat_id}&token={token}'
             return HttpResponse(link, status=200)
         else:
             return HttpResponse(status=403)
@@ -319,18 +320,18 @@ def create_group_invite(request):
 @csrf_protect
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def check_group_invite(request):
-    if request.method == "POST":
-        chat_id = request.POST.get(['chat_id'][0], False)
-        token = request.POST.get(['token'][0], False)
+    if request.method == "GET":
+        chat_id = request.GET.get(['chat_id'][0], False)
+        token = request.GET.get(['token'][0], False)
         user_id = int(request.session['_auth_user_id'])
         if GroupInvitations.objects.filter(chat_id=chat_id, token=token).exists():
             if not ChatMembers.objects.filter(chat_id=chat_id, user_id=user_id).exists():
                 add_user_to_chat(user_id=user_id, chat_id=chat_id)
-            return HttpResponse(status=200)
+            return render(request, 'group_invite.html', context={'chat_id': chat_id, 'token': token})
         else:
             return HttpResponse(status=404)
     else:
-        return HttpResponse("Pls ensure that you use POST method", status=405)
+        return HttpResponse("Pls ensure that you use GET method", status=405)
 
 
 def add_user_to_chat(user_id, chat_id):
