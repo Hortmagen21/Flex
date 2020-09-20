@@ -8,7 +8,7 @@ import asyncio
 from channels.db import database_sync_to_async
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
-from chatroom.models import Chat,ChatMembers,Message,IgnoreMessages,MsgType,BannedInChat
+from chatroom.models import Chat, ChatMembers, Message, IgnoreMessages, MsgType, BannedInChat, GroupInvitations
 from user_profile.models import UserAvatar,PostBase
 from django.contrib.auth.models import User
 from django.db.models import Max
@@ -19,6 +19,7 @@ from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 import psycopg2
 from django.db import IntegrityError
+import secrets
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from fcm_django.api.rest_framework import FCMDevice
 from fcm_django.fcm import fcm_send_message,FCMNotification
@@ -287,7 +288,7 @@ def create_group_chat(request):
 @login_required(login_url=core_url + 'acc_base/login_redirection')
 def get_chat_members(request):
     if request.method == "POST":
-        chat_id = request.POST.get(['chat_id'][0],False)
+        chat_id = request.POST.get(['chat_id'][0], False)
         members = ChatMembers.objects.filter(chat_id=chat_id)
         members_id = []
         for member in members:
@@ -297,6 +298,46 @@ def get_chat_members(request):
         return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def create_group_invite(request):
+    if request.method == "POST":
+        chat_id = request.POST.get(['chat_id'][0], False)
+        user_id = int(request.session['_auth_user_id'])
+        token = secrets.token_hex(nbytes=10)
+        if ChatMembers.objects.filter(chat_id=chat_id, user_id=user_id).exists():
+            row = GroupInvitations(chat_id=chat_id, token=token)
+            row.save()
+            link = f'flex://group_invite?chat_id={chat_id}&token={token}'
+            return HttpResponse(link, status=200)
+        else:
+            return HttpResponse(status=403)
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
+
+
+@csrf_protect
+@login_required(login_url=core_url + 'acc_base/login_redirection')
+def check_group_invite(request):
+    if request.method == "POST":
+        chat_id = request.POST.get(['chat_id'][0], False)
+        token = request.POST.get(['token'][0], False)
+        user_id = int(request.session['_auth_user_id'])
+        if GroupInvitations.objects.filter(chat_id=chat_id, token=token).exists():
+            add_user_to_chat(user_id=user_id, chat_id=chat_id)
+            return HttpResponse(status=200)
+
+
+def add_user_to_chat(user_id, chat_id):
+    member = ChatMembers(chat_id=chat_id, user_id=user_id)
+    try:
+        chat = Chat.objects.get(chat_id=chat_id)
+    except ObjectDoesNotExist:
+        raise ObjectDoesNotExist
+    else:
+        chat.chat_members += 1
+        chat.save()
+        member.save()
 
 def create_chat_ws(receiver_name, user_name):
     try:
@@ -321,32 +362,7 @@ def create_chat_ws(receiver_name, user_name):
         cursor.callproc('is_chat', args)
         print('CALLPROC IS_CHAT2')
         chat_exist = cursor.fetchall()[0][0]
-        print(chat_exist,' FETCHALL2')
-
-        """try:
-            chat_list = list(ChatMembers.objects.filter(user_id=user_id))
-        except ObjectDoesNotExist:
-            pass
-        else:
-            for chat in chat_list:
-                try:
-                    chat_settings = Chat.objects.get(chat_id=chat.chat_id)
-                except ObjectDoesNotExist:
-                    return -1
-                except MultipleObjectsReturned:
-                    return HttpResponseBadRequest()
-                else:
-                    if int(chat_settings.chat_members) == 2:
-                        try:
-                            receiver_chat = ChatMembers.objects.get(chat_id=chat_settings.chat_id, user_id=receiver_id)
-                        except MultipleObjectsReturned:
-                            return HttpResponseBadRequest()
-                        except ObjectDoesNotExist:
-                            pass
-                        else:
-                            chat_exist = True
-                            break"""
-
+        print(chat_exist, 'FETCHALL2')
         if chat_exist:
             args = (user_id, receiver_id)
             cursor.callproc('chat_id', args)

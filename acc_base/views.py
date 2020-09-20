@@ -21,6 +21,7 @@ from fcm_django.api.rest_framework import FCMDevice
 
 core_url='https://sleepy-ocean-25130.herokuapp.com/'
 
+
 @csrf_exempt
 def resend_email(request):
     if request.method == 'POST':
@@ -33,6 +34,8 @@ def resend_email(request):
         send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
                       , 'flexapplicationemail@gmail.com', [email], fail_silently=False, )
         return HttpResponse(status=200)
+
+
 @csrf_exempt
 def registration(request):
     if request.method == 'POST':
@@ -40,42 +43,22 @@ def registration(request):
         password = request.POST.get(['password'][0], False)
         email = request.POST.get(['email'][0], False)
         unique_token = request.POST.get(['token'][0], False)
-
-        if username == False or password == False or email == False:
+        if username is False or password is False or email is False:
             return HttpResponse("NOT VALID DATA", status=415)
-
-        try:
-            test_user = User.objects.get(email=email)
-        except ObjectDoesNotExist:
+        if not User.objects.filter(email=email).exists():
             user = User.objects.create_user(username=username, password=password, email=email)
             user.is_active = False
-
             token = secrets.token_hex(nbytes=10)
             token_confirm = TokenConfirm(id=user.id, token=token)
             token_confirm.save()
-            url_confirm = core_url+'acc_base/registration/ended?token={}'.format(token)
+            url_confirm = core_url+f'acc_base/registration/ended?{token}'
             send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
                       , 'flexapplicationemail@gmail.com', [email], fail_silently=False, )
-
-    # setSessionHash(request.session)
-    # session_hash = request.session.session_key
-    # HttpResponse.__setitem__(header='Authorization', value=session_hash)
-
-            #csrf_token = django.middleware.csrf.get_token(request)
-            #http_resp = HttpResponse()
-            #http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
-
             print('I created user!!!!!!!')
             user.save()
-            #WHAT DO WHEN EXIST USER WANT CREATE NEW ADDITIONAL ACC???
-
-            token = FCMDevice(registration_id=unique_token, type="android",device_id=int(user.id))
+            token = FCMDevice(registration_id=unique_token, type="android", device_id=int(user.id))
             token.save()
-            #token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
-            #token.save()
-
-            return JsonResponse({'user_id': int(user.id)})
-
+            return HttpResponse(status=200)
         return HttpResponse("Such email is already exist", status=409)
     else:
         return HttpResponse("Pls ensure that you use POST method", status=405)
@@ -87,31 +70,16 @@ def login(request):
         username = request.POST.get(['username'][0], False)
         password = request.POST.get(['password'][0], False)
         unique_token = request.POST.get(['token'][0], False)
-
         user = auth.authenticate(request, username=username, password=password)
-
-        if username == False or password == False or unique_token == False:
+        if username is False or password is False or unique_token is False:
             return HttpResponse("NOT VALID DATA", status=415)
-
         if user is not None and user.is_active:
             auth.login(request, user)
             request.session['username'] = username
             user.save()
-
-            #token = UniqueTokenUser(token=unique_token, user_id=int(user.id))
-            #token.save()
             token = FCMDevice(registration_id=unique_token, type="android", device_id=int(user.id))
             token.save()
             http_resp = HttpResponse(user.id)
-            # csrf_token = django.middleware.csrf.get_token(request)
-            # http_resp.__setitem__(header='X-CSRF-TOKEN', value=csrf_token)
-            # setSessionHash(request.session)
-            # session_hash = request.session.session_key
-            # csrf_token = django.middleware.csrf.get_token(request)
-            # http_resp = HttpResponse()
-            # must be rechanged on cookies
-            # http_resp.__setitem__(header='X-CSRFToken', value=str(csrf_token))
-            print('I log in !!!!!!!')
             return http_resp
         return HttpResponse("Unsuccessful login", status=404)
     else:

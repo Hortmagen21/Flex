@@ -8,6 +8,15 @@
 from django.db import models
 
 
+class GroupInvitations(models.Model):
+    token = models.CharField(max_length=500)
+    chat_id = models.IntegerField()
+    id = models.IntegerField(primary_key=True)
+
+    class Meta:
+        db_table = 'group_invitations'
+
+
 class Chat(models.Model):
     chat_id = models.AutoField(primary_key=True)
     chat_name = models.CharField(max_length=100, blank=True, null=True)

@@ -33,3 +33,7 @@ def search_people(request):
     else:
         return HttpResponse("Pls ensure that you use GET method", status=405)
 
+
+
+
+

@@ -34,16 +34,13 @@ users_banned = []
 
 
 class ChatConsumer(AsyncConsumer):
-    async def websocket_connect(self,event):
+    async def websocket_connect(self, event):
         await self.send({
             "type": "websocket.accept"
         })
         try:
-            print('CHATER_ID')
             chat_id = self.scope['cookies']['chat_id']
         except KeyError:
-            print('KEYERROR')
-            #other_user = str(self.scope['url_route']['kwargs']['username'])
             other_user = self.scope['cookies']['username']
             if self.scope['user'].is_anonymous:
                 await self.close()
@@ -76,19 +73,13 @@ class ChatConsumer(AsyncConsumer):
                 self.channel_name
             )
 
-    async def websocket_receive(self,event):
+    async def websocket_receive(self, event):
         front_text = event.get('text', False)
-        type2 = event.get('type',False)
-        print('FROOONT',front_text)
-        print('typeeeee', type2)
         dict_data = json.loads(front_text)
         is_ban = await self.ban_check(self.scope['cookies']['id'], self.scope['cookies']['chat_id'])
         if is_ban:
-            print('BAAAAN')
             raise StopConsumer
-        print('or not BAAAAN')
         request_type = str(dict_data['type'])
-        print(request_type,'TYYPE')
         if request_type == 'heartbeat':
             print('heartbeat')
             await self.presence_touch()
@@ -97,13 +88,12 @@ class ChatConsumer(AsyncConsumer):
             print('add_user')
             close_old_connections()
             await self.add_to_group(chat_id=self.chat_id, user_id=self.scope['cookies']['id'],
-                                   add_users_id=dict_data['users_id'])
+                                    add_users_id=dict_data['users_id'])
             my_data_dict = {"front": front_text}
             await self.channel_layer.group_send(
                 self.chat_room,
                 {
                     "type": "chat_message",
-                    # "text": json.dumps(data),
                     "text": json.dumps(my_data_dict),
                 })
             msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
@@ -129,30 +119,21 @@ class ChatConsumer(AsyncConsumer):
                     except IndexError:
                         pass
                     else:
-                        print('im here')
                         del user_to_chats[int(self.scope['cookies']['id'])]
-                        # await Room.objects.remove(self.chat_room, self.channel_name)
-                        # await self.room_remove(channel_name=prescense[-1].channel_name)
-                        # await self.remove_presence_room(prescense[-1].channel_name)
                         msg_obj = await self.save_msg(self.chat_id, str(dict_data['users_id']), int(dict_data['time']),
                                                       msg_type=request_type)
                         close_old_connections()
                         await self.ban_user(dict_data['users_id'], msg_obj.message_id, self.scope['cookies']['chat_id'])
-                        print('I BANNED HIM')
                         close_old_connections()
-                        sync_to_async(self.channel_layer.group_discard)(
+                        '''sync_to_async(self.channel_layer.group_discard)(
                                 group=self.chat_room,
                                 channel=presence[-1].channel_name
-                            )
-
+                            )'''
                 else:
                     if error_list[int(user_id)] == '404':
                         pass
                     if error_list[int(user_id)] == '403':
                         pass
-            # username = self.scope['user']
-            # kicked_users_id = dict_data['users_id']
-            # my_data_dict = {'text': f'{username} has kicked out {kicked_users_id}'}
             my_data_dict = {"front": front_text}
             await self.channel_layer.group_send(
                 self.chat_room,
@@ -163,7 +144,6 @@ class ChatConsumer(AsyncConsumer):
                 })
             print('END delete_user')
         if request_type == 'message':
-            print('MESSAGE')
             close_old_connections()
             receivers_ids = await self.dump_user_ids(int(self.chat_id))
             close_old_connections()
@@ -175,13 +155,12 @@ class ChatConsumer(AsyncConsumer):
                 msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']),
                                               msg_type=request_type)
                 close_old_connections()
-            for user in receivers_ids:#delete
+            for user in receivers_ids:
                 try:
-                    close_old_connections()
-                    user_to_chats[user]#int(self.scope['cookies']['id'])]
+                    user_to_chats[user]
                 except KeyError:
                     print('IM WORKING1')
-                    token = await self.get_user_token(user)#int(self.scope['cookies']['id']))
+                    token = await self.get_user_token(user)
                     for i in token:
                         close_old_connections()
                         print(i, 'CHECK MEE')
@@ -192,10 +171,9 @@ class ChatConsumer(AsyncConsumer):
                     if user_to_chats[int(self.scope['cookies']['id'])] == int(self.chat_id):
                         close_old_connections()
                         my_data_dict = {"front": front_text,
-                                    "ava": str(ava),
-                                    "msg_id": int(msg_obj.message_id),
-                                    }
-                        #await self.channel_layer.group_discard(self.chat_room, self.channel_name)
+                                        "ava": str(ava),
+                                        "msg_id": int(msg_obj.message_id),
+                                        }
                         await self.channel_layer.group_send(
                             self.chat_room,
                             {
@@ -203,19 +181,13 @@ class ChatConsumer(AsyncConsumer):
                                 # "text": json.dumps(data),
                                 "text": json.dumps(my_data_dict),
                             })
-                        # TIME FIX ->break
-                        #await self.channel_layer.group_add(self.chat_room, self.channel_name)
                     else:
-
                         close_old_connections()
-                        #token = await self.get_user_token(int(self.scope['cookies']['id']))
                         print('IM WORKING2')
-                        token = await self.get_user_token(user)  # int(self.scope['cookies']['id']))
-                        # print(token, 'TOKENS')
+                        token = await self.get_user_token(user)
                         for i in token:
                             close_old_connections()
                             print(i, 'CHECK MEE')
-                            ##i.send_message(data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=dict_data['text'][:20])
                             fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)},
                                              body=str(dict_data['text'][:20]))
                 close_old_connections()
@@ -224,13 +196,11 @@ class ChatConsumer(AsyncConsumer):
 
     async def chat_message(self, event):
         print('text', event)
-        # send messages
         await self.send({
             "type": "websocket.send",
             "text": event['text'],
         })
 
-    #@remove_presence
     async def websocket_disconnect(self, event):
         del user_to_chats[int(self.scope['cookies']['id'])]
         await self.room_remove(channel_name=self.channel_name)
