@@ -13,6 +13,8 @@ urlpatterns = [
     path('delete_chat', views.delete_chat),
     path('check_group_invite', views.check_group_invite),
     path('create_group_invite', views.create_group_invite),
+    path('group_invite', views.group_invite),
+
 
 
 
