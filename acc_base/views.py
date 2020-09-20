@@ -115,12 +115,12 @@ def check_log(request):
 def verifying(request):
     if request.method == 'GET':
         token = request.GET.get('token', '')
+        print(token)
         try:
             user_id = TokenConfirm.objects.get(token=token)
         except ObjectDoesNotExist:
             return HttpResponse('Such token verification does not exist', status=404)
         else:
-
             try:
                 user = User.objects.get(id=user_id.id)
             except ObjectDoesNotExist:
