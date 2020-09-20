@@ -52,7 +52,7 @@ def registration(request):
             token_confirm = TokenConfirm(id=user.id, token=token)
             token_confirm.save()
             print(token, 'I SAVEED')
-            url_confirm = core_url+f'acc_base/registration/ended?{token}'
+            url_confirm = core_url+f'acc_base/registration/ended?token={token}'
             send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
                       , 'flexapplicationemail@gmail.com', [email], fail_silently=False, )
             print('I created user!!!!!!!')
