@@ -309,7 +309,7 @@ def create_group_invite(request):
             row = GroupInvitations(chat_id=chat_id, token=token)
             row.save()
             #link = f'flex://group_invite?chat_id={chat_id}&token={token}'
-            link = f'https://sleepy-ocean-25130.herokuapp.com/check_group_invite?chat_id={chat_id}&token={token}'
+            link = f'https://sleepy-ocean-25130.herokuapp.com/chatroom/check_group_invite?chat_id={chat_id}&token={token}'
             return HttpResponse(link, status=200)
         else:
             return HttpResponse(status=403)
