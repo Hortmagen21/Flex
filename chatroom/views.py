@@ -324,7 +324,8 @@ def check_group_invite(request):
         token = request.POST.get(['token'][0], False)
         user_id = int(request.session['_auth_user_id'])
         if GroupInvitations.objects.filter(chat_id=chat_id, token=token).exists():
-            add_user_to_chat(user_id=user_id, chat_id=chat_id)
+            if not ChatMembers.objects.filter(chat_id=chat_id, user_id=user_id).exists():
+                add_user_to_chat(user_id=user_id, chat_id=chat_id)
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=404)
