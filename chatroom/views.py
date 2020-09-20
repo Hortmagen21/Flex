@@ -308,7 +308,7 @@ def create_group_invite(request):
         if ChatMembers.objects.filter(chat_id=chat_id, user_id=user_id).exists():
             row = GroupInvitations(chat_id=chat_id, token=token)
             row.save()
-            link = f'https://sleepy-ocean-25130.herokuapp.com/chatroom/check_group_invite?chat_id={chat_id}&token={token}'
+            link = f'https://sleepy-ocean-25130.herokuapp.com/chatroom/group_invite?chat_id={chat_id}&token={token}'
             return HttpResponse(link, status=200)
         else:
             return HttpResponse(status=403)
