@@ -317,7 +317,6 @@ def create_group_invite(request):
 
 
 @csrf_exempt
-@login_required(login_url=core_url + 'acc_base/login_redirection')
 def group_invite(request):
     if request.method == "GET":
         chat_id = request.GET.get(['chat_id'][0], False)
