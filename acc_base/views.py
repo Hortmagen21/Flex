@@ -51,6 +51,7 @@ def registration(request):
             token = secrets.token_hex(nbytes=10)
             token_confirm = TokenConfirm(id=user.id, token=token)
             token_confirm.save()
+            print(token, 'I SAVEED')
             url_confirm = core_url+f'acc_base/registration/ended?{token}'
             send_mail('Verify Flex account', 'End up your registration by this url {}'.format(url_confirm)
                       , 'flexapplicationemail@gmail.com', [email], fail_silently=False, )
@@ -115,7 +116,7 @@ def check_log(request):
 def verifying(request):
     if request.method == 'GET':
         token = request.GET.get('token', '')
-        print(token)
+        print(token, 'TOKEN')
         try:
             user_id = TokenConfirm.objects.get(token=token)
         except ObjectDoesNotExist:
