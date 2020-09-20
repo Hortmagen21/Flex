@@ -326,6 +326,10 @@ def check_group_invite(request):
         if GroupInvitations.objects.filter(chat_id=chat_id, token=token).exists():
             add_user_to_chat(user_id=user_id, chat_id=chat_id)
             return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse("Pls ensure that you use POST method", status=405)
 
 
 def add_user_to_chat(user_id, chat_id):
