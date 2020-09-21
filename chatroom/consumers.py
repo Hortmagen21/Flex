@@ -8,6 +8,7 @@ from channels.db import database_sync_to_async
 from .models import Message,Chat,MsgType,BannedInChat
 from .views import create_chat_ws, get_receivers_ids, get_user_special_tokens, get_receiver_avatar, ban_check_user,\
     ban_user
+from django.core.exceptions import MultipleObjectsReturned,ObjectDoesNotExist
 from django.contrib.auth.models import User
 from channels.auth import login
 from django.db import close_old_connections
@@ -221,11 +222,15 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def save_msg(self, threat_obj, msg, time, msg_type):
-        user_id = (User.objects.get(username=str(self.me))).id
-        message_obj = Message.objects.create(chat_id=threat_obj, user_id=int(user_id), message=msg, date=time)
-        msg_type_obj = MsgType(id=message_obj.message_id, type=msg_type)
-        msg_type_obj.save()
-        return message_obj
+        try:
+            user_id = (User.objects.get(username=str(self.me))).id
+        except ObjectDoesNotExist:
+            raise StopConsumer
+        else:
+            message_obj = Message.objects.create(chat_id=threat_obj, user_id=int(user_id), message=msg, date=time)
+            msg_type_obj = MsgType(id=message_obj.message_id, type=msg_type)
+            msg_type_obj.save()
+            return message_obj
 
     @database_sync_to_async
     def dump_user_ids(self, chat_id):
