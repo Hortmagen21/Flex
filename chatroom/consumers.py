@@ -168,6 +168,7 @@ class ChatConsumer(AsyncConsumer):
                         close_old_connections()
                         print(i, 'CHECK MEE')
                         fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=str(dict_data['text'][:20]))
+                    break
                 else:
                     close_old_connections()
                     print('IAM HERE')
@@ -193,6 +194,7 @@ class ChatConsumer(AsyncConsumer):
                             print(i, 'CHECK MEE')
                             fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)},
                                              body=str(dict_data['text'][:20]))
+                        break
                 close_old_connections()
         else:
             print('NOT TYPE')
