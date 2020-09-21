@@ -54,7 +54,7 @@ def username_list(request):
         for id in id_list:
             user = User.objects.get(id=int(id))
             try:
-                ava = list(AvaBase.objects.filter(user_id=id))[-1]
+                ava = list(AvaBase.objects.filter(user_id=id, chat_id=0))[-1]
             except ObjectDoesNotExist:
                 return HttpResponse(status=404)
             except MultipleObjectsReturned:

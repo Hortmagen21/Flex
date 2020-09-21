@@ -233,7 +233,7 @@ def upload_messages(request):
                 try:
                     sender = User.objects.get(id=msg.user_id)
                     msg_info = MsgType.objects.get(id=msg.message_id)
-                    post = list(AvaBase.objects.filter(user_id=int(msg.user_id)))[-1]
+                    post = list(AvaBase.objects.filter(user_id=int(msg.user_id), chat_id=0))[-1]
                 except ObjectDoesNotExist:
                     return HttpResponseNotFound()
                 except MultipleObjectsReturned:
