@@ -55,6 +55,7 @@ class ChatConsumer(AsyncConsumer):
             print('FINALLY')
             me = str(self.scope['user'])
             self.me = me
+            print(self.me,'MEEEE')
             self.chat_id = int(chat_id)
             print(self.scope["headers"],'HEADDERS')
             chat_room = f"chat_{chat_id}"
