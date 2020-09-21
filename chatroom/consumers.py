@@ -222,15 +222,11 @@ class ChatConsumer(AsyncConsumer):
 
     @database_sync_to_async
     def save_msg(self, threat_obj, msg, time, msg_type):
-        try:
-            user_id = (User.objects.get(username=str(self.me))).id
-        except ObjectDoesNotExist:
-            raise StopConsumer
-        else:
-            message_obj = Message.objects.create(chat_id=threat_obj, user_id=int(user_id), message=msg, date=time)
-            msg_type_obj = MsgType(id=message_obj.message_id, type=msg_type)
-            msg_type_obj.save()
-            return message_obj
+        user_id = (User.objects.get(username=str(self.me))).id
+        message_obj = Message.objects.create(chat_id=threat_obj, user_id=int(user_id), message=msg, date=time)
+        msg_type_obj = MsgType(id=message_obj.message_id, type=msg_type)
+        msg_type_obj.save()
+        return message_obj
 
     @database_sync_to_async
     def dump_user_ids(self, chat_id):
