@@ -66,6 +66,7 @@ class ChatConsumer(AsyncConsumer):
                 "type": "websocket.send",
                 "text": str(chat_id),
             })
+            print(self.scope['cookies']['id'],' ',chat_id, 'IDDDDDDDDDDDDDD')
             user_to_chats[int(self.scope['cookies']['id'])] = int(chat_id)
             print(user_to_chats,'USERS_TO_CHAT')
             await self.channel_layer.group_add(
@@ -144,6 +145,7 @@ class ChatConsumer(AsyncConsumer):
                 })
             print('END delete_user')
         if request_type == 'message':
+            print('message')
             close_old_connections()
             receivers_ids = await self.dump_user_ids(int(self.chat_id))
             close_old_connections()
