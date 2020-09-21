@@ -330,7 +330,7 @@ def view_information_user(request):
         except ObjectDoesNotExist:
             return HttpResponse(status=404)
         try:
-            post = list(AvaBase.objects.filter(user_id=user_id))[-1]
+            post = list(AvaBase.objects.filter(user_id=user_id, chat_id=0))[-1]
         except ObjectDoesNotExist:
             object_does_not_exist = True
             ava_src = 'none'
