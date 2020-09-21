@@ -159,17 +159,19 @@ class ChatConsumer(AsyncConsumer):
                 msg_obj = await self.save_msg(self.chat_id, str(dict_data['text']), int(dict_data['time']),
                                               msg_type=request_type)
                 close_old_connections()
+            is_push_notify=False
             for user in receivers_ids:
                 try:
                     user_to_chats[user]
                 except KeyError:
-                    print('IM WORKING1')
-                    token = await self.get_user_token(user)
-                    for i in token:
-                        close_old_connections()
-                        print(i, 'CHECK MEE')
-                        fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=str(dict_data['text'][:20]))
-                    break
+                    if not is_push_notify:
+                        print('IM WORKING1')
+                        token = await self.get_user_token(user)
+                        for i in token:
+                            close_old_connections()
+                            print(i, 'CHECK MEE')
+                            fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)}, body=str(dict_data['text'][:20]))
+                        is_push_notify = True
                 else:
                     close_old_connections()
                     print('IAM HERE')
@@ -187,14 +189,16 @@ class ChatConsumer(AsyncConsumer):
                                 "text": json.dumps(my_data_dict),
                             })
                     else:
-                        close_old_connections()
-                        print('IM WORKING2')
-                        token = await self.get_user_token(user)
-                        for i in token:
+                        if not is_push_notify:
                             close_old_connections()
-                            print(i, 'CHECK MEE')
-                            fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)},
-                                             body=str(dict_data['text'][:20]))
+                            print('IM WORKING2')
+                            token = await self.get_user_token(user)
+                            for i in token:
+                                close_old_connections()
+                                print(i, 'CHECK MEE')
+                                fcm_send_message(registration_id=i, data={"msg_id": int(msg_obj.message_id), "ava": str(ava)},
+                                                 body=str(dict_data['text'][:20]))
+                            is_push_notify = True
                         break
                 close_old_connections()
         else:
